@@ -1,8 +1,12 @@
 parameters:
-	level: 3
+	level: 4
 	autoload_files:
 		- phar:///pocketmine/PocketMine-MP.phar/vendor/autoload.php
 	autoload_directories:
 		- src
 	paths:
 		- src
+	ignoreErrors:
+		-
+			message: '#Comparison operation "<=" between int<min, 0> and 0 is always true.#'
+			path: src/uhc/tasks/UHCTimer.php
