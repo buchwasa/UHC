@@ -1,6 +1,6 @@
 name: UHC
 main: uhc\Loader
-version: 1.1.0
+version: 1.1.1
 api: 3.0.0
 authors: [Drew, Jon]
 load: STARTUP

@@ -10,7 +10,6 @@ use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\level\LevelLoadEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\event\player\PlayerCreationEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -32,10 +31,6 @@ class EventListener implements Listener{
 	public function __construct(Loader $plugin){
 		$this->plugin = $plugin;
 		$plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
-	}
-
-	public function handleCreation(PlayerCreationEvent $ev){
-		$ev->setPlayerClass(UHCPlayer::class); //TODO: Remove when pocketmine has the proper fix.
 	}
 
 	public function handleReceive(DataPacketReceiveEvent $ev){
