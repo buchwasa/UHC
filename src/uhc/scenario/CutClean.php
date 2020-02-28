@@ -17,7 +17,7 @@ class CutClean extends Scenario{
 		if($this->isActive()){
 			switch($ev->getBlock()->getId()){
 				case Block::IRON_ORE:
-					$ev->setXpDropAmount(0.7);
+					$ev->setXpDropAmount(1);
 					$ev->setDrops([Item::get(Item::IRON_INGOT)]);
 					break;
 				case Block::GOLD_ORE:

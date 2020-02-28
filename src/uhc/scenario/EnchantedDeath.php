@@ -29,7 +29,7 @@ class EnchantedDeath extends Scenario{
 
 	public function onDeath(PlayerDeathEvent $ev){
 		if($this->isActive()){
-			$ev->setDrops([$ev->getDrops(), ItemFactory::get(ItemIds::ENCHANTING_TABLE, 0, 1)]);
+			$ev->getPlayer()->getLevel()->dropItem($ev->getPlayer()->getPosition(), ItemFactory::get(ItemIds::ENCHANTING_TABLE, 0, 1));
 		}
 	}
 }
