@@ -23,7 +23,7 @@ class UHCCommand extends PluginCommand{
 
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
-		if(!$this->testPermission($sender)){
+		if(!$this->testPermission($sender) || !$sender instanceof Player){
 			return true;
 		}
 
