@@ -1,5 +1,5 @@
 parameters:
-	level: 2
+	level: 3
 	autoload_files:
 		- phar:///pocketmine/PocketMine-MP.phar/vendor/autoload.php
 	autoload_directories:
