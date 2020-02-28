@@ -1,0 +1,13 @@
+name: PHPStan
+
+on: [push, pull_request]
+
+jobs:
+  phpstan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: phpstan
+      uses: nxtlvlsoftware/pmmp-phpstan-action@3.11.5
+      with:
+        phpstan-config: phpstan.neon.dist
