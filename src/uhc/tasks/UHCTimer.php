@@ -54,7 +54,7 @@ class UHCTimer extends Task{
 		$this->plugin = $plugin;
 	}
 
-	public function onRun($currentTick) : void{
+	public function onRun(int $currentTick) : void{
 		$this->handlePlayers();
 
 		if(self::$gameStatus >= self::STATUS_GRACE) $this->game++;

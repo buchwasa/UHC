@@ -10,7 +10,7 @@ use pocketmine\utils\TextFormat as TF;
 
 class GoldenHead extends GoldenApple{
 
-	public function __construct($meta = 0){
+	public function __construct(int $meta = 0){
 		parent::__construct($meta);
 		$meta == 1 ? $this->setCustomName(TF::RESET . TF::GOLD . "Golden Head") : $this->setCustomName(TF::RESET . "Golden Apple");
 	}
