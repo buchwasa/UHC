@@ -5,7 +5,6 @@ namespace uhc;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use uhc\command\HealCommand;
-use uhc\command\HelpCommand;
 use uhc\command\ScenariosCommand;
 use uhc\command\SpectatorCommand;
 use uhc\command\UHCCommand;
@@ -45,7 +44,6 @@ class Loader extends PluginBase{
 			new UHCCommand($this),
 			new ScenariosCommand($this),
 			new SpectatorCommand($this),
-			new HelpCommand($this),
 			new HealCommand($this)
 		]);
 	}
