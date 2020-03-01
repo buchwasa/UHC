@@ -8,6 +8,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: phpstan
-      uses: nxtlvlsoftware/pmmp-phpstan-action@3.11.5
+      uses: nxtlvlsoftware/pmmp-phpstan-action@3
       with:
         phpstan-config: phpstan.neon.dist
