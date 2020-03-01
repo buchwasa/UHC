@@ -40,7 +40,14 @@ class Loader extends PluginBase{
 		new EventListener($this);
 
 		$this->registerScenarios();
-		$this->registerCommands();
+		
+		$this->getServer()->getCommandMap()->registerAll("uhc", [
+			new UHCCommand($this),
+			new ScenariosCommand($this),
+			new SpectatorCommand($this),
+			new HelpCommand($this),
+			new HealCommand($this)
+		]);
 	}
 
 	public function addElimination(Player $player) : void{
@@ -81,37 +88,5 @@ class Loader extends PluginBase{
 		$this->addScenario(new Fireless($this));
 		$this->addScenario(new HeadPole($this));
 		$this->addScenario(new NoFall($this));
-	}
-
-	private function registerCommands() : void{
-		$keepCommands = [
-			"gamemode",
-			"ban",
-			"pardon",
-			"kick",
-			"msg",
-			"give",
-			"kill",
-			"op",
-			"deop",
-			"time",
-			"tp",
-			"whitelist",
-			"tell",
-			"stop"
-		];
-		foreach($this->getServer()->getCommandMap()->getCommands() as $cmd){
-			if(!in_array($cmd->getName(), $keepCommands)){
-				$this->getServer()->getCommandMap()->unregister($cmd);
-			}
-		}
-
-		$this->getServer()->getCommandMap()->registerAll("uhc", [
-			new UHCCommand($this),
-			new ScenariosCommand($this),
-			new SpectatorCommand($this),
-			new HelpCommand($this),
-			new HealCommand($this)
-		]);
 	}
 }
