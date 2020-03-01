@@ -14,7 +14,7 @@ class CatEyes extends Scenario{
 		parent::__construct($plugin, "Cat Eyes");
 	}
 
-	public function handleStart(UHCStartEvent $ev){
+	public function handleStart(UHCStartEvent $ev) : void{
 		if($this->isActive()){
 			foreach($ev->getPlayers() as $player){
 				$player->addEffect(new EffectInstance(Effect::getEffect(Effect::NIGHT_VISION), 2147483646, 1));

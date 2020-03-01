@@ -12,7 +12,7 @@ class Fireless extends Scenario{
 		parent::__construct($plugin, "Fireless");
 	}
 
-	public function handleDamage(EntityDamageEvent $ev){
+	public function handleDamage(EntityDamageEvent $ev) : void{
 		if($this->isActive()){
 			$entity = $ev->getEntity();
 			$cause = $ev->getCause();

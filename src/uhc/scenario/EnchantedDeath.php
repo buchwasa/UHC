@@ -15,7 +15,7 @@ class EnchantedDeath extends Scenario{
 		parent::__construct($plugin, "EnchantedDeath");
 	}
 
-	public function onCraft(CraftItemEvent $ev){
+	public function onCraft(CraftItemEvent $ev) : void{
 		if($this->isActive()){
 			$items = $ev->getOutputs();
 			foreach($items as $item){
@@ -27,7 +27,7 @@ class EnchantedDeath extends Scenario{
 		}
 	}
 
-	public function onDeath(PlayerDeathEvent $ev){
+	public function onDeath(PlayerDeathEvent $ev) : void{
 		if($this->isActive()){
 			$ev->getPlayer()->getLevel()->dropItem($ev->getPlayer()->getPosition(), ItemFactory::get(ItemIds::ENCHANTING_TABLE, 0, 1));
 		}

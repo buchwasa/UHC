@@ -15,7 +15,7 @@ class AppleRates extends Scenario{
 		parent::__construct($plugin, "AppleRates");
 	}
 
-	public function handleBreak(BlockBreakEvent $ev){
+	public function handleBreak(BlockBreakEvent $ev) : void{
 		if($ev->getBlock()->getId() === BlockIds::LEAVES || $ev->getBlock()->getId() === BlockIds::LEAVES2){
 			if($ev->getPlayer()->getInventory()->getItemInHand()->getId() === ItemIds::SHEARS){
 				if(mt_rand(1, 5) === 1) $ev->setDrops([ItemFactory::get(ItemIds::APPLE)]);

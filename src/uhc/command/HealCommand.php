@@ -10,7 +10,7 @@ use pocketmine\utils\TextFormat as TF;
 use uhc\Loader;
 
 class HealCommand extends PluginCommand{
-
+	/** @var Loader */
 	private $plugin;
 
 	public function __construct(Loader $plugin){

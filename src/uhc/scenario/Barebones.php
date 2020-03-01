@@ -17,7 +17,7 @@ class Barebones extends Scenario{
 		parent::__construct($plugin, "Barebones");
 	}
 
-	public function handleCraft(CraftItemEvent $ev){
+	public function handleCraft(CraftItemEvent $ev) : void{
 		if($this->isActive()){
 			$items = $ev->getOutputs();
 			foreach($items as $item){
@@ -29,7 +29,7 @@ class Barebones extends Scenario{
 		}
 	}
 
-	public function handleDeath(PlayerDeathEvent $ev){
+	public function handleDeath(PlayerDeathEvent $ev) : void{
 		if($this->isActive()){
 			$ev->setDrops([
 					ItemFactory::get(ItemIds::DIAMOND, 0, 1),
@@ -40,7 +40,7 @@ class Barebones extends Scenario{
 		}
 	}
 
-	public function handleBreak(BlockBreakEvent $ev){
+	public function handleBreak(BlockBreakEvent $ev) : void{
 		if($this->isActive()){
 			$dropIron = [
 				BlockIds::GOLD_ORE,

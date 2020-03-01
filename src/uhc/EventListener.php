@@ -33,28 +33,21 @@ class EventListener implements Listener{
 		$plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
 	}
 
-	public function handleReceive(DataPacketReceiveEvent $ev){
+	public function handleReceive(DataPacketReceiveEvent $ev) : void{
 		$packet = $ev->getPacket();
 		if($packet instanceof LevelSoundEventPacket){
 			if($packet->sound === LevelSoundEventPacket::SOUND_ATTACK_NODAMAGE || $packet->sound === LevelSoundEventPacket::SOUND_ATTACK_STRONG){
 				$ev->setCancelled();
 			}
-		}elseif($packet instanceof InventoryTransactionPacket){
-			if($ev->getPlayer()->isSpectator()){
-				if($packet->transactionType === InventoryTransactionPacket::USE_ITEM_ACTION_CLICK_AIR){
-					var_dump($packet);
-				}
-			}
 		}
 	}
 
-	public function handleLoad(LevelLoadEvent $ev){
+	public function handleLoad(LevelLoadEvent $ev) : void{
 		$ev->getLevel()->setTime(7000);
 		$ev->getLevel()->stopTime();
 	}
 
-	public function onChat(PlayerChatEvent $ev){
-		/** @var Player $player */
+	public function handleChat(PlayerChatEvent $ev) : void{
 		$player = $ev->getPlayer();
 		if($this->plugin->globalMute && !$player->isOp()){
 			$player->sendMessage(TF::RED . "You cannot talk right now!");
@@ -64,7 +57,7 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function onJoin(PlayerJoinEvent $ev){
+	public function handleJoin(PlayerJoinEvent $ev) : void{
 		$player = $ev->getPlayer();
 
 		$pk = new GameRulesChangedPacket();
@@ -74,14 +67,14 @@ class EventListener implements Listener{
 		$ev->setJoinMessage("");
 	}
 
-	public function handleStart(UHCStartEvent $ev){
+	public function handleStart(UHCStartEvent $ev) : void{
 		foreach($ev->getPlayers() as $player){
 			$player->getInventory()->addItem(ItemFactory::get(ItemIds::STEAK, 0, 64));
 			$player->getInventory()->addItem(ItemFactory::get(ItemIds::LEATHER, 0, 32));
 		}
 	}
 
-	public function onQuit(PlayerQuitEvent $ev){
+	public function handleQuit(PlayerQuitEvent $ev) : void{
 		$player = $ev->getPlayer();
 		//TODO: View the necessity of this.
 		if(isset($this->plugin->queue[$player->getName()])){
@@ -90,13 +83,13 @@ class EventListener implements Listener{
 		$ev->setQuitMessage("");
 	}
 
-	public function handleEntityRegain(EntityRegainHealthEvent $ev){
+	public function handleEntityRegain(EntityRegainHealthEvent $ev) : void{
 		if($ev->getRegainReason() === EntityRegainHealthEvent::CAUSE_SATURATION){
 			$ev->setCancelled();
 		}
 	}
 
-	public function onDamage(EntityDamageEvent $ev){
+	public function handleDamage(EntityDamageEvent $ev) : void{
 		switch(UHCTimer::$gameStatus){
 			case UHCTimer::STATUS_WAITING:
 			case UHCTimer::STATUS_COUNTDOWN:
@@ -110,7 +103,7 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function onDeath(PlayerDeathEvent $ev){
+	public function handleDeath(PlayerDeathEvent $ev) : void{
 		$player = $ev->getPlayer();
 		$cause = $player->getLastDamageCause();
 		$player->setGamemode(3);
@@ -127,7 +120,7 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function onBreak(BlockBreakEvent $ev){
+	public function handleBreak(BlockBreakEvent $ev) : void{
 		$player = $ev->getPlayer();
 		if($player instanceof Player){
 			switch(UHCTimer::$gameStatus){
@@ -139,7 +132,7 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function onPlace(BlockPlaceEvent $ev){
+	public function handlePlace(BlockPlaceEvent $ev) : void{
 		$player = $ev->getPlayer();
 		if($player instanceof Player){
 			switch(UHCTimer::$gameStatus){

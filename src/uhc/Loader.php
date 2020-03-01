@@ -28,13 +28,14 @@ class Loader extends PluginBase{
 
 	/** @var Player[] */
 	public $queue = [];
+	/** @var array */
 	public $eliminations = [];
 	/** @var bool */
 	public $globalMute = false;
 	/** @var Scenario[] */
 	private $scenarios = [];
 
-	public function onEnable(){
+	public function onEnable() : void{
 		$this->getScheduler()->scheduleRepeatingTask(new UHCTimer($this), 20);
 		new EventListener($this);
 
@@ -42,7 +43,7 @@ class Loader extends PluginBase{
 		$this->registerCommands();
 	}
 
-	public function addElimination(Player $player){
+	public function addElimination(Player $player) : void{
 		if(isset($this->eliminations[$player->getName()])){
 			$this->eliminations[$player->getName()] = $this->eliminations[$player->getName()] + 1;
 		}else{
@@ -50,7 +51,7 @@ class Loader extends PluginBase{
 		}
 	}
 
-	public function getEliminations(Player $player){
+	public function getEliminations(Player $player) : int{
 		if(isset($this->eliminations[$player->getName()])){
 			return $this->eliminations[$player->getName()];
 		}else{
@@ -58,15 +59,16 @@ class Loader extends PluginBase{
 		}
 	}
 
-	public function getScenarios(){
+	//TODO: phpdoc
+	public function getScenarios() : array{
 		return $this->scenarios;
 	}
 
-	public function addScenario(Scenario $scenario){
+	public function addScenario(Scenario $scenario) : void{
 		$this->scenarios[$scenario->getName()] = $scenario;
 	}
 
-	private function registerScenarios(){
+	private function registerScenarios() : void{
 		$this->addScenario(new AppleRates($this));
 		$this->addScenario(new Barebones($this));
 		$this->addScenario(new BloodDiamond($this));
@@ -81,7 +83,7 @@ class Loader extends PluginBase{
 		$this->addScenario(new NoFall($this));
 	}
 
-	private function registerCommands(){
+	private function registerCommands() : void{
 		$keepCommands = [
 			"gamemode",
 			"ban",

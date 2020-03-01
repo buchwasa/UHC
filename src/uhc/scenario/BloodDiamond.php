@@ -13,7 +13,7 @@ class BloodDiamond extends Scenario{
 		parent::__construct($plugin, "BloodDiamond");
 	}
 
-	public function handleBreak(BlockBreakEvent $ev){
+	public function handleBreak(BlockBreakEvent $ev) : void{
 		if($this->isActive()){
 			$player = $ev->getPlayer();
 			if($ev->getBlock()->getId() === BlockIds::DIAMOND_ORE){

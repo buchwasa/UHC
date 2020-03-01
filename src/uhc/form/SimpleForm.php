@@ -7,10 +7,10 @@ use pocketmine\form\Form;
 use pocketmine\Player;
 
 class SimpleForm implements Form{
-
+	/** @var array */
 	private $json = [];
+	/** @var array */
 	private $buttons = [];
-	private $responseForm;
 
 	public function __construct(string $title, string $content = ""){
 		$this->json = [
@@ -21,7 +21,7 @@ class SimpleForm implements Form{
 		];
 	}
 
-	public function addButton(string $text, callable $callable = null, string $imageUrl = ""){
+	public function addButton(string $text, callable $callable = null, string $imageUrl = "") : void{
 		$button = ["text" => $text];
 		if($imageUrl !== ""){
 			$button["image"]["type"] = "url";
@@ -43,15 +43,11 @@ class SimpleForm implements Form{
 				$this->buttons[(int) $data]($player, (int) $data);
 			}
 		}
-
-		if($this->responseForm !== null){
-			$player->sendForm($this->responseForm);
-		}
 	}
 	/**
 	 * @inheritDoc
 	 */
-	public function jsonSerialize(){
+	public function jsonSerialize() : array{
 		return $this->json;
 	}
 }

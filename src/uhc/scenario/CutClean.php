@@ -13,11 +13,11 @@ class CutClean extends Scenario{
 		parent::__construct($plugin, "CutClean");
 	}
 
-	public function handleBreak(BlockBreakEvent $ev){
+	public function handleBreak(BlockBreakEvent $ev) : void{
 		if($this->isActive()){
 			switch($ev->getBlock()->getId()){
 				case Block::IRON_ORE:
-					$ev->setXpDropAmount(1);
+					$ev->setXpDropAmount(1); //TODO: 70% chance
 					$ev->setDrops([Item::get(Item::IRON_INGOT)]);
 					break;
 				case Block::GOLD_ORE:

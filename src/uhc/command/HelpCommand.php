@@ -8,7 +8,7 @@ use pocketmine\command\PluginCommand;
 use uhc\Loader;
 
 class HelpCommand extends PluginCommand{
-
+	/** @var Loader */
 	private $plugin;
 
 	public function __construct(Loader $plugin){

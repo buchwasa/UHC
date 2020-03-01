@@ -28,7 +28,7 @@ class Scenario implements Listener{
 		$this->activeScenario = $active;
 	}
 
-	public function isActive(){
+	public function isActive() : bool{
 		return $this->activeScenario;
 	}
 }

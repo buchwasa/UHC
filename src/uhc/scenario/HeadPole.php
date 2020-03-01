@@ -28,7 +28,7 @@ class HeadPole extends Scenario{
 		$plugin->getServer()->getCraftingManager()->registerRecipe($recipe);
 	}
 
-	public function handleDeath(PlayerDeathEvent $ev){
+	public function handleDeath(PlayerDeathEvent $ev) : void{
 		$player = $ev->getPlayer();
 		if($this->isActive()){
 			$level = $player->getLevel();

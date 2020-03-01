@@ -6,7 +6,8 @@ namespace uhc\utils;
 use pocketmine\level\Level;
 
 final class RegionUtils{
-	public static function onChunkGenerated(Level $level, int $chunkX, int $chunkZ, callable $callback){
+	
+	public static function onChunkGenerated(Level $level, int $chunkX, int $chunkZ, callable $callback) : void{
 		if($level->isChunkPopulated($chunkX, $chunkZ)){
 			$callback();
 			return;

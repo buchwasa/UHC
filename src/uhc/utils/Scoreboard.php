@@ -29,13 +29,13 @@ class Scoreboard{
 		self::$scoreboards[$player->getName()] = "objective";
 	}
 
-	public static function clear(Player $player){
+	public static function clear(Player $player) : void{
 		for($line = 0; $line <= 15; $line++){
 			self::removeLine($player, $line);
 		}
 	}
 
-	public static function removeScoreboard(Player $player){
+	public static function removeScoreboard(Player $player) : void{
 		$pk = new RemoveObjectivePacket();
 		$pk->objectiveName = "objective";
 		$player->sendDataPacket($pk);
@@ -43,7 +43,7 @@ class Scoreboard{
 		unset(self::$scoreboards[$player->getName()]);
 	}
 
-	public static function removeLine(Player $player, int $line){
+	public static function removeLine(Player $player, int $line) : void{
 		$pk = new SetScorePacket();
 		$pk->type = SetScorePacket::TYPE_REMOVE;
 		$entry = new ScorePacketEntry();
@@ -69,7 +69,7 @@ class Scoreboard{
 		$player->sendDataPacket($pk);
 	}
 
-	public static function setEmptyLine(Player $player, int $line){
+	public static function setEmptyLine(Player $player, int $line) : void{
 		$text = str_repeat(" ", $line);
 		self::setLine($player, $line, $text);
 	}

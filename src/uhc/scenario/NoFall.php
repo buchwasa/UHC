@@ -12,7 +12,7 @@ class NoFall extends Scenario{
 		parent::__construct($plugin, "NoFall");
 	}
 
-	public function handleDamage(EntityDamageEvent $ev){
+	public function handleDamage(EntityDamageEvent $ev) : void{
 		if($this->isActive()){
 			if($ev->getEntity() instanceof Player){
 				if($ev->getCause() === EntityDamageEvent::CAUSE_FALL){

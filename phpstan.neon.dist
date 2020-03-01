@@ -1,11 +1,12 @@
 parameters:
-	level: 5
+	level: 6
 	autoload_files:
 		- phar:///pocketmine/PocketMine-MP.phar/vendor/autoload.php
 	autoload_directories:
 		- src
 	paths:
 		- src
+	checkMissingIterableValueType: false
 	ignoreErrors:
 		-
 			message: '#Comparison operation "<=" between int<min, 0> and 0 is always true.#'

@@ -47,13 +47,14 @@ class UHCTimer extends Task{
 	/** @var Loader */
 	private $plugin;
 
+	/** @var int */
 	private $playerTimer = 1;
 
 	public function __construct(Loader $plugin){
 		$this->plugin = $plugin;
 	}
 
-	public function onRun($currentTick){
+	public function onRun($currentTick) : void{
 		$this->handlePlayers();
 
 		if(self::$gameStatus >= self::STATUS_GRACE) $this->game++;
@@ -73,7 +74,7 @@ class UHCTimer extends Task{
 		}
 	}
 
-	private function handlePlayers(){
+	private function handlePlayers() : void{
 		foreach($this->plugin->getServer()->getOnlinePlayers() as $p){
 			if($p->isSurvival()){
 				if(!isset($this->plugin->queue[$p->getName()])){
@@ -116,7 +117,7 @@ class UHCTimer extends Task{
 		}
 	}
 
-	private function handleCountdown(){
+	private function handleCountdown() : void{
 		$this->countdown--;
 		$server = $this->plugin->getServer();
 		switch($this->countdown){
@@ -163,7 +164,7 @@ class UHCTimer extends Task{
 		}
 	}
 
-	private function handleGrace(){
+	private function handleGrace() : void{
 		$this->grace--;
 		$server = $this->plugin->getServer();
 		switch($this->grace){
@@ -205,7 +206,7 @@ class UHCTimer extends Task{
 		}
 	}
 
-	private function handlePvP(){
+	private function handlePvP() : void{
 		$this->pvp--;
 		$server = $this->plugin->getServer();
 		switch($this->pvp){
@@ -232,7 +233,7 @@ class UHCTimer extends Task{
 		}
 	}
 
-	public function handleNormal(){
+	public function handleNormal() : void{
 		$this->normal--;
 		$server = $this->plugin->getServer();
 		switch($this->normal){
@@ -254,7 +255,7 @@ class UHCTimer extends Task{
 		}
 	}
 
-	private function handleScoreboard(Player $p){
+	private function handleScoreboard(Player $p) : void{
 		Scoreboard::setTitle($p, "§ky§r §b" . $p->getDisplayName() . " §f§ky§r");
 
 		if(self::$gameStatus >= self::STATUS_GRACE){
@@ -276,7 +277,7 @@ class UHCTimer extends Task{
 		}
 	}
 
-	private function teleportInBorder(Player $p){
+	private function teleportInBorder(Player $p) : void{
 		if(($p->getX() > $this->border || $p->getZ() > $this->border || $p->getX() < -$this->border || $p->getZ() < -$this->border)){
 			$x = mt_rand(5, 20);
 			$z = mt_rand(5, 20);
@@ -301,7 +302,7 @@ class UHCTimer extends Task{
 		}
 	}
 
-	private function randomizeCoordinates(Player $p, int $range){
+	private function randomizeCoordinates(Player $p, int $range) : void{
 		$this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use ($p, $range) : void{
 			$ss = $p->getLevel()->getSafeSpawn();
 			$x = mt_rand($ss->getX() - $range, $ss->getX() + $range);
@@ -316,7 +317,7 @@ class UHCTimer extends Task{
 	}
 
 	//Borders tend to be missing walls
-	public function buildBorder($border){ //TODO: Run this in a closure task, to prevent lag on the main thread.
+	public function buildBorder(int $border) : void{ //TODO: Run this in a closure task.
 		$level = $this->plugin->getServer()->getDefaultLevel();
 		if($level === null){
 			return;

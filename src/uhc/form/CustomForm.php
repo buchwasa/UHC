@@ -7,8 +7,9 @@ use pocketmine\form\Form;
 use pocketmine\Player;
 
 class CustomForm implements Form{
-
+	/** @var array */
 	private $json = [];
+	/** @var array */
 	private $content = [];
 
 	public function __construct(string $title){
@@ -19,7 +20,7 @@ class CustomForm implements Form{
 		];
 	}
 
-	public function addDropdown(string $text, array $options, callable $callable){
+	public function addDropdown(string $text, array $options, callable $callable) : void{
 		$this->json["content"][] = [
 			"type" => "dropdown",
 			"text" => $text,
@@ -30,7 +31,7 @@ class CustomForm implements Form{
 		$this->content[] = $callable;
 	}
 
-	public function addToggle(string $text, bool $defaultEnabled, callable $callable){
+	public function addToggle(string $text, bool $defaultEnabled, callable $callable) : void{
 		$this->json["content"][] = [
 			"type" => "toggle",
 			"text" => $text,
@@ -54,7 +55,7 @@ class CustomForm implements Form{
 	/**
 	 * @inheritDoc
 	 */
-	public function jsonSerialize(){
+	public function jsonSerialize() : array{
 		return $this->json;
 	}
 }

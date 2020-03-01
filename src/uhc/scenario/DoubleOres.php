@@ -16,7 +16,7 @@ class DoubleOres extends Scenario{
 		$this->plugin = $plugin;
 	}
 
-	public function handleBreak(BlockBreakEvent $ev){
+	public function handleBreak(BlockBreakEvent $ev) : void{
 		if($this->isActive()){
 			switch($ev->getBlock()->getId()){
 				case Block::IRON_ORE:
