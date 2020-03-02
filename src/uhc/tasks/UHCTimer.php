@@ -90,7 +90,7 @@ class UHCTimer extends Task{
 		}
 
 		foreach($this->plugin->queue as $player){
-			$player->setNameTag($player->getDisplayName() . TF::EOL . TF::WHITE . round($player->getHealth()) . TF::RED . " ❤");
+			$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
 			$this->teleportInBorder($player);
 			switch(self::$gameStatus){
 				case self::STATUS_COUNTDOWN:
