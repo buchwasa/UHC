@@ -34,7 +34,7 @@ class SpectatorCommand extends PluginCommand{
 						$sender->sendMessage(TextFormat::RED . "You can't spectate yourself!");
 					}else{
 						$sender->teleport($player->getPosition());
-						$sender->sendMessage(TextFormat::GREEN . "Now spectating:  " . $player->getDisplayName());
+						$sender->sendMessage(TextFormat::GREEN . "Now spectating: " . $player->getDisplayName());
 					}
 				}else{
 					$sender->sendMessage(TextFormat::RED . "That player is offline!");
