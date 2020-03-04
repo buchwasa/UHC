@@ -8,7 +8,7 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use uhc\form\SimpleForm;
 use uhc\Loader;
-use uhc\tasks\UHCTimer;
+use uhc\UHCTimer;
 
 class UHCCommand extends PluginCommand{
 	/** @var Loader */

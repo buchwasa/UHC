@@ -22,7 +22,6 @@ use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\UHCStartEvent;
-use uhc\tasks\UHCTimer;
 
 class EventListener implements Listener{
 	/** @var Loader */

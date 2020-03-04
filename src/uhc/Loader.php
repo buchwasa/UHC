@@ -21,7 +21,6 @@ use uhc\scenario\Fireless;
 use uhc\scenario\HeadPole;
 use uhc\scenario\NoFall;
 use uhc\scenario\Scenario;
-use uhc\tasks\UHCTimer;
 
 class Loader extends PluginBase{
 
