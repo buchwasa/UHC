@@ -6,16 +6,13 @@ namespace uhc;
 use pocketmine\event\Listener;
 
 class Scenario implements Listener{
-	/** @var Loader */
-	private $loader;
 	/** @var string */
 	private $name;
 	/** @var bool */
 	private $activeScenario = false;
 
-	public function __construct(Loader $loader, string $name){
-		$loader->getServer()->getPluginManager()->registerEvents($this, $loader);
-		$this->loader = $loader;
+	public function __construct(Loader $plugin, string $name){
+		$plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
 		$this->name = $name;
 	}
 

@@ -76,9 +76,7 @@ class EventListener implements Listener{
 	public function handleQuit(PlayerQuitEvent $ev) : void{
 		$player = $ev->getPlayer();
 		//TODO: View the necessity of this.
-		if(isset($this->plugin->queue[$player->getName()])){
-			unset($this->plugin->queue[$player->getName()]);
-		}
+		$this->plugin->removeFromQueue($player);
 		$ev->setQuitMessage("");
 	}
 

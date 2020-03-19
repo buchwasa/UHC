@@ -13,9 +13,9 @@ use uhc\Scenario;
 class Loader extends PluginBase{
 
 	/** @var Player[] */
-	public $queue = [];
+	private $queue = [];
 	/** @var array */
-	public $eliminations = [];
+	private $eliminations = [];
 	/** @var bool */
 	public $globalMute = false;
 	/** @var Scenario[] */
@@ -35,16 +35,34 @@ class Loader extends PluginBase{
 			new HealCommand($this)
 		]);
 		
-		if(is_array(scandir($this->getDataFolder() . "scenarios"))){
-			foreach(scandir($this->getDataFolder() . "scenarios") as $files){
-				if(substr($files, -4) === ".php"){
-					require($this->getDataFolder() . "scenarios/" . $files);
-					$scenario = str_replace(".php", "", $files);
-					$class = "\\$scenario";
-					$this->addScenario(new $class($this));
+		if(is_array($dir = scandir($this->getDataFolder() . "scenarios"))){
+			foreach($dir as $file){
+				if(substr($file, -4) === ".php"){
+					require($this->getDataFolder() . "scenarios/" . $file);
+					$class = "\\" . str_replace(".php", "", $file);
+					if(($scenario = new $class($this)) instanceof Scenario){
+						$this->addScenario($scenario);
+					}
 				}
 			}
 		}
+	}
+	
+	public function addToQueue(Player $player) : void{
+		if(!isset($this->queue[$player->getName()]){
+			$this->queue[$player->getName()] = $player;
+		}
+	}
+	
+	public function removeFromQueue(Player $player) : void{
+		if(isset($this->queue[$player->getName()]){
+			unset($this->queue[$player->getName()]);
+		}
+	}
+	
+	//TODO: phpdoc
+	public function getQueue() : array{
+		return $this->queue;
 	}
 
 	public function addElimination(Player $player) : void{
