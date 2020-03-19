@@ -35,7 +35,8 @@ class Loader extends PluginBase{
 			new HealCommand($this)
 		]);
 		
-		if(is_array($dir = scandir($this->getDataFolder() . "scenarios"))){
+		$dir = scandir($this->getDataFolder() . "scenarios")
+		if(is_array($dir)){
 			foreach($dir as $file){
 				if(substr($file, -4) === ".php"){
 					require($this->getDataFolder() . "scenarios/" . $file);
