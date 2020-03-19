@@ -32,15 +32,15 @@ class UHCTimer extends Task{
 	public const STATUS_NORMAL = 3;
 
 	/** @var int */
-	public $game = 0;
+	private $game = 0;
 	/** @var int */
-	public $countdown = 30;
+	private $countdown = 30;
 	/** @var float|int */
-	public $grace = 60 * 20;
+	private $grace = 60 * 20;
 	/** @var float|int */
-	public $pvp = 60 * 30;
+	private $pvp = 60 * 30;
 	/** @var float|int */
-	public $normal = 60 * 60;
+	private $normal = 60 * 60;
 	/** @var int */
 	private $border = 1000;
 	/** @var Loader */
