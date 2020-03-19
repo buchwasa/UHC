@@ -47,11 +47,11 @@ class UHCCommand extends PluginCommand{
 
 		$form->addButton("GlobalMute", function(Player $player, $data){
 			if($data === 2){
-				if(!$this->plugin->globalMute){
-					$this->plugin->globalMute = true;
+				if(!$this->plugin->isGlobalMuteEnabled()){
+					$this->plugin->setGlobalMute(true);
 					$this->plugin->getServer()->broadcastMessage(TextFormat::GREEN . "Chat has been disabled by an admin!");
 				}else{
-					$this->plugin->globalMute = false;
+					$this->plugin->setGlobalMute(false);
 					$this->plugin->getServer()->broadcastMessage(TextFormat::GREEN . "Chat has been enabled by an admin!");
 				}
 			}

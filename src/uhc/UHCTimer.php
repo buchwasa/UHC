@@ -123,7 +123,7 @@ class UHCTimer extends Task{
 				break;
 			case 28:
 				$server->broadcastTitle("Global Mute has been " . TF::AQUA . "enabled!");
-				$this->plugin->globalMute = true;
+				$this->plugin->setGlobalMute(true);
 				break;
 			case 23:
 				$scenarios = [];
@@ -165,7 +165,7 @@ class UHCTimer extends Task{
 		switch($this->grace){
 			case 1190:
 				$server->broadcastTip("Global Mute has been " . TF::AQUA . "disabled!");
-				$this->plugin->globalMute = false;
+				$this->plugin->setGlobalMute(false);
 				$server->broadcastTip("Final heal will occur in " . TF::AQUA . "10 minutes.");
 				break;
 			case 601:

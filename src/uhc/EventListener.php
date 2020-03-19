@@ -48,7 +48,7 @@ class EventListener implements Listener{
 
 	public function handleChat(PlayerChatEvent $ev) : void{
 		$player = $ev->getPlayer();
-		if($this->plugin->globalMute && !$player->isOp()){
+		if($this->plugin->isGlobalMuteEnabled() && !$player->isOp()){
 			$player->sendMessage(TF::RED . "You cannot talk right now!");
 			$ev->setCancelled(true);
 		}elseif($player->getGamemode() === Player::SPECTATOR){

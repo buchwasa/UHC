@@ -17,7 +17,7 @@ class Loader extends PluginBase{
 	/** @var array */
 	private $eliminations = [];
 	/** @var bool */
-	public $globalMute = false;
+	private $globalMuteEnabled = false;
 	/** @var Scenario[] */
 	private $scenarios = [];
 
@@ -47,6 +47,14 @@ class Loader extends PluginBase{
 				}
 			}
 		}
+	}
+	
+	public function setGlobalMute(bool $enabled) : void{
+		$this->globalMuteEnabled = $enabled;
+	}
+	
+	public function isGlobalMuteEnabled() : bool{
+		return $this->globalMuteEnabled;
 	}
 	
 	public function addToQueue(Player $player) : void{
