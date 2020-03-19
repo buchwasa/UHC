@@ -46,7 +46,7 @@ class EventListener implements Listener{
 		$player = $ev->getPlayer();
 
 		if(UHCTimer::$gameStatus === UHCTimer::STATUS_WAITING){
-			$player->teleport($player->getLevel()->getSafeSpawn();
+			$player->teleport($player->getLevel()->getSafeSpawn());
 			$player->setGamemode(Player::SURVIVAL);
 		}
 		
