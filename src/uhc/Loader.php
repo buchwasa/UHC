@@ -35,12 +35,14 @@ class Loader extends PluginBase{
 			new HealCommand($this)
 		]);
 		
-		foreach(scandir($this->getDataFolder() . "scenarios") as $files){
-			if(substr($files, -4) === ".php"){
-				require($this->getDataFolder() . "scenarios/" . $files);
-				$scenario = str_replace(".php", "", $files);
-				$class = "\\$scenario";
-				$this->addScenario(new $class($this));
+		if(is_array(scandir($this->getDataFolder() . "scenarios")){
+			foreach(scandir($this->getDataFolder() . "scenarios") as $files){
+				if(substr($files, -4) === ".php"){
+					require($this->getDataFolder() . "scenarios/" . $files);
+					$scenario = str_replace(".php", "", $files);
+					$class = "\\$scenario";
+					$this->addScenario(new $class($this));
+				}
 			}
 		}
 	}
