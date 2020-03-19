@@ -49,13 +49,13 @@ class Loader extends PluginBase{
 	}
 	
 	public function addToQueue(Player $player) : void{
-		if(!isset($this->queue[$player->getName()]){
+		if(!isset($this->queue[$player->getName()])){
 			$this->queue[$player->getName()] = $player;
 		}
 	}
 	
 	public function removeFromQueue(Player $player) : void{
-		if(isset($this->queue[$player->getName()]){
+		if(isset($this->queue[$player->getName()])){
 			unset($this->queue[$player->getName()]);
 		}
 	}
