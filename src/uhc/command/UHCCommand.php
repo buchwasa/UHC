@@ -57,50 +57,6 @@ class UHCCommand extends PluginCommand{
 			}
 		});
 
-		$form->addButton("Post to Discord", function(Player $player, $data){
-			if($data === 3){
-				$scenarios = [];
-				foreach($this->plugin->getScenarios() as $scenario){
-					if($scenario->isActive()){
-						$scenarios[] = $scenario->getName();
-					}
-				}
-				$webhook = curl_init();
-				curl_setopt($webhook, CURLOPT_URL, "https://discordapp.com/api/webhooks/679058488760205347/jDOmtI06dlKH6lh9F8EJXqmHJxmfDri4buDbeP2dBCYqXYjiJd4KTnGdG4YO5Fk6a5V3");
-				curl_setopt($webhook, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
-				curl_setopt($webhook, CURLOPT_POST, true);
-				curl_setopt($webhook, CURLOPT_POSTFIELDS, json_encode(
-					[
-						"content" => "<@&675893937755521024>",
-						"embeds" => [
-							[
-								"title" => "To2 UHC Starting Soon!",
-								"type" => "rich",
-								"timestamp" => date(DATE_ISO8601, time()),
-								"color" => hexdec("6C9AD8"),
-								"fields" => [
-									[
-										"name" => "Scenarios",
-										"value" => ($scenarios === [] ? "None" : implode(", ", $scenarios)),
-										"inline" => true
-									]
-								],
-								"footer" => [
-									"text" => "IP: paragon.wumpotam.us"
-								]
-							]
-						]
-					], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-				));
-				curl_setopt($webhook, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($webhook, CURLOPT_SSL_VERIFYHOST, false);
-				curl_setopt($webhook, CURLOPT_SSL_VERIFYPEER, false);
-				curl_exec($webhook);
-			}
-		});
-
-		//TODO: Heal
-
 		$sender->sendForm($form);
 
 		return true;
