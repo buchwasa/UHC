@@ -76,15 +76,15 @@ class UHCTimer extends Task{
 	private function handlePlayers() : void{
 		foreach($this->plugin->getServer()->getOnlinePlayers() as $p){
 			if($p->isSurvival()){
-				$this->plugin->addToQueue($p);
+				$this->plugin->addToGame($p);
 			}else{
-				$this->plugin->removeFromQueue($p);
+				$this->plugin->removeFromGame($p);
 			}
 
 			$this->handleScoreboard($p);
 		}
 
-		foreach($this->plugin->getQueue() as $player){
+		foreach($this->plugin->getGamePlayers() as $player){
 			$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
 			$this->teleportInBorder($player);
 			switch(self::$gameStatus){
@@ -150,7 +150,7 @@ class UHCTimer extends Task{
 						$entity->flagForDespawn();
 					}
 				}
-				$ev = new UHCStartEvent($this->plugin->getQueue());
+				$ev = new UHCStartEvent($this->plugin->getGamePlayers());
 				$ev->call();
 				$server->broadcastTitle(TF::RED . TF::BOLD . "The UHC has begun!");
 				self::$gameStatus = self::STATUS_GRACE;
@@ -256,13 +256,13 @@ class UHCTimer extends Task{
 		if(self::$gameStatus >= self::STATUS_GRACE){
 			Scoreboard::setLine($p, 1, "§7---------------------");
 			Scoreboard::setLine($p, 2, " §bGame Time: §f" . gmdate("H:i:s", $this->game));
-			Scoreboard::setLine($p, 3, " §bRemaining: §f" . count($this->plugin->getQueue()));
+			Scoreboard::setLine($p, 3, " §bRemaining: §f" . count($this->plugin->getGamePlayers()));
 			Scoreboard::setLine($p, 4, " §bEliminations: §f" . $this->plugin->getEliminations($p));
 			Scoreboard::setLine($p, 5, " §bBorder: §f" . $this->border);
 			Scoreboard::setLine($p, 6, "§7--------------------- ");
 		}elseif(self::$gameStatus <= self::STATUS_COUNTDOWN){
 			Scoreboard::setLine($p, 1, "§7---------------------");
-			Scoreboard::setLine($p, 2, " §bPlayers: §f" . count($this->plugin->getQueue()));
+			Scoreboard::setLine($p, 2, " §bPlayers: §f" . count($this->plugin->getGamePlayers()));
 			if(self::$gameStatus === self::STATUS_WAITING){
 				Scoreboard::setLine($p, 3, "§b Waiting for players...");
 			}else{

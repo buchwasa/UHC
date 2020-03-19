@@ -13,7 +13,7 @@ use uhc\Scenario;
 class Loader extends PluginBase{
 
 	/** @var Player[] */
-	private $queue = [];
+	private $gamePlayers = [];
 	/** @var array */
 	private $eliminations = [];
 	/** @var bool */
@@ -57,21 +57,25 @@ class Loader extends PluginBase{
 		return $this->globalMuteEnabled;
 	}
 	
-	public function addToQueue(Player $player) : void{
-		if(!isset($this->queue[$player->getName()])){
-			$this->queue[$player->getName()] = $player;
+	public function addToGame(Player $player) : void{
+		if(!isset($this->gamePlayers[$player->getName()])){
+			$this->gamePlayers[$player->getName()] = $player;
 		}
 	}
 	
-	public function removeFromQueue(Player $player) : void{
-		if(isset($this->queue[$player->getName()])){
-			unset($this->queue[$player->getName()]);
+	public function removeFromGame(Player $player) : void{
+		if(isset($this->gamePlayers[$player->getName()])){
+			unset($this->gamePlayers[$player->getName()]);
 		}
 	}
 	
 	//TODO: phpdoc
-	public function getQueue() : array{
-		return $this->queue;
+	public function getGamePlayers() : array{
+		return $this->gamePlayers;
+	}
+	
+	public function isInGame(Player $player) : bool{
+		return isset($this->gamePlayers[$player->getName()]);
 	}
 
 	public function addElimination(Player $player) : void{

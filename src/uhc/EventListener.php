@@ -45,6 +45,11 @@ class EventListener implements Listener{
 	public function handleJoin(PlayerJoinEvent $ev) : void{
 		$player = $ev->getPlayer();
 
+		if(UHCTimer::$gameStatus === UHCTimer::STATUS_WAITING){
+			$player->teleport($player->getLevel()->getSafeSpawn();
+			$player->setGamemode(Player::SURVIVAL);
+		}
+		
 		$pk = new GameRulesChangedPacket();
 		$pk->gameRules = ["showcoordinates" => [1, true], "immediaterespawn" => [1, true]];
 		$player->dataPacket($pk);
@@ -62,7 +67,7 @@ class EventListener implements Listener{
 	public function handleQuit(PlayerQuitEvent $ev) : void{
 		$player = $ev->getPlayer();
 		//TODO: View the necessity of this.
-		$this->plugin->removeFromQueue($player);
+		$this->plugin->removeFromGame($player);
 		$ev->setQuitMessage("");
 	}
 
