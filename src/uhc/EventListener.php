@@ -32,20 +32,6 @@ class EventListener implements Listener{
 		$plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
 	}
 
-	public function handleReceive(DataPacketReceiveEvent $ev) : void{
-		$packet = $ev->getPacket();
-		if($packet instanceof LevelSoundEventPacket){
-			if($packet->sound === LevelSoundEventPacket::SOUND_ATTACK_NODAMAGE || $packet->sound === LevelSoundEventPacket::SOUND_ATTACK_STRONG){
-				$ev->setCancelled();
-			}
-		}
-	}
-
-	public function handleLoad(LevelLoadEvent $ev) : void{
-		$ev->getLevel()->setTime(7000);
-		$ev->getLevel()->stopTime();
-	}
-
 	public function handleChat(PlayerChatEvent $ev) : void{
 		$player = $ev->getPlayer();
 		if($this->plugin->isGlobalMuteEnabled() && !$player->isOp()){
