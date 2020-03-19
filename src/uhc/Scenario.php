@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace uhc\scenario;
+namespace uhc;
 
 use pocketmine\event\Listener;
-use uhc\Loader;
 
 class Scenario implements Listener{
 	/** @var Loader */
