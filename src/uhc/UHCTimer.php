@@ -316,7 +316,7 @@ class UHCTimer extends Task{
 		}), $this->playerTimer);
 	}
 
-	public function buildBorder(int $border) : void{ //TODO: Run this in a closure task.
+	private function buildBorder(int $border) : void{ //TODO: Run this in a closure task.
 		$level = $this->plugin->getServer()->getDefaultLevel();
 		if($level === null){
 			return;
