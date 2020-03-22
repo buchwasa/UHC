@@ -3,4 +3,3 @@ main: uhc\Loader
 version: 1.0.0
 api: 3.1.0
 authors: [Drew, Jon]
-load: STARTUP
