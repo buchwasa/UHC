@@ -11,6 +11,7 @@ use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\Task;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\UHCStartEvent;
+use uhc\utils\Border;
 use uhc\utils\RegionUtils;
 use uhc\utils\Scoreboard;
 use function mt_rand;
@@ -41,8 +42,8 @@ class UHCTimer extends Task{
 	private $pvp = 60 * 30;
 	/** @var float|int */
 	private $normal = 60 * 60;
-	/** @var int */
-	private $border = 1000;
+	/** @var Border */
+	private $border;
 	/** @var Loader */
 	private $plugin;
 
@@ -51,6 +52,7 @@ class UHCTimer extends Task{
 
 	public function __construct(Loader $plugin){
 		$this->plugin = $plugin;
+		$this->border = new Border($plugin->getServer()->getDefaultLevel());
 	}
 
 	public function onRun(int $currentTick) : void{
@@ -86,7 +88,9 @@ class UHCTimer extends Task{
 
 		foreach($this->plugin->getGamePlayers() as $player){
 			$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
-			$this->teleportInBorder($player);
+			if(!$this->border->isPlayerInsideOfBorder($player)){
+                $this->border->teleportPlayer($player);
+			}
 			switch(self::$gameStatus){
 				case self::STATUS_COUNTDOWN:
 					$player->setFood($player->getMaxFood());
@@ -209,19 +213,16 @@ class UHCTimer extends Task{
 				$server->broadcastTitle("The border will shrink to " . TF::AQUA . "750" . TF::WHITE . " in " . TF::AQUA . "5 minutes");
 				break;
 			case 600:
-				$this->border = 750;
-				//$this->buildBorder($this->border);
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "500" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$this->border->setSize(750);
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "500" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 300:
-				$this->border = 500;
-				//$this->buildBorder($this->border);
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "250" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$this->border->setSize(500);
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "250" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 0:
-				$this->border = 250;
-				//$this->buildBorder($this->border);
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$this->border->setSize(250);
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				self::$gameStatus = self::STATUS_NORMAL;
 				$this->pvp = 60 * 30;
 				break;
@@ -233,19 +234,19 @@ class UHCTimer extends Task{
 		$server = $this->plugin->getServer();
 		switch($this->normal){
 			case 3300:
-				$this->border = 100;
-				$this->buildBorder($this->border);
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "25" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$this->border->setSize(100);
+				$this->border->build();
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "25" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 3000:
-				$this->border = 25;
-				$this->buildBorder($this->border);
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "10" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$this->border->setSize(25);
+				$this->border->build();
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "10" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 2700:
-				$this->border = 10;
-				$this->buildBorder($this->border);
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".");
+				$this->border->setSize(10);
+				$this->border->build();
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".");
 				break;
 		}
 	}
@@ -258,8 +259,9 @@ class UHCTimer extends Task{
 			Scoreboard::setLine($p, 2, " §bGame Time: §f" . gmdate("H:i:s", $this->game));
 			Scoreboard::setLine($p, 3, " §bRemaining: §f" . count($this->plugin->getGamePlayers()));
 			Scoreboard::setLine($p, 4, " §bEliminations: §f" . $this->plugin->getEliminations($p));
-			Scoreboard::setLine($p, 5, " §bBorder: §f" . $this->border);
-			Scoreboard::setLine($p, 6, "§7--------------------- ");
+			Scoreboard::setLine($p, 5, " §bBorder: §f" . $this->border->getSize());
+			Scoreboard::setLine($p, 6, " §bCenter: §f(" . $p->getLevel()->getSafeSpawn()->getFloorX() . ", " . $p->getLevel()->getSafeSpawn()->getFloorZ() . ")");
+			Scoreboard::setLine($p, 7, "§7--------------------- ");
 		}elseif(self::$gameStatus <= self::STATUS_COUNTDOWN){
 			Scoreboard::setLine($p, 1, "§7---------------------");
 			Scoreboard::setLine($p, 2, " §bPlayers: §f" . count($this->plugin->getGamePlayers()));
@@ -269,31 +271,6 @@ class UHCTimer extends Task{
 				Scoreboard::setLine($p, 3, "§b Starting in:§f $this->countdown");
 			}
 			Scoreboard::setLine($p, 4, "§7--------------------- ");
-		}
-	}
-
-	private function teleportInBorder(Player $p) : void{
-		if(($p->getX() > $this->border || $p->getZ() > $this->border || $p->getX() < -$this->border || $p->getZ() < -$this->border)){
-			$x = mt_rand(5, 20);
-			$z = mt_rand(5, 20);
-			if($p->getX() < 0 && $p->getZ() < 0){
-				$pX = -$this->border + $x;
-				$pZ = -$this->border + $z;
-			}elseif($p->getX() > 0 && $p->getZ() > 0){
-				$pX = $this->border - $x;
-				$pZ = $this->border - $z;
-			}elseif($p->getX() < 0 && $p->getZ() > 0){
-				$pX = -$this->border + $x;
-				$pZ = $this->border - $z;
-			}else{
-				$pX = $this->border - $x;
-				$pZ = -$this->border + $z;
-			}
-
-			RegionUtils::onChunkGenerated($p->getLevel(), $pX >> 4, $pZ >> 4, function() use ($p, $pX, $pZ){
-				$p->teleport(new Vector3($pX, $p->getLevel()->getHighestBlockAt($pX, $pZ) + 1, $pZ));
-				$p->addTitle("You have been teleported by the border!");
-			});
 		}
 	}
 
@@ -309,41 +286,5 @@ class UHCTimer extends Task{
 
 			$this->playerTimer += 5;
 		}), $this->playerTimer);
-	}
-
-	//Borders tend to be missing walls
-	public function buildBorder(int $border) : void{ //TODO: Run this in a closure task.
-		$level = $this->plugin->getServer()->getDefaultLevel();
-		if($level === null){
-			return;
-		}
-
-		for($minX = -$border; $minX <= $border; $minX++){
-			RegionUtils::onChunkGenerated($level, $minX >> 4, $border >> 4, function() use ($level, $minX, $border){
-				$highestBlock = $level->getHighestBlockAt($minX, $border);
-				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
-					$level->setBlock(new Vector3($minX, $y, $border), BlockFactory::get(BlockIds::BEDROCK));
-				}
-
-				$highestBlock = $level->getHighestBlockAt($minX, -$border);
-				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
-					$level->setBlock(new Vector3($minX, $y, -$border), BlockFactory::get(BlockIds::BEDROCK));
-				}
-			});
-		}
-
-		for($minZ = -$border; $minZ <= $border; $minZ++){
-			RegionUtils::onChunkGenerated($level, $minZ >> 4, $border >> 4, function() use ($level, $minZ, $border){
-				$highestBlock = $level->getHighestBlockAt($border, $minZ);
-				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
-					$level->setBlock(new Vector3($border, $y, $minZ), BlockFactory::get(BlockIds::BEDROCK));
-				}
-
-				$highestBlock = $level->getHighestBlockAt(-$border, $minZ);
-				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
-					$level->setBlock(new Vector3(-$border, $y, $minZ), BlockFactory::get(BlockIds::BEDROCK));
-				}
-			});
-		}
 	}
 }
