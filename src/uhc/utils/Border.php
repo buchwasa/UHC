@@ -64,7 +64,7 @@ class Border{
         $x = mt_rand(5, 20);
 		$z = mt_rand(5, 20);
 		if($p->getFloorX() < 0){
-            if($p->getFloorZ < 0){
+            if($p->getFloorZ() < 0){
                 $pX = $this->getX(true) + $x;
                 $pZ = $this->getZ(true) + $z;
             }else{
