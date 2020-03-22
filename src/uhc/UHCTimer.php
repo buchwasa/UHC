@@ -259,7 +259,8 @@ class UHCTimer extends Task{
 			Scoreboard::setLine($p, 3, " §bRemaining: §f" . count($this->plugin->getGamePlayers()));
 			Scoreboard::setLine($p, 4, " §bEliminations: §f" . $this->plugin->getEliminations($p));
 			Scoreboard::setLine($p, 5, " §bBorder: §f" . $this->border);
-			Scoreboard::setLine($p, 6, "§7--------------------- ");
+			Scoreboard::setLine($p, 6, " §bCenter: §f(" . $p->getLevel()->getSafeSpawn()->getX() . ", " . $p->getLevel()->getSafeSpawn()->getZ() . ")");
+			Scoreboard::setLine($p, 7, "§7--------------------- ");
 		}elseif(self::$gameStatus <= self::STATUS_COUNTDOWN){
 			Scoreboard::setLine($p, 1, "§7---------------------");
 			Scoreboard::setLine($p, 2, " §bPlayers: §f" . count($this->plugin->getGamePlayers()));
@@ -273,21 +274,25 @@ class UHCTimer extends Task{
 	}
 
 	private function teleportInBorder(Player $p) : void{
-		if(($p->getX() > $this->border || $p->getZ() > $this->border || $p->getX() < -$this->border || $p->getZ() < -$this->border)){
+        $safeSpawn = $p->getLevel()->getSafeSpawn();
+		if((
+            $p->getX() > $safeSpawn->getX() + $this->border || $p->getX() < $safeSpawn->getX() - $this->border ||
+            $p->getZ() > $safeSpawn->getZ() + $this->border  || $p->getZ() < $safeSpawn->getZ() - $this->border
+        )){
 			$x = mt_rand(5, 20);
 			$z = mt_rand(5, 20);
 			if($p->getX() < 0 && $p->getZ() < 0){
-				$pX = -$this->border + $x;
-				$pZ = -$this->border + $z;
+				$pX = $safeSpawn->getX() - $this->border + $x;
+				$pZ = $safeSpawn->getZ() - $this->border + $z;
 			}elseif($p->getX() > 0 && $p->getZ() > 0){
-				$pX = $this->border - $x;
-				$pZ = $this->border - $z;
+				$pX = $safeSpawn->getX() + $this->border - $x;
+				$pZ = $safeSpawn->getZ() + $this->border - $z;
 			}elseif($p->getX() < 0 && $p->getZ() > 0){
-				$pX = -$this->border + $x;
-				$pZ = $this->border - $z;
+				$pX = $safeSpawn->getX() - $this->border + $x;
+				$pZ = $safeSpawn->getZ() + $this->border - $z;
 			}else{
-				$pX = $this->border - $x;
-				$pZ = -$this->border + $z;
+				$pX = $safeSpawn->getX() + $this->border - $x;
+				$pZ = $safeSpawn->getZ() - $this->border + $z;
 			}
 
 			RegionUtils::onChunkGenerated($p->getLevel(), $pX >> 4, $pZ >> 4, function() use ($p, $pX, $pZ){
@@ -300,8 +305,8 @@ class UHCTimer extends Task{
 	private function randomizeCoordinates(Player $p, int $range) : void{
 		$this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use ($p, $range) : void{
 			$ss = $p->getLevel()->getSafeSpawn();
-			$x = mt_rand($ss->getFloorX() - $range, $ss->getFloorX() + $range);
-			$z = mt_rand($ss->getFloorZ() - $range, $ss->getFloorZ() + $range);
+			$x = mt_rand($ss->getX() - $range, $ss->getX() + $range);
+			$z = mt_rand($ss->getZ() - $range, $ss->getZ() + $range);
 
 			RegionUtils::onChunkGenerated($p->getLevel(), $x >> 4, $z >> 4, function() use ($p, $x, $z){
 				$p->teleport(new Vector3($x, $p->getLevel()->getHighestBlockAt($x, $z) + 1, $z));
@@ -311,37 +316,37 @@ class UHCTimer extends Task{
 		}), $this->playerTimer);
 	}
 
-	//Borders tend to be missing walls
 	public function buildBorder(int $border) : void{ //TODO: Run this in a closure task.
 		$level = $this->plugin->getServer()->getDefaultLevel();
 		if($level === null){
 			return;
 		}
-
-		for($minX = -$border; $minX <= $border; $minX++){
-			RegionUtils::onChunkGenerated($level, $minX >> 4, $border >> 4, function() use ($level, $minX, $border){
-				$highestBlock = $level->getHighestBlockAt($minX, $border);
+        $safeSpawn = $level->getSafeSpawn();
+        
+		for($minX = $safeSpawn->getX() + -$border; $minX <= $safeSpawn->getX() + $border; $minX++){
+			RegionUtils::onChunkGenerated($level, $minX >> 4, $safeSpawn->getZ() + $border >> 4, function() use ($level, $minX, $border, $safeSpawn){
+				$highestBlock = $level->getHighestBlockAt($minX, $safeSpawn->getZ() + $border);
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
-					$level->setBlock(new Vector3($minX, $y, $border), BlockFactory::get(BlockIds::BEDROCK));
+					$level->setBlock(new Vector3($minX, $y, $safeSpawn->getZ() + $border), BlockFactory::get(BlockIds::BEDROCK));
 				}
 
-				$highestBlock = $level->getHighestBlockAt($minX, -$border);
+				$highestBlock = $level->getHighestBlockAt($minX, $safeSpawn->getZ() + -$border);
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
-					$level->setBlock(new Vector3($minX, $y, -$border), BlockFactory::get(BlockIds::BEDROCK));
+					$level->setBlock(new Vector3($minX, $y, $safeSpawn->getZ() + -$border), BlockFactory::get(BlockIds::BEDROCK));
 				}
 			});
 		}
 
-		for($minZ = -$border; $minZ <= $border; $minZ++){
-			RegionUtils::onChunkGenerated($level, $minZ >> 4, $border >> 4, function() use ($level, $minZ, $border){
-				$highestBlock = $level->getHighestBlockAt($border, $minZ);
+		for($minZ = $safeSpawn->getZ() + -$border; $minZ <= $safeSpawn->getZ() + $border; $minZ++){
+			RegionUtils::onChunkGenerated($level, $safeSpawn->getX() + $border >> 4, $minZ >> 4, function() use ($level, $minZ, $border, $safeSpawn){
+				$highestBlock = $level->getHighestBlockAt($safeSpawn->getX() + $border, $minZ);
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
-					$level->setBlock(new Vector3($border, $y, $minZ), BlockFactory::get(BlockIds::BEDROCK));
+					$level->setBlock(new Vector3($safeSpawn->getX() + $border, $y, $minZ), BlockFactory::get(BlockIds::BEDROCK));
 				}
 
-				$highestBlock = $level->getHighestBlockAt(-$border, $minZ);
+				$highestBlock = $level->getHighestBlockAt($safeSpawn->getX() + -$border, $minZ);
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
-					$level->setBlock(new Vector3(-$border, $y, $minZ), BlockFactory::get(BlockIds::BEDROCK));
+					$level->setBlock(new Vector3($safeSpawn->getX() + -$border, $y, $minZ), BlockFactory::get(BlockIds::BEDROCK));
 				}
 			});
 		}
