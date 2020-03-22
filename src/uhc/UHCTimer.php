@@ -90,6 +90,7 @@ class UHCTimer extends Task{
 			$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
 			if(!$this->border->isPlayerInsideOfBorder($player)){
                 $this->border->teleportPlayer($player);
+                $player->addTitle("You have been teleported by border!");
 			}
 			switch(self::$gameStatus){
 				case self::STATUS_COUNTDOWN:
