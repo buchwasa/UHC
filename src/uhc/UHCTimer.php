@@ -214,15 +214,15 @@ class UHCTimer extends Task{
 				break;
 			case 600:
 				$this->border->setSize(750);
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "500" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "500" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 300:
 				$this->border->setSize(500);
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "250" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "250" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 0:
 				$this->border->setSize(250);
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				self::$gameStatus = self::STATUS_NORMAL;
 				$this->pvp = 60 * 30;
 				break;
@@ -236,17 +236,17 @@ class UHCTimer extends Task{
 			case 3300:
 				$this->border->setSize(100);
 				$this->border->build();
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "25" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "25" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 3000:
 				$this->border->setSize(25);
 				$this->border->build();
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "10" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "10" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 2700:
 				$this->border->setSize(10);
 				$this->border->build();
-				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".");
 				break;
 		}
 	}
