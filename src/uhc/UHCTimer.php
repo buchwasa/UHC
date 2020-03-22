@@ -292,7 +292,7 @@ class UHCTimer extends Task{
 
 			RegionUtils::onChunkGenerated($p->getLevel(), $pX >> 4, $pZ >> 4, function() use ($p, $pX, $pZ){
 				$p->teleport(new Vector3($pX, $p->getLevel()->getHighestBlockAt($pX, $pZ) + 1, $pZ));
-				$p->sendTitle("You have been teleported by the border!");
+				$p->addTitle("You have been teleported by the border!");
 			});
 		}
 	}
