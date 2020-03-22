@@ -277,17 +277,17 @@ class UHCTimer extends Task{
         $safeSpawn = $p->getLevel()->getSafeSpawn();
 		if((
             $p->getFloorX() > $safeSpawn->getFloorX() + $this->border || $p->getFloorX() < $safeSpawn->getFloorX() - $this->border ||
-            $p->getFloorZ() > $safeSpawn->getZ() + $this->border  || $p->getFloorZ() < $safeSpawn->getFloorZ() - $this->border
+            $p->getFloorZ() > $safeSpawn->getFloorZ() + $this->border  || $p->getFloorZ() < $safeSpawn->getFloorZ() - $this->border
         )){
 			$x = mt_rand(5, 20);
 			$z = mt_rand(5, 20);
 			if($p->getFloorX() < 0 && $p->getFloorZ() < 0){
 				$pX = $safeSpawn->getFloorX() - $this->border + $x;
 				$pZ = $safeSpawn->getFloorZ() - $this->border + $z;
-			}elseif($p->getX() > 0 && $p->getZ() > 0){
+			}elseif($p->getFloorX() > 0 && $p->getFloorZ() > 0){
 				$pX = $safeSpawn->getFloorX() + $this->border - $x;
 				$pZ = $safeSpawn->getFloorZ() + $this->border - $z;
-			}elseif($p->getX() < 0 && $p->getZ() > 0){
+			}elseif($p->getFloorX() < 0 && $p->getFloorZ() > 0){
 				$pX = $safeSpawn->getFloorX() - $this->border + $x;
 				$pZ = $safeSpawn->getFloorZ() + $this->border - $z;
 			}else{
