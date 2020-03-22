@@ -72,17 +72,15 @@ class Border{
                 $pZ = $this->getZ() - $z;
             }
 		}elseif($p->getFloorX() > 0 && $p->getFloorZ() > 0){
-            if($p->getFloorZ() > 0){
-                $pX = $safeSpawn->getFloorX() + $this->border - $x;
-                $pZ = $safeSpawn->getFloorZ() + $this->border - $z;
-			}else{
-                $pX = $safeSpawn->getFloorX() + $this->border - $x;
-                $pZ = $safeSpawn->getFloorZ() - $this->border + $z;
-            }
+            $pX = $this->getX() - $x;
+            $pZ = $this->getZ() - $z;
+        }else{ //$p->getFloorZ() < 0
+            $pX = $this->getX() - $x;
+            $pZ = $this->getZ(true) + $z;
         }
 
 		RegionUtils::onChunkGenerated($this->level, $pX >> 4, $pZ >> 4, function() use ($p, $pX, $pZ){
-            $p->teleport(new Vector3($pX, $p->getLevel()->getHighestBlockAt($pX, $pZ) + 1, $pZ));
+            $p->teleport(new Vector3($pX, $this->level->getHighestBlockAt($pX, $pZ) + 1, $pZ));
 		});
     }
     
@@ -108,9 +106,9 @@ class Border{
 					$this->level->setBlock(new Vector3($this->getX(), $y, $minZ), BlockFactory::get(BlockIds::BEDROCK));
 				}
 
-				$highestBlock = $level->getHighestBlockAt($this->getX(true), $minZ);
+				$highestBlock = $this->level->getHighestBlockAt($this->getX(true), $minZ);
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
-					$level->setBlock(new Vector3($this->getX(true), $y, $minZ), BlockFactory::get(BlockIds::BEDROCK));
+					$this->level->setBlock(new Vector3($this->getX(true), $y, $minZ), BlockFactory::get(BlockIds::BEDROCK));
 				}
 			});
 		}
