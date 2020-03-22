@@ -125,17 +125,17 @@ class UHCTimer extends Task{
 				$server->broadcastTitle("Global Mute has been " . TF::AQUA . "enabled!");
 				$this->plugin->setGlobalMute(true);
 				break;
-			case 23:
+			/*case 23:
 				$scenarios = [];
 				foreach($this->plugin->getScenarios() as $scenario){
 					if($scenario->isActive()){
 						$scenarios[] = $scenario->getName();
 					}
 				}
-				$server->broadcastMessage("The scenario for this game are:\n" . TF::AQUA . (count($scenarios) > 0 ? implode("\n", $scenarios) : "None"));
-				break;
+				$server->broadcastTitle("The scenario for this game are:\n" . TF::AQUA . (count($scenarios) > 0 ? implode("\n", $scenarios) : "None"));
+				break;*/
 			case 10:
-				$server->broadcastMessage("The game will begin in " . TF::AQUA . "10 seconds.");
+				$server->broadcastTitle("The game will begin in " . TF::AQUA . "10 seconds.");
 				break;
 			case 5:
 			case 4:
@@ -164,37 +164,37 @@ class UHCTimer extends Task{
 		$server = $this->plugin->getServer();
 		switch($this->grace){
 			case 1190:
-				$server->broadcastTip("Global Mute has been " . TF::AQUA . "disabled!");
+				$server->broadcastTitle("Global Mute has been " . TF::AQUA . "disabled!");
 				$this->plugin->setGlobalMute(false);
-				$server->broadcastTip("Final heal will occur in " . TF::AQUA . "10 minutes.");
+				$server->broadcastTitle("Final heal will occur in " . TF::AQUA . "10 minutes.");
 				break;
 			case 601:
-				$server->broadcastTip("Final heal has " . TF::AQUA . "occurred!");
+				$server->broadcastTitle("Final heal has " . TF::AQUA . "occurred!");
 				break;
 			case 600:
-				$server->broadcastTip(TF::RED . "PvP will be enabled in 10 minutes.");
+				$server->broadcastTitle(TF::RED . "PvP will be enabled in 10 minutes.");
 				break;
 			case 300:
-				$server->broadcastTip(TF::RED . "PvP will be enabled in 5 minutes.");
+				$server->broadcastTitle(TF::RED . "PvP will be enabled in 5 minutes.");
 				break;
 			case 60:
-				$server->broadcastTip(TF::RED . "PvP will be enabled in 1 minute.");
+				$server->broadcastTitle(TF::RED . "PvP will be enabled in 1 minute.");
 				break;
 			case 30:
-				$server->broadcastTip(TF::RED . "PvP will be enabled in 30 seconds.");
+				$server->broadcastTitle(TF::RED . "PvP will be enabled in 30 seconds.");
 				break;
 			case 10:
-				$server->broadcastTip(TF::RED . "PvP will be enabled in 10 seconds.");
+				$server->broadcastTitle(TF::RED . "PvP will be enabled in 10 seconds.");
 				break;
 			case 5:
 			case 4:
 			case 3:
 			case 2:
 			case 1:
-				$server->broadcastTip(TF::RED . "PvP will be enabled in $this->grace second(s).");
+				$server->broadcastTitle(TF::RED . "PvP will be enabled in $this->grace second(s).");
 				break;
 			case 0:
-				$server->broadcastTip(TF::RED . "PvP has been enabled, good luck!");
+				$server->broadcastTitle(TF::RED . "PvP has been enabled, good luck!");
 				self::$gameStatus = self::STATUS_PVP;
 				$this->grace = 60 * 20;
 				break;
@@ -206,22 +206,22 @@ class UHCTimer extends Task{
 		$server = $this->plugin->getServer();
 		switch($this->pvp){
 			case 900:
-				$server->broadcastTip("The border will shrink to " . TF::AQUA . "750" . TF::WHITE . " in " . TF::AQUA . "5 minutes");
+				$server->broadcastTitle("The border will shrink to " . TF::AQUA . "750" . TF::WHITE . " in " . TF::AQUA . "5 minutes");
 				break;
 			case 600:
 				$this->border = 750;
 				//$this->buildBorder($this->border);
-				$server->broadcastTip("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "500" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "500" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 300:
 				$this->border = 500;
 				//$this->buildBorder($this->border);
-				$server->broadcastTip("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "250" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "250" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 0:
 				$this->border = 250;
 				//$this->buildBorder($this->border);
-				$server->broadcastTip("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				self::$gameStatus = self::STATUS_NORMAL;
 				$this->pvp = 60 * 30;
 				break;
@@ -235,17 +235,17 @@ class UHCTimer extends Task{
 			case 3300:
 				$this->border = 100;
 				$this->buildBorder($this->border);
-				$server->broadcastTip("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "25" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "25" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 3000:
 				$this->border = 25;
 				$this->buildBorder($this->border);
-				$server->broadcastTip("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "10" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".\nShrinking to " . TF::AQUA . "10" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 2700:
 				$this->border = 10;
 				$this->buildBorder($this->border);
-				$server->broadcastTip("The border has shrunk to " . TF::AQUA . $this->border . ".");
+				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border . ".");
 				break;
 		}
 	}
@@ -292,7 +292,7 @@ class UHCTimer extends Task{
 
 			RegionUtils::onChunkGenerated($p->getLevel(), $pX >> 4, $pZ >> 4, function() use ($p, $pX, $pZ){
 				$p->teleport(new Vector3($pX, $p->getLevel()->getHighestBlockAt($pX, $pZ) + 1, $pZ));
-				$p->sendTip("You have been teleported by the border!");
+				$p->sendTitle("You have been teleported by the border!");
 			});
 		}
 	}

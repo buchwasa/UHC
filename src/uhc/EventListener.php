@@ -95,7 +95,7 @@ class EventListener implements Listener{
 		$player = $ev->getPlayer();
 		$cause = $player->getLastDamageCause();
 		$player->setGamemode(3);
-		$player->sendMessage(TF::YELLOW . "You have been eliminated, use /spectate to spectate a player!");
+		$player->addTitle(TF::YELLOW . "You have been eliminated!", "Use /spectate to spectate a player.");
 		$player->getLevel()->broadcastLevelSoundEvent($player, LevelSoundEventPacket::SOUND_RAID_HORN);
 		if($cause instanceof EntityDamageByEntityEvent){
 			$damager = $cause->getDamager();
