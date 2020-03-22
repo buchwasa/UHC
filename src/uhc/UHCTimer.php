@@ -42,7 +42,7 @@ class UHCTimer extends Task{
 	private $pvp = 60 * 30;
 	/** @var float|int */
 	private $normal = 60 * 60;
-	/** @var int */
+	/** @var Border */
 	private $border;
 	/** @var Loader */
 	private $plugin;
