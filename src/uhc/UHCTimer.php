@@ -266,11 +266,7 @@ class UHCTimer extends Task{
 		}elseif(self::$gameStatus <= self::STATUS_COUNTDOWN){
 			Scoreboard::setLine($p, 1, "§7---------------------");
 			Scoreboard::setLine($p, 2, " §bPlayers: §f" . count($this->plugin->getGamePlayers()));
-			if(self::$gameStatus === self::STATUS_WAITING){
-				Scoreboard::setLine($p, 3, "§b Waiting for players...");
-			}else{
-				Scoreboard::setLine($p, 3, "§b Starting in:§f $this->countdown");
-			}
+			Scoreboard::setLine($p, 3, self::$gameStatus === self::STATUS_WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown");
 			Scoreboard::setLine($p, 4, "§7--------------------- ");
 		}
 	}

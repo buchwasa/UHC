@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace uhc;
+namespace uhc\utils;
 
 use pocketmine\event\Listener;
+use uhc\Loader;
 
 class Scenario implements Listener{
 	/** @var string */
