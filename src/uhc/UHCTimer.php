@@ -18,104 +18,103 @@ use function mt_rand;
 use function round;
 
 class UHCTimer extends Task{
-	/** @var int */
-	public static $gameStatus = self::STATUS_WAITING;
+    /** @var int */
+    public static $gameStatus = self::STATUS_WAITING;
 
-	/** @var int */
-	public const STATUS_WAITING = -1;
-	/** @var int */
-	public const STATUS_COUNTDOWN = 0;
-	/** @var int */
-	public const STATUS_GRACE = 1;
-	/** @var int */
-	public const STATUS_PVP = 2;
-	/** @var int */
-	public const STATUS_NORMAL = 3;
+    /** @var int */
+    public const STATUS_WAITING = -1;
+    /** @var int */
+    public const STATUS_COUNTDOWN = 0;
+    /** @var int */
+    public const STATUS_GRACE = 1;
+    /** @var int */
+    public const STATUS_PVP = 2;
+    /** @var int */
+    public const STATUS_NORMAL = 3;
 
-	/** @var int */
-	private $game = 0;
-	/** @var int */
-	private $countdown = 30;
-	/** @var float|int */
-	private $grace = 60 * 20;
-	/** @var float|int */
-	private $pvp = 60 * 30;
-	/** @var float|int */
-	private $normal = 60 * 60;
-	/** @var Border */
-	private $border;
-	/** @var Loader */
-	private $plugin;
+    /** @var int */
+    private $game = 0;
+    /** @var int */
+    private $countdown = 30;
+    /** @var float|int */
+    private $grace = 60 * 20;
+    /** @var float|int */
+    private $pvp = 60 * 30;
+    /** @var float|int */
+    private $normal = 60 * 60;
+    /** @var Border */
+    private $border;
+    /** @var Loader */
+    private $plugin;
 
-	/** @var int */
-	private $playerTimer = 1;
+    /** @var int */
+    private $playerTimer = 1;
 
-	public function __construct(Loader $plugin){
-		$this->plugin = $plugin;
-		$this->border = new Border($plugin->getServer()->getDefaultLevel());
-	}
+    public function __construct(Loader $plugin){
+	   $this->plugin = $plugin;
+	   $this->border = new Border($plugin->getServer()->getDefaultLevel());
+    }
 
-	public function onRun(int $currentTick) : void{
-		$this->handlePlayers();
+    public function onRun(int $currentTick) : void{
+	   $this->handlePlayers();
 
-		if(self::$gameStatus >= self::STATUS_GRACE) $this->game++;
-		switch(self::$gameStatus){
-			case self::STATUS_COUNTDOWN:
+	   if(self::$gameStatus >= self::STATUS_GRACE) $this->game++;
+		  switch(self::$gameStatus){
+			 case self::STATUS_COUNTDOWN:
 				$this->handleCountdown();
 				break;
-			case self::STATUS_GRACE:
+			 case self::STATUS_GRACE:
 				$this->handleGrace();
 				break;
-			case self::STATUS_PVP:
+			 case self::STATUS_PVP:
 				$this->handlePvP();
 				break;
-			case self::STATUS_NORMAL:
+			 case self::STATUS_NORMAL:
 				$this->handleNormal();
 				break;
-		}
-	}
+	   }
+    }
 
-	private function handlePlayers() : void{
-		foreach($this->plugin->getServer()->getOnlinePlayers() as $p){
-			if($p->isSurvival()){
-				$this->plugin->addToGame($p);
-			}else{
-				$this->plugin->removeFromGame($p);
-			}
+    private function handlePlayers() : void{
+	   foreach($this->plugin->getServer()->getOnlinePlayers() as $p){
+		  if($p->isSurvival()){
+			 $this->plugin->addToGame($p);
+		  }else{
+			 $this->plugin->removeFromGame($p);
+		  }
+		  $this->handleScoreboard($p);
+	   }
 
-			$this->handleScoreboard($p);
-		}
-
-		foreach($this->plugin->getGamePlayers() as $player){
-			$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
-			if(!$this->border->isPlayerInsideOfBorder($player)){
-                $this->border->teleportPlayer($player);
-                $player->addTitle("You have been teleported by border!");
-			}
-			switch(self::$gameStatus){
-				case self::STATUS_COUNTDOWN:
-					$player->setFood($player->getMaxFood());
-					$player->setHealth($player->getMaxHealth());
-					if($this->countdown === 29){
-						$this->randomizeCoordinates($player, 750);
-						$player->setWhitelisted(true);
-						$player->removeAllEffects();
-						$player->getInventory()->clearAll();
-						$player->getArmorInventory()->clearAll();
-						$player->getCursorInventory()->clearAll();
-						$player->setImmobile(true);
-					}elseif($this->countdown === 3){
-						$player->setImmobile(false);
-					}
-					break;
-				case self::STATUS_GRACE:
-					if($this->grace === 601){
-						$player->setHealth($player->getMaxHealth());
-					}
-					break;
-			}
-		}
-	}
+	   foreach($this->plugin->getGamePlayers() as $player){
+		  $player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
+		  if(!$this->border->isPlayerInsideOfBorder($player)){
+			 $this->border->teleportPlayer($player);
+			 $player->addTitle("You have been teleported by border!");
+		  }
+		  switch(self::$gameStatus){
+			 case self::STATUS_COUNTDOWN:
+				$player->setFood($player->getMaxFood());
+				$player->setHealth($player->getMaxHealth());
+				if($this->countdown === 29){
+				    $this->randomizeCoordinates($player, 750);
+				    $player->setWhitelisted(true);
+				    $player->removeAllEffects();
+				    $player->getInventory()->clearAll();
+				    $player->getArmorInventory()->clearAll();
+				    $player->getCursorInventory()->clearAll();
+				    $player->setImmobile(true);
+				}elseif($this->countdown === 3){
+				    $player->setImmobile(false);
+				}
+				break;
+			 case self::STATUS_GRACE:
+				if($this->grace === 601){
+				    $player->setHealth($player->getMaxHealth());
+				}
+				break;
+		  }
+	   }
+    }
 
 	private function handleCountdown() : void{
 		$this->countdown--;
