@@ -34,19 +34,11 @@ class Border{
     }
     
     public function getX(bool $isNegative = false) : int{
-        if($isNegative){
-            return $this->safeX - $this->size;
-        }else{
-            return $this->safeX + $this->size;
-        }
+        return $isNegative ? ($this->safeX - $this->size) : ($this->safeX + $this->size);
     }
     
     public function getZ(bool $isNegative = false) : int{
-        if($isNegative){
-            return $this->safeZ - $this->size;
-        }else{
-            return $this->safeZ + $this->size;
-        }
+        return $isNegative ? ($this->safeZ - $this->size) : ($this->safeZ + $this->size);
     }
     
     public function isPlayerInsideOfBorder(Player $p) : bool{
@@ -54,34 +46,32 @@ class Border{
             $p->getFloorX() > $this->getX() || $p->getFloorX() <  $this->getX(true) ||
             $p->getFloorZ() > $this->getZ() || $p->getFloorZ() < $this->getZ(true)
         ){
-            return true;
+            return false;
         }
         
-        return false;
+        return true;
     }
     
     public function teleportPlayer(Player $p) : void{
         $x = mt_rand(5, 20);
-		$z = mt_rand(5, 20);
-		if($p->getFloorX() < 0){
-            if($p->getFloorZ() < 0){
-                $pX = $this->getX(true) + $x;
-                $pZ = $this->getZ(true) + $z;
-            }else{
-                $pX = $this->getX(true) + $x;
-                $pZ = $this->getZ() - $z;
-            }
-		}elseif($p->getFloorX() > 0 && $p->getFloorZ() > 0){
+        $z = mt_rand(5, 20);
+        if($p->getX() < 0 && $p->getZ() < 0){
+            $pX = $this->getX(true) + $x;
+            $pZ = $this->getZ(true) + $z;
+        }elseif($p->getX() > 0 && $p->getZ() > 0){
             $pX = $this->getX() - $x;
             $pZ = $this->getZ() - $z;
-        }else{ //$p->getFloorZ() < 0
+        }elseif($p->getX() < 0 && $p->getZ() > 0){
+            $pX = $this->getX(true) + $x;
+            $pZ = $this->getZ() - $z;
+        }else{
             $pX = $this->getX() - $x;
             $pZ = $this->getZ(true) + $z;
         }
 
-		RegionUtils::onChunkGenerated($this->level, $pX >> 4, $pZ >> 4, function() use ($p, $pX, $pZ){
+        RegionUtils::onChunkGenerated($this->level, $pX >> 4, $pZ >> 4, function() use ($p, $pX, $pZ){
             $p->teleport(new Vector3($pX, $this->level->getHighestBlockAt($pX, $pZ) + 1, $pZ));
-		});
+        });
     }
     
     public function build() : void{ //TODO: Run this in a closure task.
