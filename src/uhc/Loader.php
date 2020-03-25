@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace uhc;
 
 use pocketmine\Player;
@@ -8,7 +10,12 @@ use uhc\command\HealCommand;
 use uhc\command\ScenariosCommand;
 use uhc\command\SpectatorCommand;
 use uhc\command\UHCCommand;
-use uhc\Scenario;
+use function is_array;
+use function is_dir;
+use function mkdir;
+use function scandir;
+use function str_replace;
+use function substr;
 
 class Loader extends PluginBase{
 

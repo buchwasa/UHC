@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace uhc\form;
@@ -41,13 +42,12 @@ class CustomForm implements Form{
 		$this->content[] = $callable;
 	}
 
-
 	/**
 	 * @inheritDoc
 	 */
 	public function handleResponse(Player $player, $data) : void{
 		if($this->json !== null){
-			foreach((array)$data as $index => $value){
+			foreach((array) $data as $index => $value){
 				$this->content[$index]($player, $value);
 			}
 		}

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace uhc\utils;
@@ -8,6 +9,7 @@ use pocketmine\network\mcpe\protocol\SetDisplayObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetScorePacket;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use pocketmine\Player;
+use function str_repeat;
 
 class Scoreboard{
 

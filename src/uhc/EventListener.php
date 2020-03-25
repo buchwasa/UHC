@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace uhc;
 
 use pocketmine\event\block\BlockBreakEvent;
@@ -7,17 +9,14 @@ use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
-use pocketmine\event\level\LevelLoadEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\network\mcpe\protocol\GameRulesChangedPacket;
-use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;

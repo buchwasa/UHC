@@ -1,10 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace uhc;
 
-use pocketmine\block\BlockFactory;
-use pocketmine\block\BlockIds;
-use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
@@ -14,48 +13,50 @@ use uhc\event\UHCStartEvent;
 use uhc\utils\Border;
 use uhc\utils\RegionUtils;
 use uhc\utils\Scoreboard;
+use function count;
+use function floor;
+use function gmdate;
 use function mt_rand;
-use function round;
 
 class UHCTimer extends Task{
-    /** @var int */
-    public static $gameStatus = self::STATUS_WAITING;
+	/** @var int */
+	public static $gameStatus = self::STATUS_WAITING;
 
-    /** @var int */
-    public const STATUS_WAITING = -1;
-    /** @var int */
-    public const STATUS_COUNTDOWN = 0;
-    /** @var int */
-    public const STATUS_GRACE = 1;
-    /** @var int */
-    public const STATUS_PVP = 2;
-    /** @var int */
-    public const STATUS_NORMAL = 3;
+	/** @var int */
+	public const STATUS_WAITING = -1;
+	/** @var int */
+	public const STATUS_COUNTDOWN = 0;
+	/** @var int */
+	public const STATUS_GRACE = 1;
+	/** @var int */
+	public const STATUS_PVP = 2;
+	/** @var int */
+	public const STATUS_NORMAL = 3;
 
-    /** @var int */
-    private $game = 0;
-    /** @var int */
-    private $countdown = 30;
-    /** @var float|int */
-    private $grace = 60 * 20;
-    /** @var float|int */
-    private $pvp = 60 * 30;
-    /** @var float|int */
-    private $normal = 60 * 60;
-    /** @var Border */
-    private $border;
-    /** @var Loader */
-    private $plugin;
+	/** @var int */
+	private $game = 0;
+	/** @var int */
+	private $countdown = 30;
+	/** @var float|int */
+	private $grace = 60 * 20;
+	/** @var float|int */
+	private $pvp = 60 * 30;
+	/** @var float|int */
+	private $normal = 60 * 60;
+	/** @var Border */
+	private $border;
+	/** @var Loader */
+	private $plugin;
 
-    /** @var int */
-    private $playerTimer = 1;
+	/** @var int */
+	private $playerTimer = 1;
 
-    public function __construct(Loader $plugin){
+	public function __construct(Loader $plugin){
 	   $this->plugin = $plugin;
 	   $this->border = new Border($plugin->getServer()->getDefaultLevel());
-    }
+	}
 
-    public function onRun(int $currentTick) : void{
+	public function onRun(int $currentTick) : void{
 	   $this->handlePlayers();
 
 	   if(self::$gameStatus >= self::STATUS_GRACE) $this->game++;
@@ -73,9 +74,9 @@ class UHCTimer extends Task{
 				$this->handleNormal();
 				break;
 	   }
-    }
+	}
 
-    private function handlePlayers() : void{
+	private function handlePlayers() : void{
 	   foreach($this->plugin->getServer()->getOnlinePlayers() as $p){
 		  if($p->isSurvival()){
 			 $this->plugin->addToGame($p);
@@ -96,25 +97,25 @@ class UHCTimer extends Task{
 				$player->setFood($player->getMaxFood());
 				$player->setHealth($player->getMaxHealth());
 				if($this->countdown === 29){
-				    $this->randomizeCoordinates($player, 750);
-				    $player->setWhitelisted(true);
-				    $player->removeAllEffects();
-				    $player->getInventory()->clearAll();
-				    $player->getArmorInventory()->clearAll();
-				    $player->getCursorInventory()->clearAll();
-				    $player->setImmobile(true);
+					$this->randomizeCoordinates($player, 750);
+					$player->setWhitelisted(true);
+					$player->removeAllEffects();
+					$player->getInventory()->clearAll();
+					$player->getArmorInventory()->clearAll();
+					$player->getCursorInventory()->clearAll();
+					$player->setImmobile(true);
 				}elseif($this->countdown === 3){
-				    $player->setImmobile(false);
+					$player->setImmobile(false);
 				}
 				break;
 			 case self::STATUS_GRACE:
 				if($this->grace === 601){
-				    $player->setHealth($player->getMaxHealth());
+					$player->setHealth($player->getMaxHealth());
 				}
 				break;
 		  }
 	   }
-    }
+	}
 
 	private function handleCountdown() : void{
 		$this->countdown--;

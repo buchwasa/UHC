@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace uhc\command;
@@ -8,6 +9,7 @@ use pocketmine\command\PluginCommand;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\utils\TextFormat as TF;
 use uhc\Loader;
+use function strtolower;
 
 class HealCommand extends PluginCommand{
 	/** @var Loader */

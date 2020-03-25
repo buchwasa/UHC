@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace uhc\command;
 
 use pocketmine\command\CommandSender;
@@ -8,6 +10,7 @@ use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use uhc\Loader;
+use function strtolower;
 
 class SpectatorCommand extends PluginCommand{
 	/** @var Loader */

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
  
 namespace uhc\utils;
@@ -8,40 +9,41 @@ use pocketmine\block\BlockIds;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
+use function mt_rand;
 
 class Border{
-    /** @var int */
-    private $size = 1000;
-    /** @var Level */
-    private $level;
-    /** @var int */
-    private $safeX;
-    /** @var int */
-    private $safeZ;
-    
-    public function __construct(Level $level){
+	/** @var int */
+	private $size = 1000;
+	/** @var Level */
+	private $level;
+	/** @var int */
+	private $safeX;
+	/** @var int */
+	private $safeZ;
+	
+	public function __construct(Level $level){
 	   $this->level = $level;
 	   $this->safeX = $level->getSafeSpawn()->getFloorX();
 	   $this->safeZ = $level->getSafeSpawn()->getFloorZ();
-    }
+	}
 
-    public function setSize(int $size) : void{
+	public function setSize(int $size) : void{
 	   $this->size = $size;
-    }
+	}
 
-    public function getSize() : int{
+	public function getSize() : int{
 	   return $this->size;
-    }
+	}
 
-    public function getX(bool $isNegative = false) : int{
+	public function getX(bool $isNegative = false) : int{
 	   return $isNegative ? ($this->safeX - $this->size) : ($this->safeX + $this->size);
-    }
+	}
 
-    public function getZ(bool $isNegative = false) : int{
+	public function getZ(bool $isNegative = false) : int{
 	   return $isNegative ? ($this->safeZ - $this->size) : ($this->safeZ + $this->size);
-    }
+	}
 
-    public function isPlayerInsideOfBorder(Player $p) : bool{
+	public function isPlayerInsideOfBorder(Player $p) : bool{
 	   if(
 		  $p->getFloorX() > $this->getX() || $p->getFloorX() <  $this->getX(true) ||
 		  $p->getFloorZ() > $this->getZ() || $p->getFloorZ() < $this->getZ(true)
@@ -50,9 +52,9 @@ class Border{
 	   }
 
 	   return true;
-    }
-    
-    public function teleportPlayer(Player $p) : void{
+	}
+	
+	public function teleportPlayer(Player $p) : void{
 	   $x = mt_rand(5, 20);
 	   $z = mt_rand(5, 20);
 	   if($p->getX() < 0 && $p->getZ() < 0){
@@ -72,9 +74,9 @@ class Border{
 	   RegionUtils::onChunkGenerated($this->level, $pX >> 4, $pZ >> 4, function() use ($p, $pX, $pZ){
 		  $p->teleport(new Vector3($pX, $this->level->getHighestBlockAt($pX, $pZ) + 1, $pZ));
 	   });
-    }
-    
-    public function build() : void{ //TODO: Run this in a closure task.
+	}
+	
+	public function build() : void{ //TODO: Run this in a closure task.
 	   for($minX = $this->getX(true); $minX <= $this->getX(); $minX++){
 		  RegionUtils::onChunkGenerated($this->level, $minX >> 4, $this->getZ() >> 4, function() use ($minX){
 			 $highestBlock = $this->level->getHighestBlockAt($minX, $this->getZ());
@@ -102,5 +104,5 @@ class Border{
 			 }
 		  });
 	   }
-    }
+	}
 }

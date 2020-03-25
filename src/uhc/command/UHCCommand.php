@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace uhc\command;
 
 use pocketmine\command\CommandSender;
@@ -20,7 +22,6 @@ class UHCCommand extends PluginCommand{
 		$this->setPermission("uhc.command.uhc");
 		$this->setUsage("/uhc");
 	}
-
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
 		if(!$this->testPermission($sender) || !$sender instanceof Player){

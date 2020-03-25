@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace uhc\command;
 
 use pocketmine\command\CommandSender;
