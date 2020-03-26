@@ -75,7 +75,7 @@ class EventListener implements Listener {
 		$pk = new GameRulesChangedPacket();
 		$pk->gameRules = ["showcoordinates" => [1, true], "immediaterespawn" => [1, true]];
 		$player->dataPacket($pk);
-		$ev->setJoinMessage(null);
+		$ev->setJoinMessage("");
 	}
 
 	/**
@@ -98,7 +98,7 @@ class EventListener implements Listener {
 		/* Updates player instance in PlayerSession */
 		$session = $this->getPlugin()->getSession($player);
 		$session->getScoreboard()->remove();
-		$ev->setQuitMessage(null);
+		$ev->setQuitMessage("");
 	}
 
 	/**
