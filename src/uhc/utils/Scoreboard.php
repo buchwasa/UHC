@@ -119,7 +119,7 @@ class Scoreboard {
 		return $this->doesExist;
 	}
 
-	public function remove() {
+	public function remove(): void {
 		if($this->exists()) {
 			$pk = new RemoveObjectivePacket;
 			$pk->objectiveName = self::OBJECTIVE_NAME;
@@ -135,7 +135,7 @@ class Scoreboard {
 	 * @param string $displaySlot
 	 * @param int $sortOrder
 	 */
-	public function send(string $displayName, string $displaySlot = self::SLOT_SIDEBAR, int $sortOrder = self::SORT_DESCENDING) {
+	public function send(string $displayName, string $displaySlot = self::SLOT_SIDEBAR, int $sortOrder = self::SORT_DESCENDING): void {
 		$pk = new SetDisplayObjectivePacket;
 		$pk->displaySlot = $displaySlot;
 		$pk->objectiveName = self::OBJECTIVE_NAME;
@@ -155,7 +155,7 @@ class Scoreboard {
 	/**
 	 * Used to update without changing the displayName
 	 */
-	public function update() {
+	public function update(): void {
 		$this->send($this->getDisplayName(), $this->getDisplaySlot(), $this->getSortOrder());
 	}
 
@@ -163,7 +163,7 @@ class Scoreboard {
 	 * @param string $message
 	 * @param bool $update
 	 */
-	public function addLine(string $message, bool $update = true) {
+	public function addLine(string $message, bool $update = true): void {
 		$this->setLine(count($this->lines), $message, $update);
 	}
 
@@ -172,7 +172,7 @@ class Scoreboard {
 	 * @param string $message
 	 * @param bool $update
 	 */
-	public function setLine(int $line, string $message, bool $update = true) {
+	public function setLine(int $line, string $message, bool $update = true): void {
 		if(!$this->exists()) {
 			Server::getInstance()->getLogger()->error("Use Scoreboard::send() before executing this function!");
 			return;
@@ -201,13 +201,13 @@ class Scoreboard {
 	 * @param array $lines
 	 * @param bool $update
 	 */
-	public function setLineArray(array $lines, bool $update = true) {
+	public function setLineArray(array $lines, bool $update = true): void {
 		foreach($lines as $key => $message) {
 			$this->setLine($key, $message, $update);
 		}
 	}
 
-	public function clearLines() {
+	public function clearLines(): void {
 		foreach($this->lines as $lineId => $line) {
 			$this->removeLine($lineId);
 		}
@@ -217,7 +217,7 @@ class Scoreboard {
 	 * @param int $line
 	 * @param bool $update
 	 */
-	public function removeLine(int $line, bool $update = true) {
+	public function removeLine(int $line, bool $update = true): void {
 		if(isset($this->lines[$line])) {
 			unset($this->lines[$line]);
 		}
