@@ -11,6 +11,7 @@ use pocketmine\scheduler\Task;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\UHCStartEvent;
 use uhc\utils\Border;
+use uhc\uils\GameStatus;
 use uhc\utils\RegionUtils;
 use function count;
 use function floor;
@@ -18,20 +19,8 @@ use function gmdate;
 use function mt_rand;
 
 class GameHeartbeat extends Task {
-
 	/** @var int */
-	private $gameStatus = self::STATUS_WAITING;
-
-	/** @var int */
-	public const STATUS_WAITING = -1;
-	/** @var int */
-	public const STATUS_COUNTDOWN = 0;
-	/** @var int */
-	public const STATUS_GRACE = 1;
-	/** @var int */
-	public const STATUS_PVP = 2;
-	/** @var int */
-	public const STATUS_NORMAL = 3;
+	private $gameStatus = GameStatus::WAITING;
 
 	/** @var int */
 	private $game = 0;
@@ -51,66 +40,47 @@ class GameHeartbeat extends Task {
 	/** @var int */
 	private $playerTimer = 1;
 
-	/**
-	 * GameHeartbeat constructor.
-	 * @param Loader $plugin
-	 */
 	public function __construct(Loader $plugin) {
 		$this->plugin = $plugin;
 		$this->border = new Border($plugin->getServer()->getDefaultLevel());
 	}
 
-	/**
-	 * @return Loader
-	 */
-	public function getPlugin(): Loader {
+	public function getPlugin() : Loader{
 		return $this->plugin;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getGameStatus(): int {
+	public function getGameStatus() : int{
 		return $this->gameStatus;
 	}
 
-	/**
-	 * @param int $gameStatus
-	 */
-	public function setGameStatus(int $gameStatus): void {
+	public function setGameStatus(int $gameStatus) : void{
 		$this->gameStatus = $gameStatus;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function hasStarted(): bool {
-		return $this->getGameStatus() >= self::STATUS_GRACE;
+	public function hasStarted() : bool{
+		return $this->getGameStatus() >= GameStatus::GRACE;
 	}
 
-	/**
-	 * @param int $currentTick
-	 */
-	public function onRun(int $currentTick) : void {
+	public function onRun(int $currentTick) : void{
 		$this->handlePlayers();
 		switch($this->getGameStatus()){
-			case self::STATUS_COUNTDOWN:
+			case GameStatus::COUNTDOWN:
 				$this->handleCountdown();
 				break;
-			case self::STATUS_GRACE:
+			case GameStatus::GRACE:
 				$this->handleGrace();
 				break;
-			case self::STATUS_PVP:
+			case GameStatus::PVP:
 				$this->handlePvP();
 				break;
-			case self::STATUS_NORMAL:
+			case GameStatus::NORMAL:
 				$this->handleNormal();
 				break;
 		}
 		if($this->hasStarted()) $this->game++;
 	}
 
-	private function handlePlayers() : void {
+	private function handlePlayers() : void{
 		foreach($this->getPlugin()->getServer()->getOnlinePlayers() as $p){
 			if($p->isSurvival()){
 				$this->getPlugin()->addToGame($p);
@@ -163,15 +133,6 @@ class GameHeartbeat extends Task {
 				$server->broadcastTitle("Global Mute has been " . TF::AQUA . "enabled!");
 				$this->getPlugin()->setGlobalMute(true);
 				break;
-			/*case 23:
-				$scenarios = [];
-				foreach($this->>getPlugin()->getScenarios() as $scenario){
-					if($scenario->isActive()){
-						$scenarios[] = $scenario->getName();
-					}
-				}
-				$server->broadcastTitle("The scenario for this game are:\n" . TF::AQUA . (count($scenarios) > 0 ? implode("\n", $scenarios) : "None"));
-				break;*/
 			case 10:
 				$server->broadcastTitle("The game will begin in " . TF::AQUA . "10 seconds.");
 				break;
@@ -286,16 +247,13 @@ class GameHeartbeat extends Task {
 		}
 	}
 
-	/**
-	 * @param Player $p
-	 */
 	private function handleScoreboard(Player $p) : void{
 		$session = $this->getPlugin()->getSession($p);
 		if($session instanceof PlayerSession) {
 			if(!$session->getScoreboard()->exists()) {
 				$session->getScoreboard()->send("§ky§r §b" . $p->getDisplayName() . " §f§ky§r");
 			}
-			if($this->hasStarted()) {
+			if($this->hasStarted()){
 				$session->getScoreboard()->setLineArray([
 					1 => "§7---------------------",
 					2 => " §bGame Time: §f" . gmdate("H:i:s", $this->game),
@@ -305,11 +263,11 @@ class GameHeartbeat extends Task {
 					6 => " §bCenter: §f(" . $p->getLevel()->getSafeSpawn()->getFloorX() . ", " . $p->getLevel()->getSafeSpawn()->getFloorZ() . ")",
 					7 => "§7--------------------- "
 				]);
-			} else {
+			}else{
 				$session->getScoreboard()->setLineArray([
 					1 => "§7---------------------",
 					2 => " §bPlayers: §f" . count($this->getPlugin()->getGamePlayers()),
-					3 => $this->getGameStatus() === self::STATUS_WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown",
+					3 => $this->getGameStatus() === self::GameStatus::WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown",
 					4 => "§7--------------------- "
 				]);
 			}

@@ -49,79 +49,44 @@ class Scoreboard {
 	/** @var string[] */
 	private $lines = [];
 
-	/**
-	 * Scoreboard constructor.
-	 * @param PlayerSession $player
-	 */
-	public function __construct(PlayerSession $player) {
-		$this->setSession($player);
+	public function __construct(PlayerSession $player){
+		$this->session = $player;
 	}
 
-	/**
-	 * @return PlayerSession
-	 */
-	public function getSession(): PlayerSession {
+	public function getSession() : PlayerSession{
 		return $this->session;
 	}
 
-	/**
-	 * @param PlayerSession $session
-	 */
-	public function setSession(PlayerSession $session): void {
-		$this->session = $session;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getDisplayName(): string {
+	public function getDisplayName() : string{
 		return $this->displayName;
 	}
 
-	/**
-	 * @param string $displayName
-	 */
-	public function setDisplayName(string $displayName): void {
+	public function setDisplayName(string $displayName) : void{
 		$this->displayName = $displayName;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getDisplaySlot(): string {
+	public function getDisplaySlot() : string{
 		return $this->displaySlot;
 	}
 
-	/**
-	 * @param string $displaySlot
-	 */
-	public function setDisplaySlot(string $displaySlot): void {
+	public function setDisplaySlot(string $displaySlot) : void{
 		$this->displaySlot = $displaySlot;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getSortOrder(): int {
+	public function getSortOrder() : int{
 		return $this->sortOrder;
 	}
 
-	/**
-	 * @param int $sortOrder
-	 */
-	public function setSortOrder(int $sortOrder): void {
+	public function setSortOrder(int $sortOrder) : void{
 		$this->sortOrder = $sortOrder;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function exists(): bool {
+	public function exists() : bool{
 		return $this->doesExist;
 	}
 
-	public function remove(): void {
-		if($this->exists()) {
+	public function remove() : void{
+		if($this->exists()){
 			$pk = new RemoveObjectivePacket;
 			$pk->objectiveName = self::OBJECTIVE_NAME;
 			$this->getSession()->getPlayer()->sendDataPacket($pk);
@@ -136,7 +101,7 @@ class Scoreboard {
 	 * @param string $displaySlot
 	 * @param int $sortOrder
 	 */
-	public function send(string $displayName, string $displaySlot = self::SLOT_SIDEBAR, int $sortOrder = self::SORT_DESCENDING): void {
+	public function send(string $displayName, string $displaySlot = self::SLOT_SIDEBAR, int $sortOrder = self::SORT_DESCENDING) : void{
 		$pk = new SetDisplayObjectivePacket;
 		$pk->displaySlot = $displaySlot;
 		$pk->objectiveName = self::OBJECTIVE_NAME;
@@ -144,7 +109,7 @@ class Scoreboard {
 		$pk->criteriaName = self::CRITERIA_NAME;
 		$pk->sortOrder = $sortOrder;
 		$this->getSession()->getPlayer()->sendDataPacket($pk);
-		if(!$this->exists()) {
+		if(!$this->exists()){
 			$this->doesExist = true;
 			$this->displayName = $displayName;
 			$this->displaySlot = $displaySlot;
@@ -156,7 +121,7 @@ class Scoreboard {
 	/**
 	 * Used to update without changing the displayName
 	 */
-	public function update(): void {
+	public function update() : void{
 		$this->send($this->getDisplayName(), $this->getDisplaySlot(), $this->getSortOrder());
 	}
 
@@ -164,7 +129,7 @@ class Scoreboard {
 	 * @param string $message
 	 * @param bool $update
 	 */
-	public function addLine(string $message, bool $update = true): void {
+	public function addLine(string $message, bool $update = true) : void{
 		$this->setLine(count($this->lines), $message, $update);
 	}
 
@@ -173,8 +138,8 @@ class Scoreboard {
 	 * @param string $message
 	 * @param bool $update
 	 */
-	public function setLine(int $line, string $message, bool $update = true): void {
-		if(!$this->exists()) {
+	public function setLine(int $line, string $message, bool $update = true) : void{
+		if(!$this->exists()){
 			Server::getInstance()->getLogger()->error("Use Scoreboard::send() before executing this function!");
 			return;
 		}
@@ -198,28 +163,20 @@ class Scoreboard {
 		if($update) $this->update();
 	}
 
-	/**
-	 * @param array $lines
-	 * @param bool $update
-	 */
-	public function setLineArray(array $lines, bool $update = true): void {
-		foreach($lines as $key => $message) {
+	public function setLineArray(array $lines, bool $update = true) : void{
+		foreach($lines as $key => $message){
 			$this->setLine($key, $message, $update);
 		}
 	}
 
-	public function clearLines(): void {
-		foreach($this->lines as $lineId => $line) {
+	public function clearLines(): void{
+		foreach($this->lines as $lineId => $line){
 			$this->removeLine($lineId);
 		}
 	}
 
-	/**
-	 * @param int $line
-	 * @param bool $update
-	 */
-	public function removeLine(int $line, bool $update = true): void {
-		if(isset($this->lines[$line])) {
+	public function removeLine(int $line, bool $update = true) : void{
+		if(isset($this->lines[$line])){
 			unset($this->lines[$line]);
 		}
 		$entry = new ScorePacketEntry;
@@ -238,10 +195,7 @@ class Scoreboard {
 		if($update) $this->update();
 	}
 
-	/**
-	 * @param int $line
-	 */
-	public function setEmptyLine(int $line): void {
+	public function setEmptyLine(int $line) : void{
 		$text = str_repeat(" ", $line);
 		$this->setLine($line, $text);
 	}
