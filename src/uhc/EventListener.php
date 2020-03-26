@@ -22,18 +22,33 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\UHCStartEvent;
 
-class EventListener implements Listener{
+class EventListener implements Listener {
+
 	/** @var Loader */
 	private $plugin;
 
-	public function __construct(Loader $plugin){
+	/**
+	 * EventListener constructor.
+	 * @param Loader $plugin
+	 */
+	public function __construct(Loader $plugin) {
 		$this->plugin = $plugin;
 		$plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
 	}
 
-	public function handleChat(PlayerChatEvent $ev) : void{
+	/**
+	 * @return Loader
+	 */
+	public function getPlugin(): Loader {
+		return $this->plugin;
+	}
+
+	/**
+	 * @param PlayerChatEvent $ev
+	 */
+	public function handleChat(PlayerChatEvent $ev): void {
 		$player = $ev->getPlayer();
-		if($this->plugin->isGlobalMuteEnabled() && !$player->isOp()){
+		if($this->getPlugin()->isGlobalMuteEnabled() && !$player->isOp()){
 			$player->sendMessage(TF::RED . "You cannot talk right now!");
 			$ev->setCancelled(true);
 		}elseif($player->getGamemode() === Player::SPECTATOR){
@@ -41,48 +56,70 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function handleJoin(PlayerJoinEvent $ev) : void{
+	/**
+	 * @param PlayerJoinEvent $ev
+	 */
+	public function handleJoin(PlayerJoinEvent $ev): void {
 		$player = $ev->getPlayer();
-
-		if(UHCTimer::$gameStatus === UHCTimer::STATUS_WAITING){
+		if(!$this->getPlugin()->hasSession($player)) {
+			$this->getPlugin()->addSession(PlayerSession::create($player));
+		} else {
+			/* Updates player instance in PlayerSession */
+			$session = $this->getPlugin()->getSession($player);
+			$session->setPlayer($player);
+		}
+		if($this->getPlugin()->getHeartbeat()->getGameStatus() === GameHeartbeat::STATUS_WAITING) {
 			$player->teleport($player->getLevel()->getSafeSpawn());
 			$player->setGamemode(Player::SURVIVAL);
 		}
-		
 		$pk = new GameRulesChangedPacket();
 		$pk->gameRules = ["showcoordinates" => [1, true], "immediaterespawn" => [1, true]];
 		$player->dataPacket($pk);
-
 		$ev->setJoinMessage("");
 	}
 
-	public function handleStart(UHCStartEvent $ev) : void{
+	/**
+	 * @param UHCStartEvent $ev
+	 */
+	public function handleStart(UHCStartEvent $ev): void {
 		foreach($ev->getPlayers() as $player){
 			$player->getInventory()->addItem(ItemFactory::get(ItemIds::STEAK, 0, 64));
 			$player->getInventory()->addItem(ItemFactory::get(ItemIds::LEATHER, 0, 32));
 		}
 	}
 
-	public function handleQuit(PlayerQuitEvent $ev) : void{
+	/**
+	 * @param PlayerQuitEvent $ev
+	 */
+	public function handleQuit(PlayerQuitEvent $ev): void {
 		$player = $ev->getPlayer();
 		//TODO: View the necessity of this.
-		$this->plugin->removeFromGame($player);
+		$this->getPlugin()->removeFromGame($player);
+		/* Updates player instance in PlayerSession */
+		$session = $this->getPlugin()->getSession($player);
+		$session->getScoreboard()->remove();
 		$ev->setQuitMessage("");
 	}
 
-	public function handleEntityRegain(EntityRegainHealthEvent $ev) : void{
+	/**
+	 * @param EntityRegainHealthEvent $ev
+	 */
+	public function handleEntityRegain(EntityRegainHealthEvent $ev): void {
 		if($ev->getRegainReason() === EntityRegainHealthEvent::CAUSE_SATURATION){
 			$ev->setCancelled();
 		}
 	}
 
-	public function handleDamage(EntityDamageEvent $ev) : void{
-		switch(UHCTimer::$gameStatus){
-			case UHCTimer::STATUS_WAITING:
-			case UHCTimer::STATUS_COUNTDOWN:
+	/**
+	 * @param EntityDamageEvent $ev
+	 */
+	public function handleDamage(EntityDamageEvent $ev): void {
+		switch($this->getPlugin()->getHeartbeat()->getGameStatus()){
+			case GameHeartbeat::STATUS_WAITING:
+			case GameHeartbeat::STATUS_COUNTDOWN:
 				$ev->setCancelled();
 				break;
-			case UHCTimer::STATUS_GRACE:
+			case GameHeartbeat::STATUS_GRACE:
 				if($ev instanceof EntityDamageByEntityEvent){
 					$ev->setCancelled();
 				}
@@ -90,7 +127,10 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function handleDeath(PlayerDeathEvent $ev) : void{
+	/**
+	 * @param PlayerDeathEvent $ev
+	 */
+	public function handleDeath(PlayerDeathEvent $ev): void {
 		$player = $ev->getPlayer();
 		$cause = $player->getLastDamageCause();
 		$player->setGamemode(3);
@@ -98,35 +138,35 @@ class EventListener implements Listener{
 		$player->getLevel()->broadcastLevelSoundEvent($player, LevelSoundEventPacket::SOUND_RAID_HORN);
 		if($cause instanceof EntityDamageByEntityEvent){
 			$damager = $cause->getDamager();
-			if($damager instanceof Player){
-				$this->plugin->addElimination($damager);
-				$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $this->plugin->getEliminations($player) . TF::GRAY . "]" . TF::YELLOW . " was slain by " . TF::RED . $damager->getName() . TF::GRAY . "[" . TF::WHITE . $this->plugin->getEliminations($damager) . TF::GRAY . "]");
+			if($damager instanceof Player) {
+				$this->getPlugin()->addElimination($damager);
+				$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $this->getPlugin()->getEliminations($player) . TF::GRAY . "]" . TF::YELLOW . " was slain by " . TF::RED . $damager->getName() . TF::GRAY . "[" . TF::WHITE . $this->getPlugin()->getEliminations($damager) . TF::GRAY . "]");
 			}
 		}else{
-			$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $this->plugin->getEliminations($player) . TF::GRAY . "]" . TF::YELLOW . " died!");
+			$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $this->getPlugin()->getEliminations($player) . TF::GRAY . "]" . TF::YELLOW . " died!");
 		}
 	}
 
-	public function handleBreak(BlockBreakEvent $ev) : void{
+	/**
+	 * @param BlockBreakEvent $ev
+	 */
+	public function handleBreak(BlockBreakEvent $ev) : void {
 		$player = $ev->getPlayer();
 		if($player instanceof Player){
-			switch(UHCTimer::$gameStatus){
-				case UHCTimer::STATUS_WAITING:
-				case UHCTimer::STATUS_COUNTDOWN:
-					$ev->setCancelled();
-					break;
+			if(!$this->getPlugin()->getHeartbeat()->hasStarted()) {
+				$ev->setCancelled();
 			}
 		}
 	}
 
-	public function handlePlace(BlockPlaceEvent $ev) : void{
+	/**
+	 * @param BlockPlaceEvent $ev
+	 */
+	public function handlePlace(BlockPlaceEvent $ev): void {
 		$player = $ev->getPlayer();
 		if($player instanceof Player){
-			switch(UHCTimer::$gameStatus){
-				case UHCTimer::STATUS_WAITING:
-				case UHCTimer::STATUS_COUNTDOWN:
-					$ev->setCancelled();
-					break;
+			if(!$this->getPlugin()->getHeartbeat()->hasStarted()) {
+				$ev->setCancelled();
 			}
 		}
 	}

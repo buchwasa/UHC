@@ -1,3 +1,4 @@
 *.phar
 *.cache
 php_cs
+.idea

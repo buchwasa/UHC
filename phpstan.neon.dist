@@ -7,7 +7,3 @@ parameters:
 	paths:
 		- src
 	checkMissingIterableValueType: false
-	ignoreErrors:
-		-
-			message: '#Comparison operation "<=" between int<min, 0> and 0 is always true.#'
-			path: src/uhc/UHCTimer.php

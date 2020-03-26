@@ -12,15 +12,15 @@ use pocketmine\utils\TextFormat as TF;
 use uhc\event\UHCStartEvent;
 use uhc\utils\Border;
 use uhc\utils\RegionUtils;
-use uhc\utils\Scoreboard;
 use function count;
 use function floor;
 use function gmdate;
 use function mt_rand;
 
-class UHCTimer extends Task{
+class GameHeartbeat extends Task {
+
 	/** @var int */
-	public static $gameStatus = self::STATUS_WAITING;
+	private $gameStatus = self::STATUS_WAITING;
 
 	/** @var int */
 	public const STATUS_WAITING = -1;
@@ -51,88 +51,121 @@ class UHCTimer extends Task{
 	/** @var int */
 	private $playerTimer = 1;
 
-	public function __construct(Loader $plugin){
-	   $this->plugin = $plugin;
-	   $this->border = new Border($plugin->getServer()->getDefaultLevel());
+	/**
+	 * GameHeartbeat constructor.
+	 * @param Loader $plugin
+	 */
+	public function __construct(Loader $plugin) {
+		$this->plugin = $plugin;
+		$this->border = new Border($plugin->getServer()->getDefaultLevel());
 	}
 
-	public function onRun(int $currentTick) : void{
-	   $this->handlePlayers();
+	/**
+	 * @return Loader
+	 */
+	public function getPlugin(): Loader {
+		return $this->plugin;
+	}
 
-	   if(self::$gameStatus >= self::STATUS_GRACE) $this->game++;
-		  switch(self::$gameStatus){
-			 case self::STATUS_COUNTDOWN:
+	/**
+	 * @return int
+	 */
+	public function getGameStatus(): int {
+		return $this->gameStatus;
+	}
+
+	/**
+	 * @param int $gameStatus
+	 */
+	public function setGameStatus(int $gameStatus): void {
+		$this->gameStatus = $gameStatus;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function hasStarted(): bool {
+		return $this->getGameStatus() >= self::STATUS_GRACE;
+	}
+
+	/**
+	 * @param int $currentTick
+	 */
+	public function onRun(int $currentTick) : void {
+		$this->handlePlayers();
+		switch($this->getGameStatus()){
+			case self::STATUS_COUNTDOWN:
 				$this->handleCountdown();
 				break;
-			 case self::STATUS_GRACE:
+			case self::STATUS_GRACE:
 				$this->handleGrace();
 				break;
-			 case self::STATUS_PVP:
+			case self::STATUS_PVP:
 				$this->handlePvP();
 				break;
-			 case self::STATUS_NORMAL:
+			case self::STATUS_NORMAL:
 				$this->handleNormal();
 				break;
-	   }
+		}
+		if($this->hasStarted()) $this->game++;
 	}
 
-	private function handlePlayers() : void{
-	   foreach($this->plugin->getServer()->getOnlinePlayers() as $p){
-		  if($p->isSurvival()){
-			 $this->plugin->addToGame($p);
-		  }else{
-			 $this->plugin->removeFromGame($p);
-		  }
-		  $this->handleScoreboard($p);
-	   }
+	private function handlePlayers() : void {
+		foreach($this->getPlugin()->getServer()->getOnlinePlayers() as $p){
+			if($p->isSurvival()){
+				$this->getPlugin()->addToGame($p);
+			}else{
+				$this->getPlugin()->removeFromGame($p);
+			}
+			$this->handleScoreboard($p);
+		}
 
-	   foreach($this->plugin->getGamePlayers() as $player){
-		  $player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
-		  if(!$this->border->isPlayerInsideOfBorder($player)){
-			 $this->border->teleportPlayer($player);
-			 $player->addTitle("You have been teleported by border!");
-		  }
-		  switch(self::$gameStatus){
-			 case self::STATUS_COUNTDOWN:
-				$player->setFood($player->getMaxFood());
-				$player->setHealth($player->getMaxHealth());
-				if($this->countdown === 29){
-					$this->randomizeCoordinates($player, 750);
-					$player->setWhitelisted(true);
-					$player->removeAllEffects();
-					$player->getInventory()->clearAll();
-					$player->getArmorInventory()->clearAll();
-					$player->getCursorInventory()->clearAll();
-					$player->setImmobile(true);
-				}elseif($this->countdown === 3){
-					$player->setImmobile(false);
-				}
-				break;
-			 case self::STATUS_GRACE:
-				if($this->grace === 601){
+		foreach($this->getPlugin()->getGamePlayers() as $player){
+			$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
+			if(!$this->border->isPlayerInsideOfBorder($player)){
+				$this->border->teleportPlayer($player);
+				$player->addTitle("You have been teleported by border!");
+			}
+			switch($this->getGameStatus()) {
+				case self::STATUS_COUNTDOWN:
+					$player->setFood($player->getMaxFood());
 					$player->setHealth($player->getMaxHealth());
-				}
-				break;
-		  }
-	   }
+					if($this->countdown === 29){
+						$this->randomizeCoordinates($player, 750);
+						$player->setWhitelisted(true);
+						$player->removeAllEffects();
+						$player->getInventory()->clearAll();
+						$player->getArmorInventory()->clearAll();
+						$player->getCursorInventory()->clearAll();
+						$player->setImmobile(true);
+					}elseif($this->countdown === 3){
+						$player->setImmobile(false);
+					}
+					break;
+				case self::STATUS_GRACE:
+					if($this->grace === 601){
+						$player->setHealth($player->getMaxHealth());
+					}
+					break;
+			}
+		}
 	}
 
 	private function handleCountdown() : void{
-		$this->countdown--;
-		$server = $this->plugin->getServer();
+		$server = $this->getPlugin()->getServer();
 		switch($this->countdown){
-			case 29:
+			case 30:
 				$server->setConfigBool("white-list", true);
 				$server->broadcastTitle("Server has been " . TF::AQUA . "whitelisted!");
 				$server->broadcastTitle("The game will begin in " . TF::AQUA . "30 seconds.");
 				break;
-			case 28:
+			case 29:
 				$server->broadcastTitle("Global Mute has been " . TF::AQUA . "enabled!");
-				$this->plugin->setGlobalMute(true);
+				$this->getPlugin()->setGlobalMute(true);
 				break;
 			/*case 23:
 				$scenarios = [];
-				foreach($this->plugin->getScenarios() as $scenario){
+				foreach($this->>getPlugin()->getScenarios() as $scenario){
 					if($scenario->isActive()){
 						$scenarios[] = $scenario->getName();
 					}
@@ -150,27 +183,28 @@ class UHCTimer extends Task{
 				$server->broadcastTitle("The game will begin in " . TF::AQUA . "$this->countdown second(s).");
 				break;
 			case 0:
-				foreach($this->plugin->getServer()->getDefaultLevel()->getEntities() as $entity){
+				foreach($this->getPlugin()->getServer()->getDefaultLevel()->getEntities() as $entity){
 					if(!$entity instanceof Player){
 						$entity->flagForDespawn();
 					}
 				}
-				$ev = new UHCStartEvent($this->plugin->getGamePlayers());
+				$ev = new UHCStartEvent($this->getPlugin()->getGamePlayers());
 				$ev->call();
 				$server->broadcastTitle(TF::RED . TF::BOLD . "The UHC has begun!");
-				self::$gameStatus = self::STATUS_GRACE;
+				$this->setGameStatus(self::STATUS_GRACE);
 				$this->countdown = 30;
 				break;
 		}
+		$this->countdown--;
 	}
 
 	private function handleGrace() : void{
 		$this->grace--;
-		$server = $this->plugin->getServer();
+		$server = $this->getPlugin()->getServer();
 		switch($this->grace){
 			case 1190:
 				$server->broadcastTitle("Global Mute has been " . TF::AQUA . "disabled!");
-				$this->plugin->setGlobalMute(false);
+				$this->getPlugin()->setGlobalMute(false);
 				$server->broadcastTitle("Final heal will occur in " . TF::AQUA . "10 minutes.");
 				break;
 			case 601:
@@ -200,7 +234,7 @@ class UHCTimer extends Task{
 				break;
 			case 0:
 				$server->broadcastTitle(TF::RED . "PvP has been enabled, good luck!");
-				self::$gameStatus = self::STATUS_PVP;
+				$this->setGameStatus(self::STATUS_PVP);
 				$this->grace = 60 * 20;
 				break;
 		}
@@ -208,7 +242,7 @@ class UHCTimer extends Task{
 
 	private function handlePvP() : void{
 		$this->pvp--;
-		$server = $this->plugin->getServer();
+		$server = $this->getPlugin()->getServer();
 		switch($this->pvp){
 			case 900:
 				$server->broadcastTitle("The border will shrink to " . TF::AQUA . "750" . TF::WHITE . " in " . TF::AQUA . "5 minutes");
@@ -224,7 +258,7 @@ class UHCTimer extends Task{
 			case 0:
 				$this->border->setSize(250);
 				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
-				self::$gameStatus = self::STATUS_NORMAL;
+				$this->setGameStatus(self::STATUS_NORMAL);
 				$this->pvp = 60 * 30;
 				break;
 		}
@@ -232,7 +266,7 @@ class UHCTimer extends Task{
 
 	public function handleNormal() : void{
 		$this->normal--;
-		$server = $this->plugin->getServer();
+		$server = $this->getPlugin()->getServer();
 		switch($this->normal){
 			case 3300:
 				$this->border->setSize(100);
@@ -252,27 +286,38 @@ class UHCTimer extends Task{
 		}
 	}
 
+	/**
+	 * @param Player $p
+	 */
 	private function handleScoreboard(Player $p) : void{
-		Scoreboard::setTitle($p, "§ky§r §b" . $p->getDisplayName() . " §f§ky§r");
-
-		if(self::$gameStatus >= self::STATUS_GRACE){
-			Scoreboard::setLine($p, 1, "§7---------------------");
-			Scoreboard::setLine($p, 2, " §bGame Time: §f" . gmdate("H:i:s", $this->game));
-			Scoreboard::setLine($p, 3, " §bRemaining: §f" . count($this->plugin->getGamePlayers()));
-			Scoreboard::setLine($p, 4, " §bEliminations: §f" . $this->plugin->getEliminations($p));
-			Scoreboard::setLine($p, 5, " §bBorder: §f" . $this->border->getSize());
-			Scoreboard::setLine($p, 6, " §bCenter: §f(" . $p->getLevel()->getSafeSpawn()->getFloorX() . ", " . $p->getLevel()->getSafeSpawn()->getFloorZ() . ")");
-			Scoreboard::setLine($p, 7, "§7--------------------- ");
-		}elseif(self::$gameStatus <= self::STATUS_COUNTDOWN){
-			Scoreboard::setLine($p, 1, "§7---------------------");
-			Scoreboard::setLine($p, 2, " §bPlayers: §f" . count($this->plugin->getGamePlayers()));
-			Scoreboard::setLine($p, 3, self::$gameStatus === self::STATUS_WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown");
-			Scoreboard::setLine($p, 4, "§7--------------------- ");
+		$session = $this->getPlugin()->getSession($p);
+		if($session instanceof PlayerSession) {
+			if(!$session->getScoreboard()->exists()) {
+				$session->getScoreboard()->send("§ky§r §b" . $p->getDisplayName() . " §f§ky§r");
+			}
+			if($this->hasStarted()) {
+				$session->getScoreboard()->setLineArray([
+					1 => "§7---------------------",
+					2 => " §bGame Time: §f" . gmdate("H:i:s", $this->game),
+					3 => " §bRemaining: §f" . count($this->getPlugin()->getGamePlayers()),
+					4 => " §bEliminations: §f" . $this->getPlugin()->getEliminations($p),
+					5 => " §bBorder: §f" . $this->border->getSize(),
+					6 => " §bCenter: §f(" . $p->getLevel()->getSafeSpawn()->getFloorX() . ", " . $p->getLevel()->getSafeSpawn()->getFloorZ() . ")",
+					7 => "§7--------------------- "
+				]);
+			} else {
+				$session->getScoreboard()->setLineArray([
+					1 => "§7---------------------",
+					2 => " §bPlayers: §f" . count($this->getPlugin()->getGamePlayers()),
+					3 => $this->getGameStatus() === self::STATUS_WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown",
+					4 => "§7--------------------- "
+				]);
+			}
 		}
 	}
 
 	private function randomizeCoordinates(Player $p, int $range) : void{
-		$this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use ($p, $range) : void{
+		$this->getPlugin()->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use ($p, $range) : void{
 			$ss = $p->getLevel()->getSafeSpawn();
 			$x = mt_rand($ss->getFloorX() - $range, $ss->getFloorX() + $range);
 			$z = mt_rand($ss->getFloorZ() - $range, $ss->getFloorZ() + $range);
