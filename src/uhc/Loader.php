@@ -102,7 +102,7 @@ class Loader extends PluginBase{
 	}
 
 	/**
-	 * @return array
+	 * @return Player[]
 	 */
 	public function getGamePlayers(): array {
 		return $this->gamePlayers;
@@ -181,7 +181,7 @@ class Loader extends PluginBase{
 	}
 
 	/**
-	 * @return array
+	 * @return Scenario[]
 	 */
 	public function getScenarios(): array{
 		return $this->scenarios;
