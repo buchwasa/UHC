@@ -9,18 +9,32 @@ use pocketmine\command\PluginCommand;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use uhc\form\SimpleForm;
+use uhc\GameHeartbeat;
 use uhc\Loader;
-use uhc\UHCTimer;
 
-class UHCCommand extends PluginCommand{
+/**
+ * Class UHCCommand
+ * @package uhc\command
+ *
+ * TODO: Change from PluginCommand, so that we can use getPlugin() w/ no issues
+ */
+class UHCCommand extends PluginCommand {
+
 	/** @var Loader */
 	private $plugin;
 
-	public function __construct(Loader $plugin){
+	public function __construct(Loader $plugin) {
 		parent::__construct("uhc", $plugin);
 		$this->plugin = $plugin;
 		$this->setPermission("uhc.command.uhc");
 		$this->setUsage("/uhc");
+	}
+
+	/**
+	 * @return Loader
+	 */
+	public function getLoader(): Loader {
+		return $this->plugin;
 	}
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
@@ -31,14 +45,16 @@ class UHCCommand extends PluginCommand{
 		$form = new SimpleForm("UHC");
 		$form->addButton("Start UHC", function(Player $player, $data){
 			if($data === 0){
-				if(UHCTimer::$gameStatus >= UHCTimer::STATUS_COUNTDOWN){
+				if($this->getLoader()->getHeartbeat()->hasStarted()) {
 					$player->sendMessage(TextFormat::RED . "UHC already started!");
+				} else {
+					$this->getLoader()->getHeartbeat()->setGameStatus(GameHeartbeat::STATUS_COUNTDOWN);
+					$player->sendMessage(TextFormat::GREEN . "The UHC has been started successfully!");
 				}
-				UHCTimer::$gameStatus = UHCTimer::STATUS_COUNTDOWN;
 			}
 		});
 
-		$form->addButton("Teleport All", function(Player $player, $data){
+		$form->addButton("Teleport All", function(Player $player, $data) {
 			if($data === 1){
 				foreach($this->plugin->getServer()->getOnlinePlayers() as $p){
 					$p->teleport($player->getPosition());
