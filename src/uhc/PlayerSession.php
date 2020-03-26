@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace uhc;
 
-
 use pocketmine\Player;
 use pocketmine\utils\UUID;
 use uhc\utils\Scoreboard;

@@ -10,6 +10,7 @@ use pocketmine\network\mcpe\protocol\SetScorePacket;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use pocketmine\Server;
 use uhc\PlayerSession;
+use function count;
 use function str_repeat;
 
 class Scoreboard {
