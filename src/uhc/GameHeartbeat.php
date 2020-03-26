@@ -20,7 +20,7 @@ use function mt_rand;
 class GameHeartbeat extends Task {
 
 	/** @var int */
-	public $gameStatus = self::STATUS_WAITING;
+	private $gameStatus = self::STATUS_WAITING;
 
 	/** @var int */
 	public const STATUS_WAITING = -1;
