@@ -11,6 +11,7 @@ use pocketmine\utils\TextFormat;
 use uhc\form\SimpleForm;
 use uhc\GameHeartbeat;
 use uhc\Loader;
+use uhc\utils\GameStatus;
 
 /**
  * TODO: Change from PluginCommand, so that we can use getPlugin() w/ no issues
@@ -41,7 +42,7 @@ class UHCCommand extends PluginCommand{
 				if($this->getLoader()->getHeartbeat()->hasStarted()){
 					$player->sendMessage(TextFormat::RED . "UHC already started!");
 				}else{
-					$this->getLoader()->getHeartbeat()->setGameStatus(GameHeartbeat::STATUS_COUNTDOWN);
+					$this->getLoader()->getHeartbeat()->setGameStatus(GameStatus::COUNTDOWN);
 					$player->sendMessage(TextFormat::GREEN . "The UHC has been started successfully!");
 				}
 			}

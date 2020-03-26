@@ -97,7 +97,7 @@ class GameHeartbeat extends Task {
 				$player->addTitle("You have been teleported by border!");
 			}
 			switch($this->getGameStatus()) {
-				case self::STATUS_COUNTDOWN:
+				case GameStatus::COUNTDOWN:
 					$player->setFood($player->getMaxFood());
 					$player->setHealth($player->getMaxHealth());
 					if($this->countdown === 29){
@@ -112,7 +112,7 @@ class GameHeartbeat extends Task {
 						$player->setImmobile(false);
 					}
 					break;
-				case self::STATUS_GRACE:
+				case GameStatus::GRACE:
 					if($this->grace === 601){
 						$player->setHealth($player->getMaxHealth());
 					}
@@ -152,7 +152,7 @@ class GameHeartbeat extends Task {
 				$ev = new UHCStartEvent($this->getPlugin()->getGamePlayers());
 				$ev->call();
 				$server->broadcastTitle(TF::RED . TF::BOLD . "The UHC has begun!");
-				$this->setGameStatus(self::STATUS_GRACE);
+				$this->setGameStatus(GameStatus::GRACE);
 				$this->countdown = 30;
 				break;
 		}
@@ -195,7 +195,7 @@ class GameHeartbeat extends Task {
 				break;
 			case 0:
 				$server->broadcastTitle(TF::RED . "PvP has been enabled, good luck!");
-				$this->setGameStatus(self::STATUS_PVP);
+				$this->setGameStatus(GameStatus::PVP);
 				$this->grace = 60 * 20;
 				break;
 		}
@@ -219,7 +219,7 @@ class GameHeartbeat extends Task {
 			case 0:
 				$this->border->setSize(250);
 				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
-				$this->setGameStatus(self::STATUS_NORMAL);
+				$this->setGameStatus(GameStatus::NORMAL);
 				$this->pvp = 60 * 30;
 				break;
 		}
@@ -267,7 +267,7 @@ class GameHeartbeat extends Task {
 				$session->getScoreboard()->setLineArray([
 					1 => "§7---------------------",
 					2 => " §bPlayers: §f" . count($this->getPlugin()->getGamePlayers()),
-					3 => $this->getGameStatus() === self::GameStatus::WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown",
+					3 => $this->getGameStatus() === GameStatus::WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown",
 					4 => "§7--------------------- "
 				]);
 			}
