@@ -21,6 +21,7 @@ use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\UHCStartEvent;
+use uhc\utils\GameStatus;
 
 class EventListener implements Listener{
 	/** @var Loader */
@@ -54,7 +55,7 @@ class EventListener implements Listener{
 			$session = $this->getPlugin()->getSession($player);
 			$session->setPlayer($player);
 		}
-		if($this->getPlugin()->getHeartbeat()->getGameStatus() === GameHeartbeat::STATUS_WAITING){
+		if($this->getPlugin()->getHeartbeat()->getGameStatus() === GameStatus::WAITING){
 			$player->teleport($player->getLevel()->getSafeSpawn());
 			$player->setGamemode(Player::SURVIVAL);
 		}
@@ -89,11 +90,11 @@ class EventListener implements Listener{
 
 	public function handleDamage(EntityDamageEvent $ev) : void{
 		switch($this->getPlugin()->getHeartbeat()->getGameStatus()){
-			case GameHeartbeat::STATUS_WAITING:
-			case GameHeartbeat::STATUS_COUNTDOWN:
+			case GameStatus::WAITING:
+			case GameStatus::COUNTDOWN:
 				$ev->setCancelled();
 				break;
-			case GameHeartbeat::STATUS_GRACE:
+			case GameStatus::GRACE:
 				if($ev instanceof EntityDamageByEntityEvent){
 					$ev->setCancelled();
 				}

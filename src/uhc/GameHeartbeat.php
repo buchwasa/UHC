@@ -11,7 +11,7 @@ use pocketmine\scheduler\Task;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\UHCStartEvent;
 use uhc\utils\Border;
-use uhc\uils\GameStatus;
+use uhc\utils\GameStatus;
 use uhc\utils\RegionUtils;
 use function count;
 use function floor;
