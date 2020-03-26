@@ -76,7 +76,7 @@ class PlayerSession {
 	 * @param Player $player
 	 * @return PlayerSession
 	 */
-	public static function create(Player $player): PlayerSession {
+	static public function create(Player $player): PlayerSession {
 		return new PlayerSession($player);
 	}
 
