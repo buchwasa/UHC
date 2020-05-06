@@ -22,11 +22,11 @@ class ScenariosCommand extends PluginCommand{
 		$this->setUsage("/scenario");
 	}
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
+	public function execute(CommandSender $sender, string $commandLabel, array $args){
 		if(!$sender instanceof Player){
 			$sender->sendMessage("Must be executed in-game!");
 
-			return true;
+			return;
 		}
 
 		$form = new CustomForm("Scenarios");
@@ -41,6 +41,6 @@ class ScenariosCommand extends PluginCommand{
 
 		$sender->sendForm($form);
 
-		return true;
+		return;
 	}
 }

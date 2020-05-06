@@ -24,7 +24,7 @@ class HealCommand extends PluginCommand{
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args){
 		if(!$this->testPermission($sender)){
-			return true;
+			return;
 		}
 
 		if(!isset($args[0])){
@@ -38,6 +38,6 @@ class HealCommand extends PluginCommand{
 			$sender->sendMessage(TF::RED . "You have healed " . TF::BOLD . TF::AQUA . $player->getDisplayName() . TF::RESET . TF::RED . "!");
 		}
 
-		return false;
+		return;
 	}
 }

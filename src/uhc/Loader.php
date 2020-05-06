@@ -6,9 +6,11 @@ namespace uhc;
 
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use uhc\command\GlobalMuteCommand;
 use uhc\command\HealCommand;
 use uhc\command\ScenariosCommand;
 use uhc\command\SpectatorCommand;
+use uhc\command\TpallCommand;
 use uhc\command\UHCCommand;
 use uhc\utils\Scenario;
 use function is_array;
@@ -42,7 +44,9 @@ class Loader extends PluginBase{
 			new UHCCommand($this),
 			new ScenariosCommand($this),
 			new SpectatorCommand($this),
-			new HealCommand($this)
+			new HealCommand($this),
+			new GlobalMuteCommand($this),
+			new TpallCommand($this)
 		]);
 
 		$dir = scandir($this->getDataFolder() . "scenarios");

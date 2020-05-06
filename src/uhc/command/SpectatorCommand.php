@@ -22,33 +22,33 @@ class SpectatorCommand extends PluginCommand{
 		$this->setUsage("/spectate <playerName>");
 	}
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
+	public function execute(CommandSender $sender, string $commandLabel, array $args){
+		if(!isset($args[0])){
+			throw new InvalidCommandSyntaxException();
+		}
+
 		if(!$sender instanceof Player){
 			$sender->sendMessage("Must be a player!");
 
-			return true;
+			return;
 		}
 
 		if($sender->getGamemode() === 3){
-			if(isset($args[0])){
-				$player = $this->plugin->getServer()->getPlayer(strtolower($args[0]));
-				if($player !== null){
-					if($player === $sender){
-						$sender->sendMessage(TextFormat::RED . "You can't spectate yourself!");
-					}else{
-						$sender->teleport($player->getPosition());
-						$sender->sendMessage(TextFormat::GREEN . "Now spectating: " . $player->getDisplayName());
-					}
-				}else{
-					$sender->sendMessage(TextFormat::RED . "That player is offline!");
-				}
-			}else{
-				throw new InvalidCommandSyntaxException();
-			}
-		}else{
 			$sender->sendMessage(TextFormat::RED . "You must be in spectator mode to use this command!");
 		}
 
-		return true;
+		$player = $this->plugin->getServer()->getPlayer(strtolower($args[0]));
+		if($player !== null){
+			if($player === $sender){
+				$sender->sendMessage(TextFormat::RED . "You can't spectate yourself!");
+			}else{
+				$sender->teleport($player->getPosition());
+				$sender->sendMessage(TextFormat::GREEN . "Now spectating: " . $player->getDisplayName());
+			}
+		}else{
+			$sender->sendMessage(TextFormat::RED . "That player is offline!");
+		}
+
+		return;
 	}
 }
