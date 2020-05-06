@@ -105,17 +105,18 @@ class EventListener implements Listener{
 	public function handleDeath(PlayerDeathEvent $ev) : void{
 		$player = $ev->getPlayer();
 		$cause = $player->getLastDamageCause();
+		$eliminatedSession = $this->plugin->getSession($player);
 		$player->setGamemode(3);
 		$player->addTitle(TF::YELLOW . "You have been eliminated!", "Use /spectate to spectate a player.");
-		$player->getLevel()->broadcastLevelSoundEvent($player, LevelSoundEventPacket::SOUND_RAID_HORN);
 		if($cause instanceof EntityDamageByEntityEvent){
 			$damager = $cause->getDamager();
 			if($damager instanceof Player){
-				$this->getPlugin()->addElimination($damager);
-				$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $this->getPlugin()->getEliminations($player) . TF::GRAY . "]" . TF::YELLOW . " was slain by " . TF::RED . $damager->getName() . TF::GRAY . "[" . TF::WHITE . $this->getPlugin()->getEliminations($damager) . TF::GRAY . "]");
+				$damagerSession = $this->plugin->getSession($damager);
+				$damagerSession->addElimination();;
+				$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " was slain by " . TF::RED . $damager->getName() . TF::GRAY . "[" . TF::WHITE . $damagerSession->getEliminations() . TF::GRAY . "]");
 			}
 		}else{
-			$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $this->getPlugin()->getEliminations($player) . TF::GRAY . "]" . TF::YELLOW . " died!");
+			$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " died!");
 		}
 	}
 

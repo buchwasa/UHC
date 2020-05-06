@@ -25,8 +25,6 @@ class Loader extends PluginBase{
 	private $gamePlayers = [];
 	/** @var PlayerSession[] */
 	private $sessions = [];
-	/** @var array */
-	private $eliminations = [];
 	/** @var bool */
 	private $globalMuteEnabled = false;
 	/** @var Scenario[] */
@@ -121,22 +119,6 @@ class Loader extends PluginBase{
 
 	public function getSession(Player $player) : ?PlayerSession{
 		return $this->hasSession($player) ? $this->sessions[$player->getUniqueId()->toString()] : null;
-	}
-
-	public function addElimination(Player $player) : void{
-		if(isset($this->eliminations[$player->getName()])){
-			$this->eliminations[$player->getName()] = $this->eliminations[$player->getName()] + 1;
-		}else{
-			$this->eliminations[$player->getName()] = 1;
-		}
-	}
-
-	public function getEliminations(Player $player) : int{
-		if(isset($this->eliminations[$player->getName()])){
-			return $this->eliminations[$player->getName()];
-		}else{
-			return $this->eliminations[$player->getName()] = 0;
-		}
 	}
 
 	/**

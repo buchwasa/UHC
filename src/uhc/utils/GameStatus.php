@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace uhc\utils;
 
-interface GameStatus{
+final class GameStatus{
 	/** @var int */
 	public const WAITING = -1;
 	/** @var int */

@@ -258,7 +258,7 @@ class GameHeartbeat extends Task {
 					1 => "§7---------------------",
 					2 => " §bGame Time: §f" . gmdate("H:i:s", $this->game),
 					3 => " §bRemaining: §f" . count($this->getPlugin()->getGamePlayers()),
-					4 => " §bEliminations: §f" . $this->getPlugin()->getEliminations($p),
+					4 => " §bEliminations: §f" . $session->getEliminations(),
 					5 => " §bBorder: §f" . $this->border->getSize(),
 					6 => " §bCenter: §f(" . $p->getLevel()->getSafeSpawn()->getFloorX() . ", " . $p->getLevel()->getSafeSpawn()->getFloorZ() . ")",
 					7 => "§7--------------------- "
