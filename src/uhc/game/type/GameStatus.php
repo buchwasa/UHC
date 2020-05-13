@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace uhc\utils;
+namespace uhc\game\type;
 
 final class GameStatus{
+
 	/** @var int */
 	public const WAITING = -1;
 	/** @var int */
@@ -15,4 +16,5 @@ final class GameStatus{
 	public const PVP = 2;
 	/** @var int */
 	public const NORMAL = 3;
+
 }

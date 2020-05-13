@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace uhc\command;
 
+use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
-use pocketmine\plugin\Plugin;
 use pocketmine\utils\TextFormat;
 use uhc\Loader;
 
@@ -27,9 +27,11 @@ class GlobalMuteCommand extends PluginCommand{
 		if(!$this->plugin->isGlobalMuteEnabled()){
 			$this->plugin->setGlobalMute(true);
 			$this->plugin->getServer()->broadcastMessage(TextFormat::GREEN . "Chat has been disabled by an admin!");
+			Command::broadcastCommandMessage($sender, "Disabled chat", false);
 		}else{
 			$this->plugin->setGlobalMute(false);
 			$this->plugin->getServer()->broadcastMessage(TextFormat::GREEN . "Chat has been enabled by an admin!");
+			Command::broadcastCommandMessage($sender, "Enabled chat", false);
 		}
 	}
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace uhc\utils;
 
+use pocketmine\event\Event;
 use pocketmine\event\Listener;
 use uhc\Loader;
 

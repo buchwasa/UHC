@@ -23,32 +23,38 @@ class SpectatorCommand extends PluginCommand{
 	}
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args){
-		if(!isset($args[0])){
-			throw new InvalidCommandSyntaxException();
-		}
-
 		if(!$sender instanceof Player){
 			$sender->sendMessage("Must be a player!");
 
 			return;
 		}
 
-		if($sender->getGamemode() === 3){
+		if($sender->getGamemode() !== 3){
 			$sender->sendMessage(TextFormat::RED . "You must be in spectator mode to use this command!");
+
+			return;
+		}
+
+		if(!isset($args[0])){
+			throw new InvalidCommandSyntaxException();
 		}
 
 		$player = $this->plugin->getServer()->getPlayer(strtolower($args[0]));
 		if($player !== null){
-			if($player === $sender){
-				$sender->sendMessage(TextFormat::RED . "You can't spectate yourself!");
-			}else{
-				$sender->teleport($player->getPosition());
-				$sender->sendMessage(TextFormat::GREEN . "Now spectating: " . $player->getDisplayName());
-			}
-		}else{
 			$sender->sendMessage(TextFormat::RED . "That player is offline!");
+
+			return;
 		}
 
-		return;
+		if($player === $sender){
+			$sender->sendMessage(TextFormat::RED . "You can't spectate yourself!");
+
+			return;
+		}else{
+			$sender->teleport($player->getPosition());
+			$sender->sendMessage(TextFormat::GREEN . "Now spectating: " . $player->getDisplayName());
+
+			return;
+		}
 	}
 }

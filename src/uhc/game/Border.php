@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
  
-namespace uhc\utils;
+namespace uhc\game;
 
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockIds;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
+use uhc\utils\RegionUtils;
 use function mt_rand;
 
 class Border{

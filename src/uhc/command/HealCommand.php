@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace uhc\command;
 
+use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
@@ -36,6 +37,7 @@ class HealCommand extends PluginCommand{
 			$player->setHealth($player->getMaxHealth());
 			$player->setFood($player->getMaxFood());
 			$sender->sendMessage(TF::RED . "You have healed " . TF::BOLD . TF::AQUA . $player->getDisplayName() . TF::RESET . TF::RED . "!");
+			Command::broadcastCommandMessage($sender, "Healed: " . $player->getDisplayName(), false);
 		}
 
 		return;

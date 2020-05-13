@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace uhc\command;
 
+use dktapps\pmforms\CustomForm;
+use dktapps\pmforms\CustomFormResponse;
+use dktapps\pmforms\element\Label;
+use dktapps\pmforms\element\Toggle;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\Player;
-use uhc\form\CustomForm;
 use uhc\Loader;
 
 class ScenariosCommand extends PluginCommand{
@@ -29,15 +32,19 @@ class ScenariosCommand extends PluginCommand{
 			return;
 		}
 
-		$form = new CustomForm("Scenarios");
+		$toggles = [];
 		foreach($this->plugin->getScenarios() as $scenario){
-			$form->addToggle($scenario->getName(), $scenario->isActive(), function(Player $player, bool $data) use ($scenario){
+			$toggles[] = new Toggle($scenario->getName(), $scenario->getName(), $scenario->isActive());
+		}
+
+		$form = new CustomForm("Scenarios", $toggles, function(Player $player, CustomFormResponse $response) : void{
+			foreach($this->plugin->getScenarios() as $scenario){
 				if(!$this->testPermissionSilent($player)){
 					return;
 				}
-				$scenario->setActive($data);
-			});
-		}
+				$scenario->setActive($response->getBool($scenario->getName()));
+			}
+		});
 
 		$sender->sendForm($form);
 

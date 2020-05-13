@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace uhc\command;
 
+use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
-use pocketmine\Player;
 use pocketmine\utils\TextFormat;
-use uhc\form\SimpleForm;
-use uhc\GameHeartbeat;
+use uhc\game\type\GameStatus;
 use uhc\Loader;
-use uhc\utils\GameStatus;
 
 class UHCCommand extends PluginCommand{
 	/** @var Loader */
@@ -25,15 +23,18 @@ class UHCCommand extends PluginCommand{
 	}
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args){
-		if(!$this->testPermission($sender) || !$sender instanceof Player){
+		if(!$this->testPermission($sender)){
 			return;
 		}
 
 		if($this->plugin->getHeartbeat()->hasStarted()){
 			$sender->sendMessage(TextFormat::RED . "UHC already started!");
+
+			return;
 		}else{
 			$this->plugin->getHeartbeat()->setGameStatus(GameStatus::COUNTDOWN);
 			$sender->sendMessage(TextFormat::GREEN . "The UHC has been started successfully!");
+			Command::broadcastCommandMessage($sender, "Started the UHC", false);
 		}
 
 		return;

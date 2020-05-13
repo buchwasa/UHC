@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace uhc\command;
 
+use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\Player;
@@ -31,5 +32,6 @@ class TpallCommand extends PluginCommand{
 		foreach($this->plugin->getServer()->getOnlinePlayers() as $p){
 			$p->teleport($sender->getPosition());
 		}
+		Command::broadcastCommandMessage($sender, "Teleported everyone");
 	}
 }

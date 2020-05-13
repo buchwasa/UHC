@@ -12,6 +12,7 @@ use uhc\command\ScenariosCommand;
 use uhc\command\SpectatorCommand;
 use uhc\command\TpallCommand;
 use uhc\command\UHCCommand;
+use uhc\game\GameHeartbeat;
 use uhc\utils\Scenario;
 use function is_array;
 use function is_dir;

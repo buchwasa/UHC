@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-namespace uhc;
+namespace uhc\game;
 
+use JackMD\ScoreFactory\ScoreFactory;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\Task;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\UHCStartEvent;
-use uhc\utils\Border;
-use uhc\utils\GameStatus;
+use uhc\game\type\GameStatus;
+use uhc\game\type\GameTimer;
+use uhc\Loader;
+use uhc\PlayerSession;
 use uhc\utils\RegionUtils;
-use function count;
 use function floor;
-use function gmdate;
 use function mt_rand;
 
 class GameHeartbeat extends Task {
@@ -25,13 +26,13 @@ class GameHeartbeat extends Task {
 	/** @var int */
 	private $game = 0;
 	/** @var int */
-	private $countdown = 30;
+	private $countdown = GameTimer::TIMER_COUNTDOWN;
 	/** @var float|int */
-	private $grace = 60 * 20;
+	private $grace = GameTimer::TIMER_GRACE;
 	/** @var float|int */
-	private $pvp = 60 * 30;
+	private $pvp = GameTimer::TIMER_PVP;
 	/** @var float|int */
-	private $normal = 60 * 60;
+	private $normal = GameTimer::TIMER_NORMAL;
 	/** @var Border */
 	private $border;
 	/** @var Loader */
@@ -43,10 +44,6 @@ class GameHeartbeat extends Task {
 	public function __construct(Loader $plugin) {
 		$this->plugin = $plugin;
 		$this->border = new Border($plugin->getServer()->getDefaultLevel());
-	}
-
-	public function getPlugin() : Loader{
-		return $this->plugin;
 	}
 
 	public function getGameStatus() : int{
@@ -81,16 +78,16 @@ class GameHeartbeat extends Task {
 	}
 
 	private function handlePlayers() : void{
-		foreach($this->getPlugin()->getServer()->getOnlinePlayers() as $p){
+		foreach($this->plugin->getServer()->getOnlinePlayers() as $p){
 			if($p->isSurvival()){
-				$this->getPlugin()->addToGame($p);
+				$this->plugin->addToGame($p);
 			}else{
-				$this->getPlugin()->removeFromGame($p);
+				$this->plugin->removeFromGame($p);
 			}
 			$this->handleScoreboard($p);
 		}
 
-		foreach($this->getPlugin()->getGamePlayers() as $player){
+		foreach($this->plugin->getGamePlayers() as $player){
 			$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
 			if(!$this->border->isPlayerInsideOfBorder($player)){
 				$this->border->teleportPlayer($player);
@@ -122,7 +119,7 @@ class GameHeartbeat extends Task {
 	}
 
 	private function handleCountdown() : void{
-		$server = $this->getPlugin()->getServer();
+		$server = $this->plugin->getServer();
 		switch($this->countdown){
 			case 30:
 				$server->setConfigBool("white-list", true);
@@ -131,7 +128,7 @@ class GameHeartbeat extends Task {
 				break;
 			case 29:
 				$server->broadcastTitle("Global Mute has been " . TF::AQUA . "enabled!");
-				$this->getPlugin()->setGlobalMute(true);
+				$this->plugin->setGlobalMute(true);
 				break;
 			case 10:
 				$server->broadcastTitle("The game will begin in " . TF::AQUA . "10 seconds.");
@@ -144,28 +141,29 @@ class GameHeartbeat extends Task {
 				$server->broadcastTitle("The game will begin in " . TF::AQUA . "$this->countdown second(s).");
 				break;
 			case 0:
-				foreach($this->getPlugin()->getServer()->getDefaultLevel()->getEntities() as $entity){
+				foreach($this->plugin->getServer()->getDefaultLevel()->getEntities() as $entity){
 					if(!$entity instanceof Player){
 						$entity->flagForDespawn();
 					}
 				}
-				$ev = new UHCStartEvent($this->getPlugin()->getGamePlayers());
-				$ev->call();
+
+				foreach($this->plugin->getGamePlayers() as $playerSession){
+					$ev = new UHCStartEvent($playerSession);
+					$ev->call();
+				}
 				$server->broadcastTitle(TF::RED . TF::BOLD . "The UHC has begun!");
 				$this->setGameStatus(GameStatus::GRACE);
-				$this->countdown = 30;
 				break;
 		}
 		$this->countdown--;
 	}
 
 	private function handleGrace() : void{
-		$this->grace--;
-		$server = $this->getPlugin()->getServer();
+		$server = $this->plugin->getServer();
 		switch($this->grace){
 			case 1190:
 				$server->broadcastTitle("Global Mute has been " . TF::AQUA . "disabled!");
-				$this->getPlugin()->setGlobalMute(false);
+				$this->plugin->setGlobalMute(false);
 				$server->broadcastTitle("Final heal will occur in " . TF::AQUA . "10 minutes.");
 				break;
 			case 601:
@@ -196,14 +194,13 @@ class GameHeartbeat extends Task {
 			case 0:
 				$server->broadcastTitle(TF::RED . "PvP has been enabled, good luck!");
 				$this->setGameStatus(GameStatus::PVP);
-				$this->grace = 60 * 20;
 				break;
 		}
+		$this->grace--;
 	}
 
 	private function handlePvP() : void{
-		$this->pvp--;
-		$server = $this->getPlugin()->getServer();
+		$server = $this->plugin->getServer();
 		switch($this->pvp){
 			case 900:
 				$server->broadcastTitle("The border will shrink to " . TF::AQUA . "750" . TF::WHITE . " in " . TF::AQUA . "5 minutes");
@@ -220,14 +217,13 @@ class GameHeartbeat extends Task {
 				$this->border->setSize(250);
 				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				$this->setGameStatus(GameStatus::NORMAL);
-				$this->pvp = 60 * 30;
 				break;
 		}
+		$this->pvp--;
 	}
 
 	public function handleNormal() : void{
-		$this->normal--;
-		$server = $this->getPlugin()->getServer();
+		$server = $this->plugin->getServer();
 		switch($this->normal){
 			case 3300:
 				$this->border->setSize(100);
@@ -245,37 +241,29 @@ class GameHeartbeat extends Task {
 				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".");
 				break;
 		}
+		$this->normal--;
 	}
 
 	private function handleScoreboard(Player $p) : void{
-		$session = $this->getPlugin()->getSession($p);
-		if($session instanceof PlayerSession) {
-			if(!$session->getScoreboard()->exists()) {
-				$session->getScoreboard()->send("§ky§r §b" . $p->getDisplayName() . " §f§ky§r");
-			}
-			if($this->hasStarted()){
-				$session->getScoreboard()->setLineArray([
-					1 => "§7---------------------",
-					2 => " §bGame Time: §f" . gmdate("H:i:s", $this->game),
-					3 => " §bRemaining: §f" . count($this->getPlugin()->getGamePlayers()),
-					4 => " §bEliminations: §f" . $session->getEliminations(),
-					5 => " §bBorder: §f" . $this->border->getSize(),
-					6 => " §bCenter: §f(" . $p->getLevel()->getSafeSpawn()->getFloorX() . ", " . $p->getLevel()->getSafeSpawn()->getFloorZ() . ")",
-					7 => "§7--------------------- "
-				]);
-			}else{
-				$session->getScoreboard()->setLineArray([
-					1 => "§7---------------------",
-					2 => " §bPlayers: §f" . count($this->getPlugin()->getGamePlayers()),
-					3 => $this->getGameStatus() === GameStatus::WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown",
-					4 => "§7--------------------- "
-				]);
-			}
+		ScoreFactory::setScore($p, "§ky§r §b" . $p->getDisplayName() . " §f§ky§r");
+		if($this->hasStarted()){
+			ScoreFactory::setScoreLine($p, 1, "§7---------------------");
+			ScoreFactory::setScoreLine($p, 2, " §bGame Time: §f" . gmdate("H:i:s", $this->game));
+			ScoreFactory::setScoreLine($p, 3, " §bRemaining: §f" . count($this->plugin->getGamePlayers()));
+			ScoreFactory::setScoreLine($p, 4, " §bEliminations: §f" . $this->plugin->getSession($p)->getEliminations());
+			ScoreFactory::setScoreLine($p, 5, " §bBorder: §f" . $this->border->getSize());
+			ScoreFactory::setScoreLine($p, 6, " §bCenter: §f(" . $p->getLevel()->getSafeSpawn()->getFloorX() . ", " . $p->getLevel()->getSafeSpawn()->getFloorZ() . ")");
+			ScoreFactory::setScoreLine($p, 7, "§7--------------------- ");
+		}else{
+			ScoreFactory::setScoreLine($p, 1, "§7---------------------");
+			ScoreFactory::setScoreLine($p, 2, " §bPlayers: §f" . count($this->plugin->getGamePlayers()));
+			ScoreFactory::setScoreLine($p, 3, $this->getGameStatus() === GameStatus::WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown");
+			ScoreFactory::setScoreLine($p, 4, "§7--------------------- ");
 		}
 	}
 
 	private function randomizeCoordinates(Player $p, int $range) : void{
-		$this->getPlugin()->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use ($p, $range) : void{
+		$this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use ($p, $range) : void{
 			$ss = $p->getLevel()->getSafeSpawn();
 			$x = mt_rand($ss->getFloorX() - $range, $ss->getFloorX() + $range);
 			$z = mt_rand($ss->getFloorZ() - $range, $ss->getFloorZ() + $range);

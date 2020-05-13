@@ -4,22 +4,12 @@ declare(strict_types=1);
 
 namespace uhc\event;
 
-use pocketmine\event\Event;
+use pocketmine\event\player\PlayerEvent;
 use pocketmine\Player;
 
-class UHCStartEvent extends Event{
+class UHCStartEvent extends PlayerEvent{
 
-	/** @var Player[] */
-	private $players = [];
-
-	public function __construct(array $players){
-		$this->players = $players;
-	}
-
-	/**
-	 * @return Player[]
-	 */
-	public function getPlayers() : array{
-		return $this->players;
+	public function __construct(Player $player){
+		$this->player = $player;
 	}
 }

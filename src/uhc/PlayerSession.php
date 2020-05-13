@@ -13,15 +13,12 @@ class PlayerSession{
 	private $uuid;
 	/** @var Player */
 	private $player;
-	/** @var Scoreboard */
-	private $scoreboard;
 	/** @var array TODO: deal with this later */
 	private $eliminations = [];
 
 	public function __construct(Player $player){
 		$this->player = $player;
 		$this->uuid = $player->getUniqueId();
-		$this->scoreboard = new Scoreboard($this);
 		$this->eliminations[$player->getName()] = 0;
 	}
 
@@ -35,14 +32,6 @@ class PlayerSession{
 
 	public function getPlayer() : Player{
 		return $this->player;
-	}
-
-	public function getScoreboard() : Scoreboard{
-		return $this->scoreboard;
-	}
-
-	public function setScoreboard(Scoreboard $scoreboard) : void{
-		$this->scoreboard = $scoreboard;
 	}
 
 	public function setPlayer(Player $player) : void{
