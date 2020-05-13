@@ -45,3 +45,8 @@ class ExampleScenario extends Scenario{
 }
 ```
 **Note: Scenario API is presently not stable and is subject to change!**
+
+## Current Issues
+- Scattering can causes some lag for a few seconds.
+- Bedrock borders cause lag when built above size 100. 
+Both of these problems are well known, just been neglected, closure tasks can help reduce the issue, however I do not have much ability to test with large amounts of players.
