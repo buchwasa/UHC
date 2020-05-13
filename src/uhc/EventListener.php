@@ -106,13 +106,13 @@ class EventListener implements Listener{
 
 	public function handleBreak(BlockBreakEvent $ev) : void{
 		if(!$this->plugin->getHeartbeat()->hasStarted()){
-			$ev->setCancelled();
+			//$ev->setCancelled();
 		}
 	}
 
 	public function handlePlace(BlockPlaceEvent $ev) : void{
 		if(!$this->plugin->getHeartbeat()->hasStarted()){
-			$ev->setCancelled();
+			//$ev->setCancelled();
 		}
 	}
 }

@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace uhc\utils;
 
-use pocketmine\event\Event;
+use pocketmine\event\HandlerList;
 use pocketmine\event\Listener;
 use uhc\Loader;
 
 class Scenario implements Listener{
 	/** @var string */
 	private $name;
+	/** @var Loader */
+	private $plugin;
 	/** @var bool */
 	private $activeScenario = false;
 
 	public function __construct(Loader $plugin, string $name){
-		$plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
+		$this->plugin = $plugin;
 		$this->name = $name;
 	}
 
@@ -25,6 +27,11 @@ class Scenario implements Listener{
 
 	public function setActive(bool $active) : void{
 		$this->activeScenario = $active;
+		if($active){
+			$this->plugin->getServer()->getPluginManager()->registerEvents($this, $this->plugin);
+		}else{
+			HandlerList::unregisterAll($this);
+		}
 	}
 
 	public function isActive() : bool{
