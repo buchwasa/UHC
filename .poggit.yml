@@ -10,4 +10,6 @@ projects:
         version: 1.0.0
       - src: Wumpotamus/ScoreFactory/ScoreFactory
         version: 2.1.0
+    lint:
+      phpstan: false
 ...
