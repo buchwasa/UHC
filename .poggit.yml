@@ -1,0 +1,13 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Wumpotamus/UHC
+build-by-default: true
+branches:
+- master
+projects:
+  UHC:
+    path: "" 
+    libs: 
+      - src: dktapps/pmforms/pmforms
+        version: 1.0.0
+      - src: JackMD/ScoreFactory
+        version: 2.1.0
+...
