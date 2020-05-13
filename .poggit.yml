@@ -6,8 +6,8 @@ projects:
   UHC:
     path: "" 
     libs: 
-      - src: dktapps/pmforms/pmforms
+      - src: dktapps-pm-pl/pmforms/pmforms
         version: 1.0.0
-      - src: JackMD/ScoreFactory
+      - src: Wumpotamus/ScoreFactory/ScoreFactory
         version: 2.1.0
 ...
