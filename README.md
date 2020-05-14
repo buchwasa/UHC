@@ -11,7 +11,8 @@ with more on the way!
 
 ## FAQ
 ### There's no scenarios?
-When making this, I still wanted each UHC server to have their own unique scenarios, with the same basic UHC concept. However, I know not everyone knows how to make scenarios, so I released a [scenario pack](https://github.com/Wumpotamus/UHC/releases), however scenarios are still a work in progress, and may need updated from time to time. You can unpack these scenarios in plugin_data/UHC/scenarios. Zip file support on the [way!](https://github.com/Wumpotamus/UHC/issues/6)
+When making this, I still wanted each UHC server to have their own unique scenarios, with the same basic UHC concept. However, I know not everyone knows how to make scenarios, so I released a [scenario pack](https://github.com/Wumpotamus/UHC/releases), however scenarios are still a work in progress, and may need updated from time to time. You can unpack these scenarios in plugin_data/UHC/scenarios. Zip file support on the [way!](https://github.com/Wumpotamus/UHC/issues/6)<br>
+*Note: the versioning for scenarios packs match up with the plugin version!*
 
 ### Okay... I got scenarios installed, now what?
 After you install scenarios, you simply start your server, and enable your scenarios by doing `/scenarios` or `/sc` for short! When you're satisfied with the amount of players, just run `/uhc` and it'll start!
