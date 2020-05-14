@@ -30,7 +30,7 @@ Making your own scenarios is simple! You'll want to create a `.php` file, with n
 declare(strict_types=1);
 
 use uhc\Loader;
-use uhc\utils\Scenario;
+use uhc\game\Scenario;
 
 class ExampleScenario extends Scenario{
     public function __construct(Loader $plugin){
