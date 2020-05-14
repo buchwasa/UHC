@@ -4,8 +4,8 @@ parameters:
 		- phar:///pocketmine/PocketMine-MP.phar/vendor/autoload.php
 	autoload_directories:
 		- src
-		- phar:///src/virions/pmforms_dev-4.phar
-		- phar:///src/virions/ScoreFactory_dev-2.phar
+		- phar:///source/virions/pmforms_dev-4.phar
+		- phar:///source/virions/ScoreFactory_dev-2.phar
 	paths:
 		- src
 	checkMissingIterableValueType: false
