@@ -7,16 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: ls
-      run: ls
+    - name: virions
+      run: mkdir virions
     - name: pmforms
       uses: wei/wget@v1
       with:
-        args: -P vendor/ https://poggit.pmmp.io/r/55533/pmforms_dev-4.phar
+        args: -P virions/ https://poggit.pmmp.io/r/55533/pmforms_dev-4.phar
     - name: scorefactory
       uses: wei/wget@v1
       with:
-        args: -P vendor/ https://poggit.pmmp.io/r/86613/ScoreFactory_dev-2.phar
+        args: -P virions/ https://poggit.pmmp.io/r/86613/ScoreFactory_dev-2.phar
     - name: phpstan
       uses: nxtlvlsoftware/pmmp-phpstan-action@3
       with:
