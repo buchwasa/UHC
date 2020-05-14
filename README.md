@@ -24,29 +24,27 @@ Feel free to open up an issue about any features you want! I will try my best to
 
 ### How do I make my own scenarios?
 Making your own scenarios is simple! You'll want to create a `.php` file, with no namespace, as shown below.<br>
-**Make sure you have the isActive() check, my current implementation does not automatically handle that.**
+
 ```php
 <?php
 declare(strict_types=1);
 
 use uhc\Loader;
-use uhc\utils\Scenario;
+use uhc\game\Scenario;
 
 class ExampleScenario extends Scenario{
     public function __construct(Loader $plugin){
-		    parent::__construct($plugin, "ExampleScenario");
-	  }
-    
+        parent::__construct($plugin, "ExampleScenario");
+    }
+
     public function handleEvent(ExampleEvent $ev){
-      if($this->isActive()){
         //code
-      }
     }
 }
 ```
 **Note: Scenario API is presently not stable and is subject to change!**
 
 ## Current Issues
-- Scattering can causes some lag for a few seconds.
+- Scattering can cause some lag for a few seconds.
 - Bedrock borders cause lag when built above size 100. 
-Both of these problems are well known, just been neglected, closure tasks can help reduce the issue, however I do not have much ability to test with large amounts of players.
+Both of these problems are well-known, just been neglected, closure tasks can help reduce the issue, however I do not have much ability to test with large amounts of players.
