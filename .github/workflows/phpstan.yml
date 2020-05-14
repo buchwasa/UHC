@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: vendor dir
-      run: mkdir vendor
+    - name: ls
+      run: ls
     - name: pmforms
       uses: wei/wget@v1
       with:
