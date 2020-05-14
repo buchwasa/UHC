@@ -14,7 +14,6 @@ use uhc\event\UHCStartEvent;
 use uhc\game\type\GameStatus;
 use uhc\game\type\GameTimer;
 use uhc\Loader;
-use uhc\PlayerSession;
 use uhc\utils\RegionUtils;
 use function floor;
 use function mt_rand;

@@ -6,7 +6,6 @@ namespace uhc;
 
 use pocketmine\Player;
 use pocketmine\utils\UUID;
-use uhc\scoreboard\Scoreboard;
 
 class PlayerSession{
 	/** @var UUID */

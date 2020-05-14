@@ -7,7 +7,6 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\Player;
-use pocketmine\plugin\Plugin;
 use uhc\Loader;
 
 class TpallCommand extends PluginCommand{

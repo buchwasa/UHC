@@ -6,7 +6,6 @@ namespace uhc\command;
 
 use dktapps\pmforms\CustomForm;
 use dktapps\pmforms\CustomFormResponse;
-use dktapps\pmforms\element\Label;
 use dktapps\pmforms\element\Toggle;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
