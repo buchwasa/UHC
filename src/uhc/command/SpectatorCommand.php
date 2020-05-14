@@ -40,7 +40,7 @@ class SpectatorCommand extends PluginCommand{
 		}
 
 		$player = $this->plugin->getServer()->getPlayer(strtolower($args[0]));
-		if($player !== null){
+		if($player === null){
 			$sender->sendMessage(TextFormat::RED . "That player is offline!");
 
 			return;
