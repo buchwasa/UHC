@@ -49,12 +49,16 @@ class Loader extends PluginBase{
 			new GlobalMuteCommand($this),
 			new TpallCommand($this)
 		]);
+		$this->loadScenarios();
+	}
 
+	public function loadScenarios() : void{
 		$dir = scandir($this->getDataFolder() . "scenarios");
 		if(is_array($dir)){
 			foreach($dir as $file){
+				$fileLocation = $this->getDataFolder() . "scenarios/" . $file;
 				if(substr($file, -4) === ".php"){
-					require($this->getDataFolder() . "scenarios/" . $file);
+					require($fileLocation);
 					$class = "\\" . str_replace(".php", "", $file);
 					if(($scenario = new $class($this)) instanceof Scenario){
 						$this->addScenario($scenario);

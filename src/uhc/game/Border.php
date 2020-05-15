@@ -9,7 +9,7 @@ use pocketmine\block\BlockIds;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
-use uhc\utils\RegionUtils;
+use wumpotamus\chunkloader\ChunkRegion;
 use function mt_rand;
 
 class Border{
@@ -72,14 +72,14 @@ class Border{
 		  $pZ = $this->getZ(true) + $z;
 	   }
 
-	   RegionUtils::onChunkGenerated($this->level, $pX >> 4, $pZ >> 4, function() use ($p, $pX, $pZ){
+	   ChunkRegion::onChunkGenerated($this->level, $pX >> 4, $pZ >> 4, function() use ($p, $pX, $pZ){
 		  $p->teleport(new Vector3($pX, $this->level->getHighestBlockAt($pX, $pZ) + 1, $pZ));
 	   });
 	}
 	
 	public function build() : void{ //TODO: Run this in a closure task.
 	   for($minX = $this->getX(true); $minX <= $this->getX(); $minX++){
-		  RegionUtils::onChunkGenerated($this->level, $minX >> 4, $this->getZ() >> 4, function() use ($minX){
+		  ChunkRegion::onChunkGenerated($this->level, $minX >> 4, $this->getZ() >> 4, function() use ($minX){
 			 $highestBlock = $this->level->getHighestBlockAt($minX, $this->getZ());
 			 for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
 				$this->level->setBlock(new Vector3($minX, $y, $this->getZ()), BlockFactory::get(BlockIds::BEDROCK));
@@ -93,7 +93,7 @@ class Border{
 	   }
 
 	   for($minZ = $this->getZ(true); $minZ <= $this->getZ(); $minZ++){
-		  RegionUtils::onChunkGenerated($this->level, $this->getX() >> 4, $minZ >> 4, function() use ($minZ){
+		  ChunkRegion::onChunkGenerated($this->level, $this->getX() >> 4, $minZ >> 4, function() use ($minZ){
 			 $highestBlock = $this->level->getHighestBlockAt($this->getX(), $minZ);
 			 for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
 				$this->level->setBlock(new Vector3($this->getX(), $y, $minZ), BlockFactory::get(BlockIds::BEDROCK));

@@ -12,7 +12,7 @@ class PlayerSession{
 	private $uuid;
 	/** @var Player */
 	private $player;
-	/** @var array TODO: deal with this later */
+	/** @var int[] */
 	private $eliminations = [];
 
 	public function __construct(Player $player){
@@ -23,10 +23,6 @@ class PlayerSession{
 
 	public function getUniqueId() : UUID{
 		return $this->uuid;
-	}
-
-	public function setUniqueId(UUID $uuid) : void{
-		$this->uuid = $uuid;
 	}
 
 	public function getPlayer() : Player{

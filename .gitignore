@@ -2,3 +2,4 @@
 *.cache
 php_cs
 .idea
+dev-phpstan.neon
