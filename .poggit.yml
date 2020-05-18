@@ -4,12 +4,12 @@ branches:
 - master
 projects:
   UHC:
-    path: "" 
-    libs: 
+    path: ""
+    libs:
       - src: dktapps-pm-pl/pmforms/pmforms
         version: 1.0.0
-      - src: Wumpotamus/ScoreFactory/ScoreFactory
-        version: 2.1.0
+      - src: JackMD/ScoreFactory/ScoreFactory
+        version: 2.0.0
       - src: Wumpotamus/libChunkLoader/libChunkLoader
         version: 1.0.0
     lint:
