@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace uhc\game;
 
 use JackMD\ScoreFactory\ScoreFactory;
+use pocketmine\entity\Entity;
 use pocketmine\math\Vector3;
+use pocketmine\network\mcpe\protocol\SetActorDataPacket;
 use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\Task;
@@ -87,7 +89,19 @@ class GameHeartbeat extends Task {
 		}
 
 		foreach($this->plugin->getGamePlayers() as $player){
-			$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
+			if($this->plugin->getSession($player) !== null) {
+				$playerTeam = $this->plugin->getSession($player)->getTeam();
+				$name = $playerTeam !== null ? $playerTeam->getName() : "NO TEAM";
+				$player->setNameTag(TF::RED . "[" . $name . "] " . TF::WHITE . $player->getDisplayName());
+				$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
+
+				if ($playerTeam !== null) {
+					foreach ($playerTeam->getMembers() as $member){
+						$findMember = $this->plugin->getServer()->getPlayer($member);
+						$player->sendData($findMember, [Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, TF::GREEN . $player->getNameTag()]]);
+					}
+				}
+			}
 			if(!$this->border->isPlayerInsideOfBorder($player)){
 				$this->border->teleportPlayer($player);
 				$player->addTitle("You have been teleported by border!");

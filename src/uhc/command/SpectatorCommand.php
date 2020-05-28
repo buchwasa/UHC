@@ -24,7 +24,7 @@ class SpectatorCommand extends PluginCommand{
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args){
 		if(!$sender instanceof Player){
-			$sender->sendMessage("Must be a player!");
+			$sender->sendMessage(TextFormat::RED . "You must be a player to execute this command!");
 
 			return;
 		}

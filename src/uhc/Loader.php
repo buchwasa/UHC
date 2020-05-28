@@ -14,6 +14,7 @@ use uhc\command\TpallCommand;
 use uhc\command\UHCCommand;
 use uhc\game\GameHeartbeat;
 use uhc\game\Scenario;
+use uhc\game\Team;
 use function is_array;
 use function is_dir;
 use function mkdir;
@@ -32,6 +33,8 @@ class Loader extends PluginBase{
 	private $globalMuteEnabled = false;
 	/** @var Scenario[] */
 	private $scenarios = [];
+	/** @var Team[] */
+	private $teams = [];
 
 	public function onEnable(): void{
 		if(!is_dir($this->getDataFolder() . "scenarios")){
@@ -49,7 +52,10 @@ class Loader extends PluginBase{
 			new GlobalMuteCommand($this),
 			new TpallCommand($this)
 		]);
+
 		$this->loadScenarios();
+
+		$this->addTeam("Tester", "Wumpotamus", 2);
 	}
 
 	public function loadScenarios() : void{
@@ -139,5 +145,24 @@ class Loader extends PluginBase{
 
 	public function addScenario(Scenario $scenario) : void{
 		$this->scenarios[$scenario->getName()] = $scenario;
+	}
+
+	/**
+	 * @return Team[]
+	 */
+	public function getTeams() : array{
+		return $this->teams;
+	}
+
+	public function addTeam(string $teamName, string $teamLeader, int $limit) : void{
+		$this->teams[$teamName] = new Team($teamName, $teamLeader, $limit);
+	}
+
+	public function getTeam(string $teamName) : ?Team{
+		return $this->teamExists($teamName) ? $this->teams[$teamName] : null;
+	}
+
+	public function teamExists(string $teamName) : bool{
+		return isset($this->teams[$teamName]);
 	}
 }

@@ -1,0 +1,18 @@
+{
+	"command": {
+		"globalmute-enabled-broadcast": "Chat has been disabled by an admin!",
+		"globalmute-disabled-broadcast": "Chat has been enabled by an admin!",
+		"heal-message": "You have healed: {HEALED_USER}",
+		"scenarios-title": "Scenarios",
+
+	},
+	"co": "",
+	"event-death-title": "You died!",
+	"event-death-subtitle": "Use /spectate to spectate a player!",
+	"death-message-generic": "{DISPLAY_NAME}[{ELIMINATIONS}] died!",
+	"death-message-slain": "{DISPLAY_NAME}[{ELIMINATIONS}] was killed by {KILLER_NAME}[{KILLER_ELIMINATIONS}]",
+	"event-join": "{DISPLAY_NAME} joined the game.",
+	"event-leave": "{DISPLAY_NAME} left the game.",
+	"cannot-talk": "You cannot talk right now!"
+
+}

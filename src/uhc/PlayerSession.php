@@ -6,6 +6,7 @@ namespace uhc;
 
 use pocketmine\Player;
 use pocketmine\utils\UUID;
+use uhc\game\Team;
 
 class PlayerSession{
 	/** @var UUID */
@@ -14,6 +15,8 @@ class PlayerSession{
 	private $player;
 	/** @var int[] */
 	private $eliminations = [];
+	/** @var Team */
+	private $team = null;
 
 	public function __construct(Player $player){
 		$this->player = $player;
@@ -39,6 +42,24 @@ class PlayerSession{
 
 	public function getEliminations() : int{
 		return $this->eliminations[$this->player->getName()];
+	}
+
+	public function getTeam() : ?Team{
+		return $this->team;
+	}
+
+	public function isInTeam() : bool{
+		return $this->team !== null;
+	}
+
+	public function addToTeam(Team $team) : void{
+		$team->addMember($this->getPlayer()->getName());
+		$this->team = $team; //FIXME: Does not account for failure to add
+	}
+
+	public function removeFromTeams() : void{
+		$this->team->removeMember($this->getPlayer()->getName());
+		$this->team = null;
 	}
 
 	public static function create(Player $player) : self{

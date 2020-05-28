@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace uhc;
 
 use JackMD\ScoreFactory\ScoreFactory;
+use pocketmine\entity\Entity;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -17,7 +18,9 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
+use pocketmine\network\mcpe\protocol\SetActorDataPacket;
 use pocketmine\Player;
+use pocketmine\utils\TextFormat;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\UHCStartEvent;
 use uhc\game\type\GameStatus;
@@ -46,6 +49,8 @@ class EventListener implements Listener{
 		}else{
 			$this->plugin->getSession($player)->setPlayer($player);
 		}
+
+		$this->plugin->getSession($player)->addToTeam($this->plugin->getTeam("Tester"));
 
 		if($this->plugin->getHeartbeat()->getGameStatus() === GameStatus::WAITING){
 			$player->teleport($player->getLevel()->getSafeSpawn());
@@ -84,6 +89,18 @@ class EventListener implements Listener{
 		){
 			$ev->setCancelled();
 		}
+
+		if($ev instanceof EntityDamageByEntityEvent){
+			$damager = $ev->getDamager();
+			$victim = $ev->getEntity();
+			if($damager instanceof Player && $victim instanceof Player){
+				$damagerSession = $this->plugin->getSession($damager);
+				$victimSession = $this->plugin->getSession($victim);
+				if($damagerSession->getTeam()->getName() === $victimSession->getTeam()->getName()){
+					$ev->setCancelled();
+				}
+			}
+		}
 	}
 
 	public function handleDeath(PlayerDeathEvent $ev) : void{
@@ -96,7 +113,7 @@ class EventListener implements Listener{
 			$damager = $cause->getDamager();
 			if($damager instanceof Player){
 				$damagerSession = $this->plugin->getSession($damager);
-				$damagerSession->addElimination();;
+				$damagerSession->addElimination();
 				$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " was slain by " . TF::RED . $damager->getName() . TF::GRAY . "[" . TF::WHITE . $damagerSession->getEliminations() . TF::GRAY . "]");
 			}
 		}else{
