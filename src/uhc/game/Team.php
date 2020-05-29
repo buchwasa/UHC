@@ -9,9 +9,9 @@ use function count;
 class Team{
 	/** @var string */
 	private $teamName;
-	/** @var string */
+	/** @var Player */
 	private $teamLeader;
-	/** @var string[] */
+	/** @var Player[] */
 	private $members = [];
 	/** @var int */
 	private $limit;
@@ -25,7 +25,7 @@ class Team{
 	}
 
 	/**
-	 * @return string[]
+	 * @return Player[]
 	 */
 	public function getMembers() : array{
 		return $this->members;
@@ -36,7 +36,7 @@ class Team{
 	}
 
 	public function addMember(Player $player) : bool{
-		if((count($this->members)) === $this->limit || $player->getName() === $this->teamLeader){ //leader is the +1
+		if((count($this->members)) === $this->limit || $player->getName() === $this->teamLeader){
 			return false;
 		}
 
@@ -59,7 +59,7 @@ class Team{
 		return $this->teamName;
 	}
 
-	public function getLeader() : string{
+	public function getLeader() : Player{
 		return $this->teamLeader;
 	}
 
