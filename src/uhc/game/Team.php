@@ -14,12 +14,11 @@ class Team{
 	/** @var Player[] */
 	private $members = [];
 	/** @var int */
-	private $limit;
+	public const TEAM_LIMIT = 2;
 
-	public function __construct(string $teamName, Player $teamLeader, int $limit = 2){
+	public function __construct(string $teamName, Player $teamLeader){
 		$this->teamName = $teamName;
 		$this->teamLeader = $teamLeader;
-		$this->limit = $limit;
 
 		$this->members[$teamLeader->getUniqueId()] = $teamLeader;
 	}
@@ -36,7 +35,7 @@ class Team{
 	}
 
 	public function addMember(Player $player) : bool{
-		if((count($this->members)) === $this->limit || $player->getName() === $this->teamLeader){
+		if((count($this->members)) === self::TEAM_LIMIT|| $player->getName() === $this->teamLeader){
 			return false;
 		}
 
@@ -61,9 +60,5 @@ class Team{
 
 	public function getLeader() : Player{
 		return $this->teamLeader;
-	}
-
-	public function getLimit() : int{
-		return $this->limit;
 	}
 }
