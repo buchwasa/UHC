@@ -32,20 +32,24 @@ class Team{
 		return isset($this->members[$playerName]);
 	}
 
-	public function addMember(string $playerName) : void{
+	public function addMember(string $playerName) : bool{
 		if((count($this->members) + 1) === $this->limit || $playerName === $this->teamLeader){ //leader is the +1
-			return;
+			return false;
 		}
 
 		$this->members[$playerName] = $playerName;
+
+		return true;
 	}
 
-	public function removeMember(string $playerName) : void{
+	public function removeMember(string $playerName) : bool{
 		if(!isset($this->members[$playerName])){
-			return;
+			return false;
 		}
 
 		unset($this->members[$playerName]);
+
+		return true;
 	}
 
 	public function getName() : string{

@@ -52,14 +52,22 @@ class PlayerSession{
 		return $this->team !== null;
 	}
 
-	public function addToTeam(Team $team) : void{
-		$team->addMember($this->getPlayer()->getName());
-		$this->team = $team; //FIXME: Does not account for failure to add
+	public function addToTeam(Team $team) : bool{
+		if($team->addMember($this->getPlayer()->getName())){
+			$this->team = $team;
+			return true;
+		}
+
+		return false;
 	}
 
-	public function removeFromTeams() : void{
-		$this->team->removeMember($this->getPlayer()->getName());
-		$this->team = null;
+	public function removeFromTeams() : bool{
+		if($this->team->removeMember($this->getPlayer()->getName())){
+			$this->team = null;
+			return true;
+		}
+
+		return false;
 	}
 
 	public static function create(Player $player) : self{
