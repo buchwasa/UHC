@@ -10,6 +10,7 @@ use uhc\command\GlobalMuteCommand;
 use uhc\command\HealCommand;
 use uhc\command\ScenariosCommand;
 use uhc\command\SpectatorCommand;
+use uhc\command\TeamCommand;
 use uhc\command\TpallCommand;
 use uhc\command\UHCCommand;
 use uhc\game\GameHeartbeat;
@@ -50,6 +51,7 @@ class Loader extends PluginBase{
 			new SpectatorCommand($this),
 			new HealCommand($this),
 			new GlobalMuteCommand($this),
+			new TeamCommand($this),
 			new TpallCommand($this)
 		]);
 
@@ -162,5 +164,9 @@ class Loader extends PluginBase{
 
 	public function teamExists(string $teamName) : bool{
 		return isset($this->teams[$teamName]);
+	}
+
+	public function removeTeam(string $teamName) : void{
+		unset($this->teams[$teamName]);
 	}
 }

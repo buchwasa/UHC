@@ -53,7 +53,7 @@ class PlayerSession{
 	}
 
 	public function addToTeam(Team $team) : bool{
-		if($team->addMember($this->getPlayer()) || $team->getLeader()->getName() === $this->getPlayer()->getName()){
+		if($team->addMember($this->getPlayer()) || $this->isTeamLeader()){
 			$this->team = $team;
 			return true;
 		}
@@ -68,6 +68,10 @@ class PlayerSession{
 		}
 
 		return false;
+	}
+
+	public function isTeamLeader() : bool{
+		return $this->isInTeam() ?? $this->team->getLeader()->getUniqueId() === $this->getPlayer()->getUniqueId();
 	}
 
 	public static function create(Player $player) : self{

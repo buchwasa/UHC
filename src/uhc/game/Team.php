@@ -35,7 +35,7 @@ class Team{
 	}
 
 	public function addMember(Player $player) : bool{
-		if((count($this->members)) === self::TEAM_LIMIT|| $player->getName() === $this->teamLeader){
+		if($this->isFull() || $player->getName() === $this->teamLeader){
 			return false;
 		}
 
@@ -60,5 +60,9 @@ class Team{
 
 	public function getLeader() : Player{
 		return $this->teamLeader;
+	}
+
+	public function isFull() : bool{
+		return count($this->members) === self::TEAM_LIMIT;
 	}
 }
