@@ -50,8 +50,6 @@ class EventListener implements Listener{
 			$this->plugin->getSession($player)->setPlayer($player);
 		}
 
-		$this->plugin->getSession($player)->addToTeam($this->plugin->getTeam("Tester"));
-
 		if($this->plugin->getHeartbeat()->getGameStatus() === GameStatus::WAITING){
 			$player->teleport($player->getLevel()->getSafeSpawn());
 			$player->setGamemode(Player::SURVIVAL);

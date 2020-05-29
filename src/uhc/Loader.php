@@ -54,8 +54,6 @@ class Loader extends PluginBase{
 		]);
 
 		$this->loadScenarios();
-
-		$this->addTeam("Tester", "Wumpotamus", 2);
 	}
 
 	public function loadScenarios() : void{
