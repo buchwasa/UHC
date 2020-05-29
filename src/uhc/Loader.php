@@ -152,8 +152,8 @@ class Loader extends PluginBase{
 		return $this->teams;
 	}
 
-	public function addTeam(string $teamName, Player $teamLeader, int $limit) : void{
-		$this->teams[$teamName] = new Team($teamName, $teamLeader, $limit);
+	public function addTeam(string $teamName, Player $teamLeader) : void{
+		$this->teams[$teamName] = new Team($teamName, $teamLeader);
 	}
 
 	public function getTeam(string $teamName) : ?Team{
