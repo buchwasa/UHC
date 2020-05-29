@@ -53,7 +53,7 @@ class PlayerSession{
 	}
 
 	public function addToTeam(Team $team) : bool{
-		if($team->addMember($this->getPlayer()->getName())){
+		if($team->addMember($this->getPlayer())){
 			$this->team = $team;
 			return true;
 		}
@@ -62,7 +62,7 @@ class PlayerSession{
 	}
 
 	public function removeFromTeam() : bool{
-		if($this->team->removeMember($this->getPlayer()->getName())){
+		if($this->team->removeMember($this->getPlayer())){
 			$this->team = null;
 			return true;
 		}

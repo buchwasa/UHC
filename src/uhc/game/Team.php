@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace uhc\game;
 
+use pocketmine\Player;
 use function count;
 
 class Team{
@@ -15,12 +16,12 @@ class Team{
 	/** @var int */
 	private $limit;
 
-	public function __construct(string $teamName, string $teamLeader, int $limit = 2){
+	public function __construct(string $teamName, Player $teamLeader, int $limit = 2){
 		$this->teamName = $teamName;
 		$this->teamLeader = $teamLeader;
 		$this->limit = $limit;
 
-		$this->members[$teamLeader] = $teamLeader;
+		$this->members[$teamLeader->getUniqueId()] = $teamLeader;
 	}
 
 	/**
@@ -30,26 +31,26 @@ class Team{
 		return $this->members;
 	}
 
-	public function memberExists(string $playerName) : bool{
-		return isset($this->members[$playerName]);
+	public function memberExists(Player $player) : bool{
+		return isset($this->members[$player->getUniqueId()]);
 	}
 
-	public function addMember(string $playerName) : bool{
-		if((count($this->members)) === $this->limit || $playerName === $this->teamLeader){ //leader is the +1
+	public function addMember(Player $player) : bool{
+		if((count($this->members)) === $this->limit || $player->getName() === $this->teamLeader){ //leader is the +1
 			return false;
 		}
 
-		$this->members[$playerName] = $playerName;
+		$this->members[$player->getUniqueId()] = $player;
 
 		return true;
 	}
 
-	public function removeMember(string $playerName) : bool{
-		if(!isset($this->members[$playerName]) || $this->teamLeader === $playerName){
+	public function removeMember(Player $player) : bool{
+		if(!isset($this->members[$player->getUniqueId()]) || $player->getName() === $this->teamLeader){
 			return false;
 		}
 
-		unset($this->members[$playerName]);
+		unset($this->members[$player->getUniqueId()]);
 
 		return true;
 	}
