@@ -19,6 +19,8 @@ class Team{
 		$this->teamName = $teamName;
 		$this->teamLeader = $teamLeader;
 		$this->limit = $limit;
+
+		$this->members[$teamLeader] = $teamLeader;
 	}
 
 	/**
@@ -33,7 +35,7 @@ class Team{
 	}
 
 	public function addMember(string $playerName) : bool{
-		if((count($this->members) + 1) === $this->limit || $playerName === $this->teamLeader){ //leader is the +1
+		if((count($this->members)) === $this->limit || $playerName === $this->teamLeader){ //leader is the +1
 			return false;
 		}
 
@@ -43,7 +45,7 @@ class Team{
 	}
 
 	public function removeMember(string $playerName) : bool{
-		if(!isset($this->members[$playerName])){
+		if(!isset($this->members[$playerName]) || $this->teamLeader === $playerName){
 			return false;
 		}
 

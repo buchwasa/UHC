@@ -61,7 +61,7 @@ class PlayerSession{
 		return false;
 	}
 
-	public function removeFromTeams() : bool{
+	public function removeFromTeam() : bool{
 		if($this->team->removeMember($this->getPlayer()->getName())){
 			$this->team = null;
 			return true;

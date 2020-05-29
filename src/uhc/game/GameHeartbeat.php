@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace uhc\game;
 
 use JackMD\ScoreFactory\ScoreFactory;
-use pocketmine\entity\Entity;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\SetActorDataPacket;
 use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\Task;
@@ -20,7 +18,7 @@ use wumpotamus\chunkloader\ChunkRegion;
 use function floor;
 use function mt_rand;
 
-class GameHeartbeat extends Task {
+class GameHeartbeat extends Task{
 	/** @var int */
 	private $gameStatus = GameStatus::WAITING;
 
@@ -42,7 +40,7 @@ class GameHeartbeat extends Task {
 	/** @var int */
 	private $playerTimer = 1;
 
-	public function __construct(Loader $plugin) {
+	public function __construct(Loader $plugin){
 		$this->plugin = $plugin;
 		$this->border = new Border($plugin->getServer()->getDefaultLevel());
 	}
@@ -89,24 +87,17 @@ class GameHeartbeat extends Task {
 		}
 
 		foreach($this->plugin->getGamePlayers() as $player){
-			if($this->plugin->getSession($player) !== null) {
-				$playerTeam = $this->plugin->getSession($player)->getTeam();
-				$name = $playerTeam !== null ? $playerTeam->getName() : "NO TEAM";
-				$player->setNameTag(TF::RED . "[" . $name . "] " . TF::WHITE . $player->getDisplayName());
-				$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
-
-				if ($playerTeam !== null) {
-					foreach ($playerTeam->getMembers() as $member){
-						$findMember = $this->plugin->getServer()->getPlayer($member);
-						$player->sendData($findMember, [Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, TF::GREEN . $player->getNameTag()]]);
-					}
-				}
+			$session = $this->plugin->getSession($player);
+			if($session !== null){
+				$name = $session->getTeam() !== null ? $session->getTeam()->getName() : "NO TEAM";
+				$player->setNameTag(TF::GOLD . "[$name] " . $player->getDisplayName());
 			}
+			$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
 			if(!$this->border->isPlayerInsideOfBorder($player)){
 				$this->border->teleportPlayer($player);
 				$player->addTitle("You have been teleported by border!");
 			}
-			switch($this->getGameStatus()) {
+			switch($this->getGameStatus()){
 				case GameStatus::COUNTDOWN:
 					$player->setFood($player->getMaxFood());
 					$player->setHealth($player->getMaxHealth());
