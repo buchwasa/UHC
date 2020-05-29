@@ -78,24 +78,24 @@ class EventListener implements Listener{
 	}
 
 	public function handleDamage(EntityDamageEvent $ev) : void{
-		if(
-			!$this->plugin->getHeartbeat()->hasStarted() ||
-			(
-				$this->plugin->getHeartbeat()->getGameStatus() === GameStatus::GRACE &&
-				$ev instanceof EntityDamageByEntityEvent
-			)
-		){
+		if(!$this->plugin->getHeartbeat()->hasStarted()){
 			$ev->setCancelled();
 		}
 
 		if($ev instanceof EntityDamageByEntityEvent){
 			$damager = $ev->getDamager();
 			$victim = $ev->getEntity();
+			if($this->plugin->getHeartbeat()->getGameStatus() === GameStatus::GRACE){
+				$ev->setCancelled();
+			}
+
 			if($damager instanceof Player && $victim instanceof Player){
 				$damagerSession = $this->plugin->getSession($damager);
 				$victimSession = $this->plugin->getSession($victim);
-				if($damagerSession->getTeam()->getName() === $victimSession->getTeam()->getName()){
-					$ev->setCancelled();
+				if($damagerSession->getTeam() !== null && $victimSession->getTeam() !== null){
+					if($damagerSession->getTeam()->getName() === $victimSession->getTeam()->getName()){
+						$ev->setCancelled();
+					}
 				}
 			}
 		}
