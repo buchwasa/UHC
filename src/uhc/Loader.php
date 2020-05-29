@@ -87,14 +87,14 @@ class Loader extends PluginBase{
 	}
 
 	public function addToGame(Player $player) : void{
-		if(!isset($this->gamePlayers[$player->getName()])){
-			$this->gamePlayers[$player->getName()] = $player;
+		if(!isset($this->gamePlayers[$player->getUniqueId()->toString()])){
+			$this->gamePlayers[$player->getUniqueId()->toString()] = $player;
 		}
 	}
 
 	public function removeFromGame(Player $player) : void{
-		if(isset($this->gamePlayers[$player->getName()])){
-			unset($this->gamePlayers[$player->getName()]);
+		if(isset($this->gamePlayers[$player->getUniqueId()->toString()])){
+			unset($this->gamePlayers[$player->getUniqueId()->toString()]);
 		}
 	}
 
@@ -106,7 +106,7 @@ class Loader extends PluginBase{
 	}
 
 	public function isInGame(Player $player) : bool{
-		return isset($this->gamePlayers[$player->getName()]);
+		return isset($this->gamePlayers[$player->getUniqueId()->toString()]);
 	}
 
 	public function addSession(PlayerSession $session) : void{

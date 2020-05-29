@@ -20,7 +20,7 @@ class Team{
 		$this->teamName = $teamName;
 		$this->teamLeader = $teamLeader;
 
-		$this->members[$teamLeader->getUniqueId()] = $teamLeader;
+		$this->members[$teamLeader->getUniqueId()->toString()] = $teamLeader;
 	}
 
 	/**
@@ -31,7 +31,7 @@ class Team{
 	}
 
 	public function memberExists(Player $player) : bool{
-		return isset($this->members[$player->getUniqueId()]);
+		return isset($this->members[$player->getUniqueId()->toString()]);
 	}
 
 	public function addMember(Player $player) : bool{
@@ -39,17 +39,17 @@ class Team{
 			return false;
 		}
 
-		$this->members[$player->getUniqueId()] = $player;
+		$this->members[$player->getUniqueId()->toString()] = $player;
 
 		return true;
 	}
 
 	public function removeMember(Player $player) : bool{
-		if(!isset($this->members[$player->getUniqueId()]) || $player->getName() === $this->teamLeader){
+		if(!isset($this->members[$player->getUniqueId()->toString()]) || $player->getName() === $this->teamLeader){
 			return false;
 		}
 
-		unset($this->members[$player->getUniqueId()]);
+		unset($this->members[$player->getUniqueId()->toString()]);
 
 		return true;
 	}
