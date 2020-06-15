@@ -61,7 +61,7 @@ For each setting under messages.json, it has its own set of variables, here's th
 |      Key      |     Values     |
 | ------------- | -------------- |
 | event.join | {DISPLAY_NAME} |
-| event.quit | {DISPLAY_NAME| |
+| event.quit | {DISPLAY_NAME} |
 | event.death.title | N/A |
 | event.death.pvp | {VICTIM_NAME}, {VICTIM_KILLS}, {KILLER_NAME}, {KILLER_KILLS} |
 | event.death.other | {VICTIM_NAME}, {VICTIM_KILLS} |

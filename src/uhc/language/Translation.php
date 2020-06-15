@@ -20,6 +20,6 @@ class Translation{
         $message = $config->get($message);
         $message = str_replace("&", TextFormat::ESCAPE, $message);
 
-        return str_replace(array_keys($variables), $variables, $message);
+        return (string)str_replace(array_keys($variables), $variables, $message);
     }
 }
