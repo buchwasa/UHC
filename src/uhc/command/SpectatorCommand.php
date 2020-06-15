@@ -10,7 +10,7 @@ use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use uhc\Loader;
-use function strtolower;
+use function mb_strtolower;
 
 class SpectatorCommand extends PluginCommand
 {
@@ -42,7 +42,7 @@ class SpectatorCommand extends PluginCommand
             throw new InvalidCommandSyntaxException();
         }
 
-        $player = $this->plugin->getServer()->getPlayer(strtolower($args[0]));
+        $player = $this->plugin->getServer()->getPlayer(mb_strtolower($args[0]));
         if ($player === null) {
             $sender->sendMessage(TextFormat::RED . "That player is offline!");
 

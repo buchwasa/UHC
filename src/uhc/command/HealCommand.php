@@ -10,7 +10,7 @@ use pocketmine\command\PluginCommand;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\utils\TextFormat as TF;
 use uhc\Loader;
-use function strtolower;
+use function mb_strtolower;
 
 class HealCommand extends PluginCommand
 {
@@ -35,7 +35,7 @@ class HealCommand extends PluginCommand
             throw new InvalidCommandSyntaxException();
         }
 
-        $player = $this->plugin->getServer()->getPlayer(strtolower($args[0]));
+        $player = $this->plugin->getServer()->getPlayer(mb_strtolower($args[0]));
         if ($player !== null) {
             $player->setHealth($player->getMaxHealth());
             $player->setFood($player->getMaxFood());
