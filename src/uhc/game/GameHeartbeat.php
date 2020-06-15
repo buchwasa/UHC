@@ -10,7 +10,7 @@ use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\Task;
 use pocketmine\utils\TextFormat as TF;
-use uhc\event\UHCStartEvent;
+use uhc\event\PhaseChangeEvent;
 use uhc\game\type\GameStatus;
 use uhc\game\type\GameTimer;
 use uhc\Loader;
@@ -146,7 +146,7 @@ class GameHeartbeat extends Task {
 				}
 
 				foreach($this->plugin->getGamePlayers() as $playerSession){
-					$ev = new UHCStartEvent($playerSession);
+					$ev = new PhaseChangeEvent($playerSession, GameStatus::COUNTDOWN, GameStatus::GRACE);
 					$ev->call();
 				}
 				$server->broadcastTitle(TF::RED . TF::BOLD . "The UHC has begun!");
@@ -190,6 +190,10 @@ class GameHeartbeat extends Task {
 				$server->broadcastTitle(TF::RED . "PvP will be enabled in $this->grace second(s).");
 				break;
 			case 0:
+                foreach($this->plugin->getGamePlayers() as $playerSession){
+                    $ev = new PhaseChangeEvent($playerSession, GameStatus::GRACE, GameStatus::PVP);
+                    $ev->call();
+                }
 				$server->broadcastTitle(TF::RED . "PvP has been enabled, good luck!");
 				$this->setGameStatus(GameStatus::PVP);
 				break;
@@ -212,6 +216,10 @@ class GameHeartbeat extends Task {
 				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "250" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 0:
+                foreach($this->plugin->getGamePlayers() as $playerSession){
+                    $ev = new PhaseChangeEvent($playerSession, GameStatus::PVP, GameStatus::NORMAL);
+                    $ev->call();
+                }
 				$this->border->setSize(250);
 				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				$this->setGameStatus(GameStatus::NORMAL);

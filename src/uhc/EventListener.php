@@ -19,7 +19,7 @@ use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
-use uhc\event\UHCStartEvent;
+use uhc\event\PhaseChangeEvent;
 use uhc\game\type\GameStatus;
 
 class EventListener implements Listener{
@@ -55,9 +55,11 @@ class EventListener implements Listener{
 		$ev->setJoinMessage("");
 	}
 
-	public function handleStart(UHCStartEvent $ev) : void{
+	public function handlePhaseChange(PhaseChangeEvent $ev) : void{
 		$player = $ev->getPlayer();
-		$player->getInventory()->addItem(ItemFactory::get(ItemIds::STEAK, 0, 64));
+		if($ev->getOldPhase() === GameStatus::COUNTDOWN) {
+            $player->getInventory()->addItem(ItemFactory::get(ItemIds::STEAK, 0, 64));
+        }
 	}
 
 	public function handleQuit(PlayerQuitEvent $ev) : void{
