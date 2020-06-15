@@ -21,6 +21,7 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\UHCStartEvent;
 use uhc\game\type\GameStatus;
+use uhc\language\Translation;
 
 class EventListener implements Listener{
 	/** @var Loader */
@@ -34,7 +35,7 @@ class EventListener implements Listener{
 	public function handleChat(PlayerChatEvent $ev) : void{
 		$player = $ev->getPlayer();
 		if($this->plugin->isGlobalMuteEnabled() && !$player->isOp()){
-			$player->sendMessage(TF::RED . "You cannot talk right now!");
+			$player->sendMessage(Translation::convert("globalmute.enabled"));
 			$ev->setCancelled();
 		}
 	}
@@ -52,7 +53,7 @@ class EventListener implements Listener{
 			$player->setGamemode(Player::SURVIVAL);
 		}
 
-		$ev->setJoinMessage("");
+		$ev->setJoinMessage(Translation::convert("message.join", ["{DISPLAY_NAME}" => $player->getDisplayName()]));
 	}
 
 	public function handleStart(UHCStartEvent $ev) : void{
@@ -65,7 +66,7 @@ class EventListener implements Listener{
 		//TODO: View the necessity of this.
 		$this->plugin->removeFromGame($player);
 		ScoreFactory::removeScore($player);
-		$ev->setQuitMessage("");
+		$ev->setQuitMessage(Translation::convert("event.quit", ["{DISPLAY_NAME}" => $player->getDisplayName()]));
 	}
 
 	public function handleEntityRegain(EntityRegainHealthEvent $ev) : void{
@@ -91,16 +92,24 @@ class EventListener implements Listener{
 		$cause = $player->getLastDamageCause();
 		$eliminatedSession = $this->plugin->getSession($player);
 		$player->setGamemode(3);
-		$player->addTitle(TF::YELLOW . "You have been eliminated!", "Use /spectate to spectate a player.");
+		$player->addTitle(Translation::convert("event.death.title"));
 		if($cause instanceof EntityDamageByEntityEvent){
 			$damager = $cause->getDamager();
 			if($damager instanceof Player){
 				$damagerSession = $this->plugin->getSession($damager);
 				$damagerSession->addElimination();;
-				$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " was slain by " . TF::RED . $damager->getName() . TF::GRAY . "[" . TF::WHITE . $damagerSession->getEliminations() . TF::GRAY . "]");
+				$ev->setDeathMessage(Translation::convert("event.death.pvp", [
+				    "{VICTIM_NAME}" => $player->getDisplayName(),
+                    "{VICTIM_KILLS}" => $eliminatedSession->getEliminations(),
+                    "{KILLER_NAME}" => $damager->getDisplayName(),
+                    "{KILLER_KILLS}" => $damagerSession->getEliminations()
+                ]));
 			}
 		}else{
-			$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " died!");
+			$ev->setDeathMessage(Translation::convert("event.death.other", [
+			    "{VICTIM_NAME}" => $player->getDisplayName(),
+                "{VICTIM_KILLS}" => $eliminatedSession->getEliminations()
+            ]));
 		}
 	}
 

@@ -48,7 +48,21 @@ class ExampleScenario extends Scenario{
 ### How can I add health under nametags?
 As you may have noticed, as of the recent commit, health under nametags have gone missing. <br>
 It was not unintentional, if you'd like the health back (and more!), use [PlayerTags](https://github.com/sylvrs/PlayerTags).
+
 ## Current Issues
 - Scattering can cause some lag for a few seconds.
 - Bedrock borders cause lag when built above size 100. 
 Both of these problems are well-known, just been neglected, closure tasks can help reduce the issue, however I do not have much ability to test with large amounts of players.
+
+## Configuration Variables
+**Instead of using the minecraft color symbol, you may use & instead.**
+For each setting under messages.json, it has its own set of variables, here's the list.<br>
+
+|      Key      |     Values     |
+| ------------- | -------------- |
+| event.join | {DISPLAY_NAME} |
+| event.quit | {DISPLAY_NAME| |
+| event.death.title | N/A |
+| event.death.pvp | {VICTIM_NAME}, {VICTIM_KILLS}, {KILLER_NAME}, {KILLER_KILLS} |
+| event.death.other | {VICTIM_NAME}, {VICTIM_KILLS} |
+| globalmute.enabled | N/A |
