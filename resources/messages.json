@@ -1,3 +1,8 @@
 {
-  "message.join": "{PLAYER} joined."
+  "event.join": "{DISPLAY_NAME} joined.",
+  "event.quit": "{DISPLAY_NAME} quit.",
+  "event.death.title": "You have been eliminated!",
+  "event.death.pvp": "{VICTIM_NAME}[{VICTIM_KILLS}] was eliminated by {KILLER_NAME}[{KILLER_KILLS}]!",
+  "event.death.other": "{VICTIM_NAME}[{VICTIM_KILLS}] has been eliminated!",
+  "globalmute.enabled": "You cannot talk right now!"
 }
