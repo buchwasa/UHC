@@ -87,7 +87,6 @@ class GameHeartbeat extends Task {
 		}
 
 		foreach($this->plugin->getGamePlayers() as $player){
-			$player->setScoreTag(floor($player->getHealth()) . TF::RED . " ❤");
 			if(!$this->border->isPlayerInsideOfBorder($player)){
 				$this->border->teleportPlayer($player);
 				$player->addTitle("You have been teleported by border!");
