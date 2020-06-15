@@ -14,7 +14,6 @@ use uhc\command\TpallCommand;
 use uhc\command\UHCCommand;
 use uhc\game\GameHeartbeat;
 use uhc\game\Scenario;
-use uhc\language\Translation;
 use function is_array;
 use function is_dir;
 use function mkdir;
@@ -35,7 +34,6 @@ class Loader extends PluginBase{
 	private $scenarios = [];
 
 	public function onEnable(): void{
-	    $this->saveResource("messages.json");
 		if(!is_dir($this->getDataFolder() . "scenarios")){
 			mkdir($this->getDataFolder() . "scenarios");
 		}
@@ -52,8 +50,6 @@ class Loader extends PluginBase{
 			new TpallCommand($this)
 		]);
 		$this->loadScenarios();
-
-		new Translation($this->getDataFolder() . "messages.json");
 	}
 
 	public function loadScenarios() : void{
