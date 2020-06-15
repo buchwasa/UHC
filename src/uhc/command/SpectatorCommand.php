@@ -12,7 +12,7 @@ use pocketmine\utils\TextFormat;
 use uhc\Loader;
 use function mb_strtolower;
 
-class SpectatorCommand extends PluginCommand
+class SpectatorCommand extends BaseCommand
 {
     /** @var Loader */
     private $plugin;
@@ -24,14 +24,8 @@ class SpectatorCommand extends PluginCommand
         $this->setUsage("/spectate <playerName>");
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args)
+    public function onExecute(Player $sender, array $args) : void
     {
-        if (!$sender instanceof Player) {
-            $sender->sendMessage("Must be a player!");
-
-            return;
-        }
-
         if ($sender->getGamemode() !== 3) {
             $sender->sendMessage(TextFormat::RED . "You must be in spectator mode to use this command!");
 

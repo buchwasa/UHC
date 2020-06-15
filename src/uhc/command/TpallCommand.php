@@ -9,7 +9,7 @@ use pocketmine\command\PluginCommand;
 use pocketmine\Player;
 use uhc\Loader;
 
-class TpallCommand extends PluginCommand
+class TpallCommand extends BaseCommand
 {
     /** @var Loader */
     private $plugin;
@@ -21,16 +21,8 @@ class TpallCommand extends PluginCommand
         $this->setPermission("uhc.command.tpall");
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args)
+    public function onExecute(Player $sender, array $args): void
     {
-        if (!$sender instanceof Player) {
-            return;
-        }
-
-        if (!$this->testPermission($sender)) {
-            return;
-        }
-
         foreach ($this->plugin->getServer()->getOnlinePlayers() as $p) {
             $p->teleport($sender->getPosition());
         }

@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace uhc\command;
 
 use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
-use pocketmine\command\PluginCommand;
+use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use uhc\event\PhaseChangeEvent;
 use uhc\Loader;
 
-class UHCCommand extends PluginCommand
+class UHCCommand extends BaseCommand
 {
     /** @var Loader */
     private $plugin;
@@ -24,12 +23,8 @@ class UHCCommand extends PluginCommand
         $this->setUsage("/uhc");
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args)
+    public function onExecute(Player $sender, array $args): void
     {
-        if (!$this->testPermission($sender)) {
-            return;
-        }
-
         if ($this->plugin->getHeartbeat()->hasStarted()) {
             $sender->sendMessage(TextFormat::RED . "UHC already started!");
 

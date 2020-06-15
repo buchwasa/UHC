@@ -4,12 +4,11 @@ declare(strict_types=1);
 namespace uhc\command;
 
 use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
-use pocketmine\command\PluginCommand;
+use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use uhc\Loader;
 
-class GlobalMuteCommand extends PluginCommand
+class GlobalMuteCommand extends BaseCommand
 {
     /** @var Loader */
     private $plugin;
@@ -21,12 +20,8 @@ class GlobalMuteCommand extends PluginCommand
         $this->setPermission("uhc.command.globalmute");
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args)
+    public function onExecute(Player $sender, array $args): void
     {
-        if (!$this->testPermission($sender)) {
-            return;
-        }
-
         if (!$this->plugin->isGlobalMuteEnabled()) {
             $this->plugin->setGlobalMute(true);
             $this->plugin->getServer()->broadcastMessage(TextFormat::GREEN . "Chat has been disabled by an admin!");

@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace uhc\command;
 
 use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
-use pocketmine\command\PluginCommand;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
+use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 use uhc\Loader;
 use function mb_strtolower;
 
-class HealCommand extends PluginCommand
+class HealCommand extends BaseCommand
 {
     /** @var Loader */
     private $plugin;
@@ -25,12 +24,8 @@ class HealCommand extends PluginCommand
         $this->setPermission("uhc.command.heal");
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args)
+    public function onExecute(Player $sender, array $args): void
     {
-        if (!$this->testPermission($sender)) {
-            return;
-        }
-
         if (!isset($args[0])) {
             throw new InvalidCommandSyntaxException();
         }
