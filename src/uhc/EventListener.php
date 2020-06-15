@@ -69,7 +69,6 @@ class EventListener implements Listener
     public function handleQuit(PlayerQuitEvent $ev): void
     {
         $player = $ev->getPlayer();
-        //TODO: View the necessity of this.
         $this->plugin->removeFromGame($player);
         ScoreFactory::removeScore($player);
         $ev->setQuitMessage("");
