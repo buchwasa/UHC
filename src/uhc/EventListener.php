@@ -50,7 +50,7 @@ class EventListener implements Listener
             $this->plugin->getSession($player)->setPlayer($player);
         }
 
-        if ($this->plugin->getHeartbeat()->getPhaseChangeEvent() === PhaseChangeEvent::WAITING) {
+        if ($this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::WAITING) {
             $player->teleport($player->getLevel()->getSafeSpawn());
             $player->setGamemode(Player::SURVIVAL);
         }
