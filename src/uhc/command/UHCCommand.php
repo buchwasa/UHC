@@ -8,7 +8,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\utils\TextFormat;
-use uhc\game\type\GameStatus;
+use uhc\game\type\PhaseChangeEvent;
 use uhc\Loader;
 
 class UHCCommand extends PluginCommand
@@ -35,7 +35,7 @@ class UHCCommand extends PluginCommand
 
             return;
         } else {
-            $this->plugin->getHeartbeat()->setGameStatus(GameStatus::COUNTDOWN);
+            $this->plugin->getHeartbeat()->setPhaseChangeEvent(PhaseChangeEvent::COUNTDOWN);
             $sender->sendMessage(TextFormat::GREEN . "The UHC has been started successfully!");
             Command::broadcastCommandMessage($sender, "Started the UHC", false);
         }

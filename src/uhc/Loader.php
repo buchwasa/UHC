@@ -153,6 +153,11 @@ class Loader extends PluginBase
         return $this->scenarios;
     }
 
+    public function getScenario(string $scenarioName) : Scenario
+    {
+        return $this->scenarios[$scenarioName];
+    }
+
     public function addScenario(Scenario $scenario): void
     {
         $this->scenarios[$scenario->getName()] = $scenario;

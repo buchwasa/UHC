@@ -20,7 +20,6 @@ use pocketmine\item\ItemIds;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\PhaseChangeEvent;
-use uhc\game\type\GameStatus;
 
 class EventListener implements Listener
 {
@@ -51,7 +50,7 @@ class EventListener implements Listener
             $this->plugin->getSession($player)->setPlayer($player);
         }
 
-        if ($this->plugin->getHeartbeat()->getGameStatus() === GameStatus::WAITING) {
+        if ($this->plugin->getHeartbeat()->getPhaseChangeEvent() === PhaseChangeEvent::WAITING) {
             $player->teleport($player->getLevel()->getSafeSpawn());
             $player->setGamemode(Player::SURVIVAL);
         }
@@ -62,7 +61,7 @@ class EventListener implements Listener
     public function handlePhaseChange(PhaseChangeEvent $ev): void
     {
         $player = $ev->getPlayer();
-        if ($ev->getOldPhase() === GameStatus::COUNTDOWN) {
+        if ($ev->getOldPhase() === PhaseChangeEvent::COUNTDOWN) {
             $player->getInventory()->addItem(ItemFactory::get(ItemIds::STEAK, 0, 64));
         }
     }
@@ -88,7 +87,7 @@ class EventListener implements Listener
         if (
             !$this->plugin->getHeartbeat()->hasStarted() ||
             (
-                $this->plugin->getHeartbeat()->getGameStatus() === GameStatus::GRACE &&
+                $this->plugin->getHeartbeat()->getPhaseChangeEvent() === PhaseChangeEvent::GRACE &&
                 $ev instanceof EntityDamageByEntityEvent
             )
         ) {
