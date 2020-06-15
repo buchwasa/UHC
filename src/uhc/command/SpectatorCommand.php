@@ -12,49 +12,52 @@ use pocketmine\utils\TextFormat;
 use uhc\Loader;
 use function strtolower;
 
-class SpectatorCommand extends PluginCommand{
-	/** @var Loader */
-	private $plugin;
+class SpectatorCommand extends PluginCommand
+{
+    /** @var Loader */
+    private $plugin;
 
-	public function __construct(Loader $plugin){
-		parent::__construct("spectate", $plugin);
-		$this->plugin = $plugin;
-		$this->setUsage("/spectate <playerName>");
-	}
+    public function __construct(Loader $plugin)
+    {
+        parent::__construct("spectate", $plugin);
+        $this->plugin = $plugin;
+        $this->setUsage("/spectate <playerName>");
+    }
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args){
-		if(!$sender instanceof Player){
-			$sender->sendMessage("Must be a player!");
+    public function execute(CommandSender $sender, string $commandLabel, array $args)
+    {
+        if (!$sender instanceof Player) {
+            $sender->sendMessage("Must be a player!");
 
-			return;
-		}
+            return;
+        }
 
-		if($sender->getGamemode() !== 3){
-			$sender->sendMessage(TextFormat::RED . "You must be in spectator mode to use this command!");
+        if ($sender->getGamemode() !== 3) {
+            $sender->sendMessage(TextFormat::RED . "You must be in spectator mode to use this command!");
 
-			return;
-		}
+            return;
+        }
 
-		if(!isset($args[0])){
-			throw new InvalidCommandSyntaxException();
-		}
+        if (!isset($args[0])) {
+            throw new InvalidCommandSyntaxException();
+        }
 
-		$player = $this->plugin->getServer()->getPlayer(strtolower($args[0]));
-		if($player === null){
-			$sender->sendMessage(TextFormat::RED . "That player is offline!");
+        $player = $this->plugin->getServer()->getPlayer(strtolower($args[0]));
+        if ($player === null) {
+            $sender->sendMessage(TextFormat::RED . "That player is offline!");
 
-			return;
-		}
+            return;
+        }
 
-		if($player === $sender){
-			$sender->sendMessage(TextFormat::RED . "You can't spectate yourself!");
+        if ($player === $sender) {
+            $sender->sendMessage(TextFormat::RED . "You can't spectate yourself!");
 
-			return;
-		}else{
-			$sender->teleport($player->getPosition());
-			$sender->sendMessage(TextFormat::GREEN . "Now spectating: " . $player->getDisplayName());
+            return;
+        } else {
+            $sender->teleport($player->getPosition());
+            $sender->sendMessage(TextFormat::GREEN . "Now spectating: " . $player->getDisplayName());
 
-			return;
-		}
-	}
+            return;
+        }
+    }
 }
