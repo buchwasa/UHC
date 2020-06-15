@@ -8,7 +8,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\utils\TextFormat;
-use uhc\game\type\PhaseChangeEvent;
+use uhc\event\PhaseChangeEvent;
 use uhc\Loader;
 
 class UHCCommand extends PluginCommand

@@ -106,7 +106,7 @@ class EventListener implements Listener
             $damager = $cause->getDamager();
             if ($damager instanceof Player) {
                 $damagerSession = $this->plugin->getSession($damager);
-                $damagerSession->addElimination();;
+                $damagerSession->addElimination();
                 $ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " was slain by " . TF::RED . $damager->getName() . TF::GRAY . "[" . TF::WHITE . $damagerSession->getEliminations() . TF::GRAY . "]");
             }
         } else {
