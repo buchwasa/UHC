@@ -55,7 +55,7 @@ It was not unintentional, if you'd like the health back (and more!), use [Player
 Both of these problems are well-known, just been neglected, closure tasks can help reduce the issue, however I do not have much ability to test with large amounts of players.
 
 ## Configuration Variables
-**Instead of using the minecraft color symbol, you may use & instead.**
+**Instead of using the minecraft color symbol, you may use & instead.**<br>
 For each setting under messages.json, it has its own set of variables, here's the list.<br>
 
 |      Key      |     Values     |
