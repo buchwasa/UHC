@@ -19,7 +19,7 @@ use function mt_rand;
 class GameHeartbeat extends Task
 {
     /** @var int */
-    private $PhaseChangeEvent = PhaseChangeEvent::WAITING;
+    private $phase = PhaseChangeEvent::WAITING;
 
     /** @var int */
     private $game = 0;
@@ -45,25 +45,25 @@ class GameHeartbeat extends Task
         $this->border = new Border($plugin->getServer()->getDefaultLevel());
     }
 
-    public function getPhaseChangeEvent(): int
+    public function getPhase(): int
     {
-        return $this->PhaseChangeEvent;
+        return $this->phase;
     }
 
-    public function setPhaseChangeEvent(int $PhaseChangeEvent): void
+    public function setPhase(int $phase): void
     {
-        $this->PhaseChangeEvent = $PhaseChangeEvent;
+        $this->phase = $phase;
     }
 
     public function hasStarted(): bool
     {
-        return $this->getPhaseChangeEvent() >= PhaseChangeEvent::GRACE;
+        return $this->getPhase() >= PhaseChangeEvent::GRACE;
     }
 
     public function onRun(int $currentTick): void
     {
         $this->handlePlayers();
-        switch ($this->getPhaseChangeEvent()) {
+        switch ($this->getPhase()) {
             case PhaseChangeEvent::COUNTDOWN:
                 $this->handleCountdown();
                 break;
@@ -96,7 +96,7 @@ class GameHeartbeat extends Task
                 $this->border->teleportPlayer($player);
                 $player->addTitle("You have been teleported by border!");
             }
-            switch ($this->getPhaseChangeEvent()) {
+            switch ($this->getPhase()) {
                 case PhaseChangeEvent::COUNTDOWN:
                     $player->setFood($player->getMaxFood());
                     $player->setHealth($player->getMaxHealth());
@@ -156,7 +156,7 @@ class GameHeartbeat extends Task
                     $ev->call();
                 }
                 $server->broadcastTitle(TF::RED . TF::BOLD . "The UHC has begun!");
-                $this->setPhaseChangeEvent(PhaseChangeEvent::GRACE);
+                $this->setPhase(PhaseChangeEvent::GRACE);
                 break;
         }
         $this->countdown--;
@@ -202,7 +202,7 @@ class GameHeartbeat extends Task
                     $ev->call();
                 }
                 $server->broadcastTitle(TF::RED . "PvP has been enabled, good luck!");
-                $this->setPhaseChangeEvent(PhaseChangeEvent::PVP);
+                $this->setPhase(PhaseChangeEvent::PVP);
                 break;
         }
         $this->grace--;
@@ -230,7 +230,7 @@ class GameHeartbeat extends Task
                 }
                 $this->border->setSize(250);
                 $server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
-                $this->setPhaseChangeEvent(PhaseChangeEvent::NORMAL);
+                $this->setPhase(PhaseChangeEvent::NORMAL);
                 break;
         }
         $this->pvp--;
@@ -273,7 +273,7 @@ class GameHeartbeat extends Task
         } else {
             ScoreFactory::setScoreLine($p, 1, "§7---------------------");
             ScoreFactory::setScoreLine($p, 2, " §bPlayers: §f" . count($this->plugin->getGamePlayers()));
-            ScoreFactory::setScoreLine($p, 3, $this->getPhaseChangeEvent() === PhaseChangeEvent::WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown");
+            ScoreFactory::setScoreLine($p, 3, $this->getPhase() === PhaseChangeEvent::WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown");
             ScoreFactory::setScoreLine($p, 4, "§7--------------------- ");
         }
     }

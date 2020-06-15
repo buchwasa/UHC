@@ -35,7 +35,7 @@ class UHCCommand extends PluginCommand
 
             return;
         } else {
-            $this->plugin->getHeartbeat()->setPhaseChangeEvent(PhaseChangeEvent::COUNTDOWN);
+            $this->plugin->getHeartbeat()->setPhase(PhaseChangeEvent::COUNTDOWN);
             $sender->sendMessage(TextFormat::GREEN . "The UHC has been started successfully!");
             Command::broadcastCommandMessage($sender, "Started the UHC", false);
         }

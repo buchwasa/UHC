@@ -86,7 +86,7 @@ class EventListener implements Listener
         if (
             !$this->plugin->getHeartbeat()->hasStarted() ||
             (
-                $this->plugin->getHeartbeat()->getPhaseChangeEvent() === PhaseChangeEvent::GRACE &&
+                $this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::GRACE &&
                 $ev instanceof EntityDamageByEntityEvent
             )
         ) {
