@@ -9,8 +9,10 @@
         }
     ],
     "require": {
+        "pocketmine/pocketmine-mp": "3.13.0"
+    },
+    "require-dev": {
         "phpstan/phpstan": "^0.12.29",
-        "pocketmine/pocketmine-mp": "3.13.0",
         "phpstan/phpstan-strict-rules": "^0.12.2"
     },
     "autoload": {
