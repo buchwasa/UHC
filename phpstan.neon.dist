@@ -1,5 +1,9 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
 parameters:
 	level: 7
+	checkExplicitMixed: true
 	autoload_files:
 		- phar:///pocketmine/PocketMine-MP.phar/vendor/autoload.php
 	autoload_directories:
@@ -9,4 +13,3 @@ parameters:
 		- phar:///source/virions/libChunkLoader_dev-8.phar
 	paths:
 		- src
-	checkMissingIterableValueType: false

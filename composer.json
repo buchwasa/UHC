@@ -10,7 +10,8 @@
     ],
     "require": {
         "phpstan/phpstan": "^0.12.29",
-        "pocketmine/pocketmine-mp": "3.13.0"
+        "pocketmine/pocketmine-mp": "3.13.0",
+        "phpstan/phpstan-strict-rules": "^0.12.2"
     },
     "autoload": {
         "psr-4": {

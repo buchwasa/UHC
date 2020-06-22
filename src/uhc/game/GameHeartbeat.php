@@ -285,7 +285,7 @@ class GameHeartbeat extends Task
             $x = mt_rand($ss->getFloorX() - $range, $ss->getFloorX() + $range);
             $z = mt_rand($ss->getFloorZ() - $range, $ss->getFloorZ() + $range);
 
-            ChunkRegion::onChunkGenerated($p->getLevel(), $x >> 4, $z >> 4, function () use ($p, $x, $z) {
+            ChunkRegion::onChunkGenerated($p->getLevel(), $x >> 4, $z >> 4, function () use ($p, $x, $z): void {
                 $p->teleport(new Vector3($x, $p->getLevel()->getHighestBlockAt($x, $z) + 1, $z));
             });
 

@@ -15,7 +15,13 @@ class BaseCommand extends PluginCommand{
         parent::__construct($name, $plugin);
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args)
+    /**
+     * @param CommandSender $sender
+     * @param string $commandLabel
+     * @param string[] $args
+     * @return void
+     */
+    public function execute(CommandSender $sender, string $commandLabel, array $args) : void
     {
         if(!$sender instanceof Player){
             $sender->sendMessage("You must be a player to execute this command!");
@@ -29,6 +35,10 @@ class BaseCommand extends PluginCommand{
         $this->onExecute($sender, $args);
     }
 
+    /**
+     * @param Player $sender
+     * @param string[] $args
+     */
     public function onExecute(Player $sender, array $args): void
     {
 
