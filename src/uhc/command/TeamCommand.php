@@ -22,11 +22,6 @@ class TeamCommand extends BaseCommand
 
     public function onExecute(Player $sender, array $args): void
     {
-        if (!$sender instanceof Player) {
-            $sender->sendMessage("Must be executed in-game!");
-            return;
-        }
-
         $session = $this->plugin->getSession($sender);
         switch (strtolower($args[0])) {
             case "create":

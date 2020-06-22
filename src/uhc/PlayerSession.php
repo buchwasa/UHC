@@ -16,6 +16,8 @@ class PlayerSession
     private $player;
     /** @var int[] */
     private $eliminations = [];
+    /** @var Team|null */
+    private $team = null;
 
     public function __construct(Player $player)
     {
