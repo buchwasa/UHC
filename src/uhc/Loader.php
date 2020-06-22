@@ -53,6 +53,7 @@ class Loader extends PluginBase
             new SpectatorCommand($this),
             new HealCommand($this),
             new GlobalMuteCommand($this),
+            new TeamCommand($this),
             new TpallCommand($this)
         ]);
         $this->loadScenarios();
