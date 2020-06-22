@@ -5,38 +5,36 @@ declare(strict_types=1);
 namespace uhc\command;
 
 use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
-use pocketmine\command\PluginCommand;
+use pocketmine\Player;
 use pocketmine\utils\TextFormat;
-use uhc\game\type\GameStatus;
+use uhc\event\PhaseChangeEvent;
 use uhc\Loader;
 
-class UHCCommand extends PluginCommand{
-	/** @var Loader */
-	private $plugin;
+class UHCCommand extends BaseCommand
+{
+    /** @var Loader */
+    private $plugin;
 
-	public function __construct(Loader $plugin){
-		parent::__construct("uhc", $plugin);
-		$this->plugin = $plugin;
-		$this->setPermission("uhc.command.uhc");
-		$this->setUsage("/uhc");
-	}
+    public function __construct(Loader $plugin)
+    {
+        parent::__construct("uhc", $plugin);
+        $this->plugin = $plugin;
+        $this->setPermission("uhc.command.uhc");
+        $this->setUsage("/uhc");
+    }
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args){
-		if(!$this->testPermission($sender)){
-			return;
-		}
+    public function onExecute(Player $sender, array $args): void
+    {
+        if ($this->plugin->getHeartbeat()->hasStarted()) {
+            $sender->sendMessage(TextFormat::RED . "UHC already started!");
 
-		if($this->plugin->getHeartbeat()->hasStarted()){
-			$sender->sendMessage(TextFormat::RED . "UHC already started!");
+            return;
+        } else {
+            $this->plugin->getHeartbeat()->setPhase(PhaseChangeEvent::COUNTDOWN);
+            $sender->sendMessage(TextFormat::GREEN . "The UHC has been started successfully!");
+            Command::broadcastCommandMessage($sender, "Started the UHC", false);
+        }
 
-			return;
-		}else{
-			$this->plugin->getHeartbeat()->setGameStatus(GameStatus::COUNTDOWN);
-			$sender->sendMessage(TextFormat::GREEN . "The UHC has been started successfully!");
-			Command::broadcastCommandMessage($sender, "Started the UHC", false);
-		}
-
-		return;
-	}
+        return;
+    }
 }

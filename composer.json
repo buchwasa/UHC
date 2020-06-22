@@ -1,0 +1,23 @@
+{
+    "name": "wumpotamus/uhc",
+    "description": "Minecraft: Bedrock Edition UHC plugin for PocketMine.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wumpotamus"
+        }
+    ],
+    "require": {
+        "pocketmine/pocketmine-mp": "3.13.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.29",
+        "phpstan/phpstan-strict-rules": "^0.12.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "./src"
+        }
+    }
+}

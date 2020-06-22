@@ -45,6 +45,9 @@ class ExampleScenario extends Scenario{
 ```
 **Note: Scenario API is presently not stable and is subject to change!**
 
+### How can I add health under nametags?
+As you may have noticed, as of the recent commit, health under nametags have gone missing. <br>
+It was not unintentional, if you'd like the health back (and more!), use [PlayerTags](https://github.com/sylvrs/PlayerTags).
 ## Current Issues
 - Scattering can cause some lag for a few seconds.
 - Bedrock borders cause lag when built above size 100. 
