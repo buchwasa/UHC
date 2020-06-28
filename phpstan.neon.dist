@@ -3,12 +3,10 @@ includes:
 
 parameters:
 	level: 7
-	autoload_files:
-		- phar:///pocketmine/PocketMine-MP.phar/vendor/autoload.php
-	autoload_directories:
+	checkExplicitMixed: true
+	paths:
 		- src
+	scanDirectories:
 		- phar:///source/virions/pmforms.phar
 		- phar:///source/virions/ScoreFactory.phar
 		- phar:///source/virions/libChunkLoader.phar
-	paths:
-		- src
