@@ -6,7 +6,7 @@ namespace uhc\command;
 
 use pocketmine\command\Command;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
 use uhc\Loader;
 use function mb_strtolower;
@@ -33,7 +33,7 @@ class HealCommand extends BaseCommand
         $player = $this->plugin->getServer()->getPlayer(mb_strtolower($args[0]));
         if ($player !== null) {
             $player->setHealth($player->getMaxHealth());
-            $player->setFood($player->getMaxFood());
+            $player->getHungerManager()->setFood($player->getHungerManager()->getMaxFood());
             $sender->sendMessage(TF::RED . "You have healed " . TF::BOLD . TF::AQUA . $player->getDisplayName() . TF::RESET . TF::RED . "!");
             Command::broadcastCommandMessage($sender, "Healed: " . $player->getDisplayName(), false);
         }

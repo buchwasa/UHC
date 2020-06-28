@@ -3,16 +3,18 @@ declare(strict_types=1);
 
 namespace uhc\command;
 
+use pocketmine\command\Command;
+use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use uhc\Loader;
 
-class BaseCommand extends PluginCommand{
+class BaseCommand extends PluginCommand implements CommandExecutor{
 
     public function __construct(string $name, Loader $plugin)
     {
-        parent::__construct($name, $plugin);
+        parent::__construct($name, $plugin, $this);
     }
 
     /**
@@ -43,4 +45,7 @@ class BaseCommand extends PluginCommand{
     {
 
     }
+	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
+		return false;
+	}
 }

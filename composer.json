@@ -8,9 +8,10 @@
             "name": "Wumpotamus"
         }
     ],
-    "require": {
-        "pocketmine/pocketmine-mp": "3.13.0"
-    },
+	"minimum-stability": "dev",
+	"require": {
+		"pocketmine/pocketmine-mp": "dev-master"
+	},
     "require-dev": {
         "phpstan/phpstan": "^0.12.29",
         "phpstan/phpstan-strict-rules": "^0.12.2"

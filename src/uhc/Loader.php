@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace uhc;
 
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use uhc\command\GlobalMuteCommand;
 use uhc\command\HealCommand;

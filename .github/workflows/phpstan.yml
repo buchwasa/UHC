@@ -20,8 +20,8 @@ jobs:
     - name: libchunkloader
       uses: wei/wget@v1
       with:
-        args: -P virions/ https://poggit.pmmp.io/r/86811/libChunkLoader_dev-8.phar
+        args: -P virions/ https://poggit.pmmp.io/r/86810/libChunkLoader_dev-7.phar
     - name: phpstan
-      uses: nxtlvlsoftware/pmmp-phpstan-action@3
+      uses: nxtlvlsoftware/pmmp-phpstan-action@4
       with:
         phpstan-config: phpstan.neon.dist

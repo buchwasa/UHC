@@ -17,7 +17,8 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
-use pocketmine\Player;
+use pocketmine\player\GameMode;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\PhaseChangeEvent;
 
@@ -51,8 +52,8 @@ class EventListener implements Listener
         }
 
         if ($this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::WAITING) {
-            $player->teleport($player->getLevel()->getSafeSpawn());
-            $player->setGamemode(Player::SURVIVAL);
+            $player->teleport($player->getWorld()->getSafeSpawn());
+            $player->setGamemode(GameMode::SURVIVAL());
         }
 
         $ev->setJoinMessage("");
@@ -99,8 +100,8 @@ class EventListener implements Listener
         $player = $ev->getPlayer();
         $cause = $player->getLastDamageCause();
         $eliminatedSession = $this->plugin->getSession($player);
-        $player->setGamemode(3);
-        $player->addTitle(TF::YELLOW . "You have been eliminated!", "Use /spectate to spectate a player.");
+        $player->setGamemode(GameMode::SPECTATOR());
+        $player->sendTitle(TF::YELLOW . "You have been eliminated!", "Use /spectate to spectate a player.");
         if ($cause instanceof EntityDamageByEntityEvent) {
             $damager = $cause->getDamager();
             if ($damager instanceof Player) {

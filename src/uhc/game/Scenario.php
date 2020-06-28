@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace uhc\game;
 
 use pocketmine\event\HandlerList;
+use pocketmine\event\HandlerListManager;
 use pocketmine\event\Listener;
 use uhc\Loader;
 
@@ -34,7 +35,7 @@ class Scenario implements Listener
         if ($active) {
             $this->plugin->getServer()->getPluginManager()->registerEvents($this, $this->plugin);
         } else {
-            HandlerList::unregisterAll($this);
+        	HandlerListManager::global()->unregisterAll($this);
         }
     }
 

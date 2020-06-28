@@ -6,7 +6,7 @@ namespace uhc\game;
 
 use JackMD\ScoreFactory\ScoreFactory;
 use pocketmine\math\Vector3;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\Task;
 use pocketmine\utils\TextFormat as TF;
@@ -42,7 +42,7 @@ class GameHeartbeat extends Task
     public function __construct(Loader $plugin)
     {
         $this->plugin = $plugin;
-        $this->border = new Border($plugin->getServer()->getDefaultLevel());
+        $this->border = new Border($plugin->getServer()->getWorldManager()->getDefaultWorld());
     }
 
     public function getPhase(): int
@@ -60,7 +60,7 @@ class GameHeartbeat extends Task
         return $this->getPhase() >= PhaseChangeEvent::GRACE;
     }
 
-    public function onRun(int $currentTick): void
+    public function onRun(): void
     {
         $this->handlePlayers();
         switch ($this->getPhase()) {
@@ -94,16 +94,16 @@ class GameHeartbeat extends Task
         foreach ($this->plugin->getGamePlayers() as $player) {
             if (!$this->border->isPlayerInsideOfBorder($player)) {
                 $this->border->teleportPlayer($player);
-                $player->addTitle("You have been teleported by border!");
+                $player->sendTitle("You have been teleported by border!");
             }
             switch ($this->getPhase()) {
                 case PhaseChangeEvent::COUNTDOWN:
-                    $player->setFood($player->getMaxFood());
+                    $player->getHungerManager()->setFood($player->getHungerManager()->getMaxFood());
                     $player->setHealth($player->getMaxHealth());
                     if ($this->countdown === 29) {
                         $this->randomizeCoordinates($player, 750);
                         $player->setWhitelisted(true);
-                        $player->removeAllEffects();
+                        $player->getEffects()->clear();
                         $player->getInventory()->clearAll();
                         $player->getArmorInventory()->clearAll();
                         $player->getCursorInventory()->clearAll();
@@ -126,7 +126,7 @@ class GameHeartbeat extends Task
         $server = $this->plugin->getServer();
         switch ($this->countdown) {
             case 30:
-                $server->setConfigBool("white-list", true);
+                $server->getConfigGroup()->setConfigBool("white-list", true); //TODO: Remove server whitelist.
                 $server->broadcastTitle("Server has been " . TF::AQUA . "whitelisted!");
                 $server->broadcastTitle("The game will begin in " . TF::AQUA . "30 seconds.");
                 break;
@@ -145,7 +145,7 @@ class GameHeartbeat extends Task
                 $server->broadcastTitle("The game will begin in " . TF::AQUA . "$this->countdown second(s).");
                 break;
             case 0:
-                foreach ($this->plugin->getServer()->getDefaultLevel()->getEntities() as $entity) {
+                foreach ($server->getWorldManager()->getDefaultWorld()->getEntities() as $entity) {
                     if (!$entity instanceof Player) {
                         $entity->flagForDespawn();
                     }
@@ -261,6 +261,7 @@ class GameHeartbeat extends Task
 
     private function handleScoreboard(Player $p): void
     {
+    	$safeSpawn = $p->getWorld()->getSafeSpawn();
         ScoreFactory::setScore($p, "§ky§r §b" . $p->getDisplayName() . " §f§ky§r");
         if ($this->hasStarted()) {
             ScoreFactory::setScoreLine($p, 1, "§7---------------------");
@@ -268,7 +269,7 @@ class GameHeartbeat extends Task
             ScoreFactory::setScoreLine($p, 3, " §bRemaining: §f" . count($this->plugin->getGamePlayers()));
             ScoreFactory::setScoreLine($p, 4, " §bEliminations: §f" . $this->plugin->getSession($p)->getEliminations());
             ScoreFactory::setScoreLine($p, 5, " §bBorder: §f" . $this->border->getSize());
-            ScoreFactory::setScoreLine($p, 6, " §bCenter: §f(" . $p->getLevel()->getSafeSpawn()->getFloorX() . ", " . $p->getLevel()->getSafeSpawn()->getFloorZ() . ")");
+            ScoreFactory::setScoreLine($p, 6, " §bCenter: §f({$safeSpawn->getFloorX()}, {$safeSpawn->getFloorZ()})");
             ScoreFactory::setScoreLine($p, 7, "§7--------------------- ");
         } else {
             ScoreFactory::setScoreLine($p, 1, "§7---------------------");
@@ -281,12 +282,12 @@ class GameHeartbeat extends Task
     private function randomizeCoordinates(Player $p, int $range): void
     {
         $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($p, $range) : void {
-            $ss = $p->getLevel()->getSafeSpawn();
+            $ss = $p->getWorld()->getSafeSpawn();
             $x = mt_rand($ss->getFloorX() - $range, $ss->getFloorX() + $range);
             $z = mt_rand($ss->getFloorZ() - $range, $ss->getFloorZ() + $range);
 
-            ChunkRegion::onChunkGenerated($p->getLevel(), $x >> 4, $z >> 4, function () use ($p, $x, $z): void {
-                $p->teleport(new Vector3($x, $p->getLevel()->getHighestBlockAt($x, $z) + 1, $z));
+            ChunkRegion::onChunkGenerated($p->getWorld(), $x >> 4, $z >> 4, function () use ($p, $x, $z): void {
+                $p->teleport(new Vector3($x, $p->getWorld()->getHighestBlockAt($x, $z) + 1, $z));
             });
 
             $this->playerTimer += 5;

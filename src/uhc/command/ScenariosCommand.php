@@ -7,7 +7,7 @@ namespace uhc\command;
 use dktapps\pmforms\CustomForm;
 use dktapps\pmforms\CustomFormResponse;
 use dktapps\pmforms\element\Toggle;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use uhc\Loader;
 
 class ScenariosCommand extends BaseCommand
