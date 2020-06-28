@@ -12,18 +12,20 @@ jobs:
     - name: pmforms
       uses: wei/wget@v1
       with:
-        args: -O pmforms.phar -P virions/ https://poggit.pmmp.io/r/55533/pmforms_dev-4.phar
+        args: -P virions/ -O pmforms.phar https://poggit.pmmp.io/r/55533/pmforms_dev-4.phar
     - name: scorefactory
       uses: wei/wget@v1
       with:
-        args: -O ScoreFactory.phar -P virions/ https://poggit.pmmp.io/r/87280/ScoreFactory_dev-5.phar
+        args: -P virions/ -O ScoreFactory.phar https://poggit.pmmp.io/r/87280/ScoreFactory_dev-5.phar
     - name: libchunkloader
       uses: wei/wget@v1
       with:
-        args: -O libChunkLoader.phar -P virions/ https://poggit.pmmp.io/r/86810/libChunkLoader_dev-7.phar
+        args: -P virions/ -O libChunkLoader.phar https://poggit.pmmp.io/r/86810/libChunkLoader_dev-7.phar
     - name: ls
       run: ls
     - name: phpstan
       uses: nxtlvlsoftware/pmmp-phpstan-action@4
       with:
         phpstan-config: phpstan.neon.dist
+    - name: ls2
+      run: ls
