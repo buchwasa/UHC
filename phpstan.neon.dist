@@ -7,6 +7,6 @@ parameters:
 	paths:
 		- src
 	scanDirectories:
-		- phar:///source/virions/pmforms.phar
-		- phar:///source/virions/ScoreFactory.phar
-		- phar:///source/virions/libChunkLoader.phar
+		- phar:///virions/pmforms.phar
+		- phar://virions/ScoreFactory.phar
+		- phar://virions/libChunkLoader.phar

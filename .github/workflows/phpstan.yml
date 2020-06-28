@@ -21,6 +21,8 @@ jobs:
       uses: wei/wget@v1
       with:
         args: -O libChunkLoader.phar -P virions/ https://poggit.pmmp.io/r/86810/libChunkLoader_dev-7.phar
+    - name: ls
+      run: ls
     - name: phpstan
       uses: nxtlvlsoftware/pmmp-phpstan-action@4
       with:
