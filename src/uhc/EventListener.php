@@ -15,8 +15,7 @@ use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\item\ItemFactory;
-use pocketmine\item\ItemIds;
+use pocketmine\item\VanillaItems;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
@@ -44,7 +43,7 @@ class EventListener implements Listener
 
     public function handleJoin(PlayerJoinEvent $ev): void
     {
-        $player = $ev->getPlayer();
+		$player = $ev->getPlayer();
         if (!$this->plugin->hasSession($player)) {
             $this->plugin->addSession(PlayerSession::create($player));
         } else {
@@ -63,7 +62,7 @@ class EventListener implements Listener
     {
         $player = $ev->getPlayer();
         if ($ev->getOldPhase() === PhaseChangeEvent::COUNTDOWN) {
-            $player->getInventory()->addItem(ItemFactory::get(ItemIds::STEAK, 0, 64));
+            $player->getInventory()->addItem(VanillaItems::STEAK()->setCount(64));
         }
     }
 

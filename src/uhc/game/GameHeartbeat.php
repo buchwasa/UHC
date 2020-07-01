@@ -281,7 +281,7 @@ class GameHeartbeat extends Task
 
     private function randomizeCoordinates(Player $p, int $range): void
     {
-        $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($p, $range) : void {
+        $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($p, $range) : void {
             $ss = $p->getWorld()->getSafeSpawn();
             $x = mt_rand($ss->getFloorX() - $range, $ss->getFloorX() + $range);
             $z = mt_rand($ss->getFloorZ() - $range, $ss->getFloorZ() + $range);
