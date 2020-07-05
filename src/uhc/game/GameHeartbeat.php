@@ -126,7 +126,6 @@ class GameHeartbeat extends Task
         $server = $this->plugin->getServer();
         switch ($this->countdown) {
             case 30:
-                $server->getConfigGroup()->setConfigBool("white-list", true); //TODO: Remove server whitelist.
                 $server->broadcastTitle("Server has been " . TF::AQUA . "whitelisted!");
                 $server->broadcastTitle("The game will begin in " . TF::AQUA . "30 seconds.");
                 break;
