@@ -44,7 +44,10 @@ class EventListener implements Listener
 
     public function handlePreLogin(PlayerPreLoginEvent $ev): void
 	{
-		if ($this->plugin->getHeartbeat()->hasStarted() && !in_array($ev->getPlayerInfo()->getUsername(), $this->plugin->getGamePlayers())) {
+		if (
+			$this->plugin->getHeartbeat()->getPhase() >= PhaseChangeEvent::COUNTDOWN &&
+			!in_array($ev->getPlayerInfo()->getUsername(), $this->plugin->getGamePlayers())
+		) {
 			$ev->setKickReason(PlayerPreLoginEvent::KICK_REASON_PLUGIN, "UHC has already started!");
 		}
 	}
