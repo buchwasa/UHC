@@ -3,7 +3,6 @@ includes:
 
 parameters:
 	level: 7
-	checkExplicitMixed: true
 	paths:
 		- src
 	scanDirectories:
