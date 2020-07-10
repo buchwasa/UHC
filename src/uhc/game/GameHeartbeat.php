@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace uhc\game;
 
-use JackMD\ScoreFactory\ScoreFactory;
+use jackmd\scorefactory\ScoreFactory;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
@@ -13,7 +13,7 @@ use pocketmine\utils\TextFormat as TF;
 use uhc\event\PhaseChangeEvent;
 use uhc\game\type\GameTimer;
 use uhc\Loader;
-use wumpotamus\chunkloader\ChunkRegion;
+use muqsit\chunkloader\ChunkRegion;
 use function mt_rand;
 
 class GameHeartbeat extends Task

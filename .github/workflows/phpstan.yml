@@ -16,11 +16,11 @@ jobs:
     - name: scorefactory
       uses: wei/wget@v1
       with:
-        args: -P virions/ https://poggit.pmmp.io/r/87280/ScoreFactory_dev-5.phar
+        args: -P virions/ https://poggit.pmmp.io/r/95687/ScoreFactory_dev-11.phar
     - name: libchunkloader
       uses: wei/wget@v1
       with:
-        args: -P virions/ https://poggit.pmmp.io/r/86811/libChunkLoader_dev-8.phar
+        args: -P virions/ https://poggit.pmmp.io/r/95686/libChunkLoader_dev-13.phar
     - name: phpstan
       uses: nxtlvlsoftware/pmmp-phpstan-action@3
       with:

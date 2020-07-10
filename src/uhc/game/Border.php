@@ -9,7 +9,7 @@ use pocketmine\block\BlockIds;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
-use wumpotamus\chunkloader\ChunkRegion;
+use muqsit\chunkloader\ChunkRegion;
 use function mt_rand;
 
 class Border

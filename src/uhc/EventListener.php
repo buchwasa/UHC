@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace uhc;
 
-use JackMD\ScoreFactory\ScoreFactory;
+use jackmd\scorefactory\ScoreFactory;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;

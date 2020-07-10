@@ -8,7 +8,7 @@ parameters:
 	autoload_directories:
 		- src
 		- phar:///source/virions/pmforms_dev-4.phar
-		- phar:///source/virions/ScoreFactory_dev-5.phar
-		- phar:///source/virions/libChunkLoader_dev-8.phar
+		- phar:///source/virions/ScoreFactory_dev-11.phar
+		- phar:///source/virions/libChunkLoader_dev-13.phar
 	paths:
 		- src
