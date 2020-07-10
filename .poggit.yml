@@ -1,17 +1,18 @@
---- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Wumpotamus/UHC
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/stephen-mc-pl/UHC
 build-by-default: true
 branches:
 - master
+- pm4
 projects:
   UHC:
     path: ""
     libs:
       - src: dktapps-pm-pl/pmforms/pmforms
         version: 1.0.0
-      - src: JackMD/ScoreFactory/ScoreFactory
+      - src: stephen-mc-pl/ScoreFactory/ScoreFactory
+        version: 3.0.0
+      - src: stephen-mc-pl/libChunkLoader/libChunkLoader
         version: 2.0.0
-      - src: Wumpotamus/libChunkLoader/libChunkLoader
-        version: 1.0.0
     lint:
       phpstan: false
 ...
