@@ -6,6 +6,6 @@ parameters:
 	paths:
 		- src
 	scanDirectories:
-		- phar:///pmforms.phar
+		- phar://pmforms.phar
 		- phar://ScoreFactory.phar
 		- phar://libChunkLoader.phar
