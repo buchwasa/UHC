@@ -10,8 +10,10 @@ projects:
       - src: dktapps-pm-pl/pmforms/pmforms
         version: 1.0.0
       - src: stephen-mc-pl/ScoreFactory/ScoreFactory
+        branch: pm4
         version: 3.0.1
       - src: stephen-mc-pl/libChunkLoader/libChunkLoader
+        branch: "4.0"
         version: 3.0.0
     lint:
       phpstan: false
