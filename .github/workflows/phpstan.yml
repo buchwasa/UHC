@@ -10,7 +10,7 @@ jobs:
     - name: pmforms
       uses: wei/wget@v1
       with:
-        args: https://poggit.pmmp.io/r/55533/pmforms_dev-4.phar -O pmforms.phar
+        args: https://poggit.pmmp.io/r/96115/pmforms_dev-1.phar -O pmforms.phar
     - name: scorefactory
       uses: wei/wget@v1
       with:

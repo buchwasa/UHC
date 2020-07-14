@@ -7,8 +7,9 @@ projects:
   UHC:
     path: ""
     libs:
-      - src: dktapps-pm-pl/pmforms/pmforms
-        version: 1.0.0
+      - src: stephen-mc-pl/pmforms-pm4/pmforms
+        branch: pm4
+        version: 1.0.1
       - src: stephen-mc-pl/ScoreFactory/ScoreFactory
         branch: pm4
         version: 3.0.1
