@@ -10,15 +10,15 @@ jobs:
     - name: pmforms
       uses: wei/wget@v1
       with:
-        args: -O pmforms.phar https://poggit.pmmp.io/r/55533/pmforms_dev-4.phar
+        args: https://poggit.pmmp.io/r/55533/pmforms_dev-4.phar -O pmforms.phar
     - name: scorefactory
       uses: wei/wget@v1
       with:
-        args: -O ScoreFactory.phar https://poggit.pmmp.io/r/95688/ScoreFactory_dev-12.phar
+        args: https://poggit.pmmp.io/r/95688/ScoreFactory_dev-12.phar -O ScoreFactory.phar
     - name: libchunkloader
       uses: wei/wget@v1
       with:
-        args: -O libChunkLoader.phar https://poggit.pmmp.io/r/95685/libChunkLoader_dev-12.phar
+        args: https://poggit.pmmp.io/r/95685/libChunkLoader_dev-12.phar -O libChunkLoader.phar
     - name: ls
       run: ls
     - name: phpstan
