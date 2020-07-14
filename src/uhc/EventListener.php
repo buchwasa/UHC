@@ -14,7 +14,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\event\player\PlayerPreLoginEvent;
+use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\GameMode;
@@ -43,13 +43,14 @@ class EventListener implements Listener
 		}
 	}
 
-	public function handlePreLogin(PlayerPreLoginEvent $ev): void
+	public function handleLogin(PlayerLoginEvent $ev): void
 	{
 		if (
 			$this->plugin->getHeartbeat()->getPhase() >= PhaseChangeEvent::COUNTDOWN &&
-			!in_array($ev->getPlayerInfo()->getUsername(), $this->plugin->getGamePlayers(), true)
+			!$this->plugin->isInGame($ev->getPlayer())
 		) {
-			$ev->setKickReason(PlayerPreLoginEvent::KICK_REASON_PLUGIN, "UHC has already started!");
+			$ev->setKickMessage("UHC has already started!");
+			$ev->setCancelled();
 		}
 	}
 
