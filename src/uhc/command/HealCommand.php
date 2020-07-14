@@ -18,7 +18,7 @@ class HealCommand extends BaseCommand
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("heal", $plugin);
+		parent::__construct("heal");
 		$this->plugin = $plugin;
 		$this->setUsage("/heal <playerName>");
 		$this->setPermission("uhc.command.heal");

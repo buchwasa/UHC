@@ -15,7 +15,7 @@ class GlobalMuteCommand extends BaseCommand
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("globalmute", $plugin);
+		parent::__construct("globalmute");
 		$this->plugin = $plugin;
 		$this->setPermission("uhc.command.globalmute");
 	}

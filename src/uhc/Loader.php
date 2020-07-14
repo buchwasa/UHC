@@ -10,10 +10,12 @@ use uhc\command\GlobalMuteCommand;
 use uhc\command\HealCommand;
 use uhc\command\ScenariosCommand;
 use uhc\command\SpectatorCommand;
+use uhc\command\TeamCommand;
 use uhc\command\TpallCommand;
 use uhc\command\UHCCommand;
 use uhc\game\GameHeartbeat;
 use uhc\game\Scenario;
+use uhc\game\Team;
 use Throwable;
 use function is_array;
 use function is_dir;
@@ -34,6 +36,8 @@ class Loader extends PluginBase
 	private $globalMuteEnabled = false;
 	/** @var Scenario[] */
 	private $scenarios = [];
+	/** @var Team[] */
+    private $teams = [];
 
 	public function onEnable(): void
 	{
@@ -50,6 +54,7 @@ class Loader extends PluginBase
 			new SpectatorCommand($this),
 			new HealCommand($this),
 			new GlobalMuteCommand($this),
+			new TeamCommand($this),
 			new TpallCommand($this)
 		]);
 		$this->loadScenarios();
@@ -167,4 +172,32 @@ class Loader extends PluginBase
 	{
 		$this->scenarios[$scenario->getName()] = $scenario;
 	}
+
+	/**
+     * @return Team[]
+     */
+    public function getTeams(): array
+    {
+        return $this->teams;
+    }
+
+    public function addTeam(string $teamName, Player $teamLeader): void
+    {
+        $this->teams[$teamName] = new Team($teamName, $teamLeader);
+    }
+
+    public function getTeam(string $teamName): ?Team
+    {
+        return $this->teamExists($teamName) ? $this->teams[$teamName] : null;
+    }
+
+    public function teamExists(string $teamName): bool
+    {
+        return isset($this->teams[$teamName]);
+    }
+
+    public function removeTeam(string $teamName): void
+    {
+        unset($this->teams[$teamName]);
+    }
 }

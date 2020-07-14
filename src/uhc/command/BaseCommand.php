@@ -10,12 +10,12 @@ use pocketmine\command\PluginCommand;
 use pocketmine\player\Player;
 use uhc\Loader;
 
-class BaseCommand extends PluginCommand implements CommandExecutor
+class BaseCommand extends Command
 {
 
-	public function __construct(string $name, Loader $plugin)
+	public function __construct(string $name)
 	{
-		parent::__construct($name, $plugin, $this);
+		parent::__construct($name);
 	}
 
 	/**
@@ -45,10 +45,5 @@ class BaseCommand extends PluginCommand implements CommandExecutor
 	public function onExecute(Player $sender, array $args): void
 	{
 
-	}
-
-	public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
-	{
-		return false;
 	}
 }

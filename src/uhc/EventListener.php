@@ -20,6 +20,7 @@ use pocketmine\item\VanillaItems;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
+
 use uhc\event\PhaseChangeEvent;
 
 class EventListener implements Listener
@@ -94,14 +95,26 @@ class EventListener implements Listener
 
 	public function handleDamage(EntityDamageEvent $ev): void
 	{
-		if (
-			!$this->plugin->getHeartbeat()->hasStarted() ||
-			(
-				$this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::GRACE &&
-				$ev instanceof EntityDamageByEntityEvent
-			)
-		) {
+		if (!$this->plugin->getHeartbeat()->hasStarted()) {
 			$ev->setCancelled();
+		}
+
+		if ($ev instanceof EntityDamageByEntityEvent) {
+			$damager = $ev->getDamager();
+			$victim = $ev->getEntity();
+			if ($this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::GRACE) {
+				$ev->setCancelled();
+			}
+
+			if ($damager instanceof Player && $victim instanceof Player) {
+				$damagerSession = $this->plugin->getSession($damager);
+				$victimSession = $this->plugin->getSession($victim);
+				if ($damagerSession->getTeam() !== null && $victimSession->getTeam() !== null) {
+					if ($damagerSession->getTeam()->getName() === $victimSession->getTeam()->getName()) {
+						$ev->setCancelled();
+					}
+				}
+			}
 		}
 	}
 

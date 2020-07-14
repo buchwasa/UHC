@@ -14,7 +14,7 @@ class TpallCommand extends BaseCommand
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("tpall", $plugin);
+		parent::__construct("tpall");
 		$this->plugin = $plugin;
 		$this->setPermission("uhc.command.tpall");
 	}

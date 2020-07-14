@@ -17,7 +17,7 @@ class UHCCommand extends BaseCommand
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("uhc", $plugin);
+		parent::__construct("uhc");
 		$this->plugin = $plugin;
 		$this->setPermission("uhc.command.uhc");
 		$this->setUsage("/uhc");

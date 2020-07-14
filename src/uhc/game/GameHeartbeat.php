@@ -92,6 +92,11 @@ class GameHeartbeat extends Task
 		}
 
 		foreach ($this->plugin->getGamePlayers() as $player) {
+			$session = $this->plugin->getSession($player);
+            if ($session !== null) {
+                $name = $session->getTeam() !== null ? $session->getTeam()->getName() : "NO TEAM";
+                $player->setNameTag(TF::GOLD . "[$name] " . $player->getDisplayName());
+            }
 			if (!$this->border->isPlayerInsideOfBorder($player)) {
 				$this->border->teleportPlayer($player);
 				$player->sendTitle("You have been teleported by border!");

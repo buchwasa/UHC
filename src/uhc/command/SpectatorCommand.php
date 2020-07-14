@@ -17,7 +17,7 @@ class SpectatorCommand extends BaseCommand
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("spectate", $plugin);
+		parent::__construct("spectate");
 		$this->plugin = $plugin;
 		$this->setUsage("/spectate <playerName>");
 	}

@@ -17,7 +17,7 @@ class ScenariosCommand extends BaseCommand
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("scenario", $plugin);
+		parent::__construct("scenario");
 		$this->plugin = $plugin;
 		$this->setAliases(["sc"]);
 		$this->setUsage("/scenario");
