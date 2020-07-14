@@ -19,8 +19,6 @@ jobs:
       uses: wei/wget@v1
       with:
         args: https://poggit.pmmp.io/r/95685/libChunkLoader_dev-12.phar -O libChunkLoader.phar
-    - name: ls
-      run: ls
     - name: phpstan
       uses: nxtlvlsoftware/pmmp-phpstan-action@4
       with:
