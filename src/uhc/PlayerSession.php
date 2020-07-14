@@ -17,7 +17,7 @@ class PlayerSession
 	/** @var int[] */
 	private $eliminations = [];
 	/** @var Team|null */
-    private $team = null;
+	private $team = null;
 
 	public function __construct(Player $player)
 	{
@@ -52,39 +52,39 @@ class PlayerSession
 	}
 
 	public function getTeam(): ?Team
-    {
-        return $this->team;
-    }
+	{
+		return $this->team;
+	}
 
-    public function isInTeam(): bool
-    {
-        return $this->team !== null;
-    }
+	public function isInTeam(): bool
+	{
+		return $this->team !== null;
+	}
 
-    public function addToTeam(Team $team): bool
-    {
-        if ($team->addMember($this->getPlayer()) || $this->isTeamLeader()) {
-            $this->team = $team;
-            return true;
-        }
+	public function addToTeam(Team $team): bool
+	{
+		if ($team->addMember($this->getPlayer()) || $this->isTeamLeader()) {
+			$this->team = $team;
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public function removeFromTeam(): bool
-    {
-        if ($this->team->removeMember($this->getPlayer())) {
-            $this->team = null;
-            return true;
-        }
+	public function removeFromTeam(): bool
+	{
+		if ($this->team->removeMember($this->getPlayer())) {
+			$this->team = null;
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public function isTeamLeader(): bool
-    {
-        return $this->isInTeam() ?? $this->team->getLeader()->getUniqueId() === $this->getPlayer()->getUniqueId();
-    }
+	public function isTeamLeader(): bool
+	{
+		return $this->isInTeam() ?? $this->team->getLeader()->getUniqueId() === $this->getPlayer()->getUniqueId();
+	}
 
 	public static function create(Player $player): self
 	{

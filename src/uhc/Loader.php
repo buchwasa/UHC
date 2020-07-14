@@ -37,7 +37,7 @@ class Loader extends PluginBase
 	/** @var Scenario[] */
 	private $scenarios = [];
 	/** @var Team[] */
-    private $teams = [];
+	private $teams = [];
 
 	public function onEnable(): void
 	{
@@ -174,30 +174,30 @@ class Loader extends PluginBase
 	}
 
 	/**
-     * @return Team[]
-     */
-    public function getTeams(): array
-    {
-        return $this->teams;
-    }
+	 * @return Team[]
+	 */
+	public function getTeams(): array
+	{
+		return $this->teams;
+	}
 
-    public function addTeam(string $teamName, Player $teamLeader): void
-    {
-        $this->teams[$teamName] = new Team($teamName, $teamLeader);
-    }
+	public function addTeam(string $teamName, Player $teamLeader): void
+	{
+		$this->teams[$teamName] = new Team($teamName, $teamLeader);
+	}
 
-    public function getTeam(string $teamName): ?Team
-    {
-        return $this->teamExists($teamName) ? $this->teams[$teamName] : null;
-    }
+	public function getTeam(string $teamName): ?Team
+	{
+		return $this->teamExists($teamName) ? $this->teams[$teamName] : null;
+	}
 
-    public function teamExists(string $teamName): bool
-    {
-        return isset($this->teams[$teamName]);
-    }
+	public function teamExists(string $teamName): bool
+	{
+		return isset($this->teams[$teamName]);
+	}
 
-    public function removeTeam(string $teamName): void
-    {
-        unset($this->teams[$teamName]);
-    }
+	public function removeTeam(string $teamName): void
+	{
+		unset($this->teams[$teamName]);
+	}
 }
