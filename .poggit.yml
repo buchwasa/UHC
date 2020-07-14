@@ -8,7 +8,7 @@ projects:
     path: ""
     libs:
       - src: stephen-mc-pl/pmforms-pm4/pmforms
-        branch: pm4
+        branch: prod
         version: 1.0.1
       - src: stephen-mc-pl/ScoreFactory/ScoreFactory
         branch: pm4
