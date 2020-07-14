@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace uhc\command;
 
+use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\player\Player;
 use uhc\Loader;
 
@@ -23,7 +24,9 @@ class TeamCommand extends BaseCommand
 		$session = $this->plugin->getSession($sender);
 		switch (strtolower($args[0])) {
 			case "create":
-				if ($session->isInTeam()) {
+				if (count($args) < 2) {
+					throw new InvalidCommandSyntaxException();
+				} elseif ($session->isInTeam()) {
 					$sender->sendMessage("You are already in a team!");
 					return;
 				}
@@ -31,7 +34,9 @@ class TeamCommand extends BaseCommand
 				$sender->sendMessage("Successfully created your team!");
 				break;
 			case "disband":
-				if (!$session->isInTeam()) {
+				if (!isset($args[0])) {
+					throw new InvalidCommandSyntaxException();
+				} elseif (!$session->isInTeam()) {
 					$sender->sendMessage("You must be in a team to disband it!");
 					return;
 				} elseif (!$session->isTeamLeader()) {
@@ -46,7 +51,9 @@ class TeamCommand extends BaseCommand
 				$sender->sendMessage("Successfully disbanded your team!");
 				break;
 			case "add":
-				if (!$session->isInTeam()) {
+				if (count($args) < 2) {
+					throw new InvalidCommandSyntaxException();
+				} else if (!$session->isInTeam()) {
 					$sender->sendMessage("You must be in a team to add players!");
 					return;
 				} elseif (!$session->isTeamLeader()) {
@@ -63,7 +70,9 @@ class TeamCommand extends BaseCommand
 				$sender->sendMessage("Successfully added {$addedPlayer->getDisplayName()} to your team!");
 				break;
 			case "leave":
-				if (!$session->isInTeam()) {
+				if (!isset($args[0])) {
+					throw new InvalidCommandSyntaxException();
+				} elseif (!$session->isInTeam()) {
 					$sender->sendMessage("You must be in a team to leave!");
 					return;
 				} elseif ($session->isTeamLeader()) {
