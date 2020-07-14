@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace uhc\command;
 
 use pocketmine\command\utils\InvalidCommandSyntaxException;
+use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use uhc\Loader;
@@ -24,7 +25,7 @@ class SpectatorCommand extends BaseCommand
 
 	public function onExecute(Player $sender, array $args): void
 	{
-		if ($sender->getGamemode() !== 3) {
+		if ($sender->getGamemode() !== GameMode::SPECTATOR()) {
 			$sender->sendMessage(TextFormat::RED . "You must be in spectator mode to use this command!");
 
 			return;
