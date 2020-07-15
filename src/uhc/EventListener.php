@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace uhc;
 
-use jackmd\scorefactory\ScoreFactory;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -83,7 +82,6 @@ class EventListener implements Listener
 	{
 		$player = $ev->getPlayer();
 		$this->plugin->removeFromGame($player);
-		ScoreFactory::removeScore($player); //TODO: Remove?
 		$ev->setQuitMessage("");
 	}
 
@@ -126,6 +124,7 @@ class EventListener implements Listener
 		$eliminatedSession = $this->plugin->getSession($player);
 		$player->setGamemode(GameMode::SPECTATOR());
 		$player->sendTitle(TF::YELLOW . "You have been eliminated!", "Use /spectate to spectate a player.");
+		//$this->plugin->removeFromGame($player); TODO: Fix this, presently the timer does this, which is not ideal.
 		if ($cause instanceof EntityDamageByEntityEvent) {
 			$damager = $cause->getDamager();
 			if ($damager instanceof Player) {

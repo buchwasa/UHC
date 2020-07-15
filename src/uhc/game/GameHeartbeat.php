@@ -83,7 +83,7 @@ class GameHeartbeat extends Task
 	private function handlePlayers(): void
 	{
 		foreach ($this->plugin->getServer()->getOnlinePlayers() as $p) {
-			if ($p->isSurvival()) {
+			if ($p->isSurvival()) { //TODO: This really shouldn't be done the whole game
 				$this->plugin->addToGame($p);
 			} else {
 				$this->plugin->removeFromGame($p);
