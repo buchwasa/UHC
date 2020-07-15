@@ -14,9 +14,8 @@ class TeamCommand extends BaseCommand
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("team");
+		parent::__construct("team", "Team management", "/team <add:create:disband:leave> <player:team>");
 		$this->plugin = $plugin;
-		$this->setUsage("/team [create:disband:add:leave] <teamName:playerName>");
 	}
 
 	public function onExecute(Player $sender, array $args): void

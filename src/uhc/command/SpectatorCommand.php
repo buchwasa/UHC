@@ -18,9 +18,8 @@ class SpectatorCommand extends BaseCommand
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("spectate");
+		parent::__construct("spectate", "Spectates a player", "/spectate <player>");
 		$this->plugin = $plugin;
-		$this->setUsage("/spectate <playerName>");
 	}
 
 	public function onExecute(Player $sender, array $args): void

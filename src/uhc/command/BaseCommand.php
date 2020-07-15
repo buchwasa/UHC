@@ -13,9 +13,9 @@ use uhc\Loader;
 class BaseCommand extends Command
 {
 
-	public function __construct(string $name)
+	public function __construct(string $name, string $description, string $usageMessage, array $aliases = [])
 	{
-		parent::__construct($name);
+		parent::__construct($name, $description, $usageMessage, $aliases);
 	}
 
 	/**

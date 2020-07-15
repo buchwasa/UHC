@@ -17,10 +17,8 @@ class ScenariosCommand extends BaseCommand
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("scenario");
+		parent::__construct("scenario", "Shows the game's scenarios or sets them", "/scenario", ["sc"]);
 		$this->plugin = $plugin;
-		$this->setAliases(["sc"]);
-		$this->setUsage("/scenario");
 	}
 
 	public function onExecute(Player $sender, array $args): void

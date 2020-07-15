@@ -15,7 +15,7 @@ class GlobalMuteCommand extends BaseCommand
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("globalmute");
+		parent::__construct("globalmute", "Controls whether all players can chat or not", "/globalmute");
 		$this->plugin = $plugin;
 		$this->setPermission("uhc.command.globalmute");
 	}
