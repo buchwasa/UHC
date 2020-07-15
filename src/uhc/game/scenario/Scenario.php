@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace uhc\scenario;
+namespace uhc\game\scenario;
 
 use pocketmine\event\HandlerListManager;
 use pocketmine\event\Listener;

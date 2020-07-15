@@ -15,7 +15,7 @@ use uhc\command\TpallCommand;
 use uhc\command\UHCCommand;
 use uhc\game\GameHeartbeat;
 use uhc\game\Team;
-use uhc\scenario\ScenarioManager;
+use uhc\game\scenario\ScenarioManager;
 use function is_dir;
 use function mkdir;
 

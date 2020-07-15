@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace uhc\scenario;
+namespace uhc\game\scenario;
 
 use uhc\Loader;
 use Throwable;
