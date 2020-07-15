@@ -9,7 +9,7 @@ use pocketmine\plugin\PluginBase;
 use uhc\command\GlobalMuteCommand;
 use uhc\command\HealCommand;
 use uhc\command\ScenariosCommand;
-use uhc\command\SpectatorCommand;
+use uhc\command\SpectateCommand;
 use uhc\command\TeamCommand;
 use uhc\command\TpallCommand;
 use uhc\command\UHCCommand;
@@ -51,7 +51,7 @@ class Loader extends PluginBase
 		$this->getServer()->getCommandMap()->registerAll("uhc", [
 			new UHCCommand($this),
 			new ScenariosCommand($this),
-			new SpectatorCommand($this),
+			new SpectateCommand($this),
 			new HealCommand($this),
 			new GlobalMuteCommand($this),
 			new TeamCommand($this),
