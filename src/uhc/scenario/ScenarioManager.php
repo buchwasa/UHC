@@ -22,7 +22,8 @@ class ScenarioManager{
 		$this->loadDirectoryScenarios($plugin->getDataFolder() . "scenarios/");
 	}
 
-	public function loadDirectoryScenarios(string $directory){
+	public function loadDirectoryScenarios(string $directory): void
+	{
 		$dir = scandir($directory);
 		if (is_array($dir)) {
 			foreach ($dir as $file) {

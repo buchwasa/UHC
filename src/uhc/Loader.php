@@ -23,6 +23,7 @@ class Loader extends PluginBase
 {
 	/** @var GameHeartbeat */
 	private $heartbeat;
+	/** @var ScenarioManager */
 	private $scenarioManager;
 	/** @var Player[] */
 	private $gamePlayers = [];

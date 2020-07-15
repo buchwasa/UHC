@@ -28,7 +28,7 @@ class Scenario implements Listener
 		return $this->name;
 	}
 
-	public function setActive(bool $active): void
+	public final function setActive(bool $active): void
 	{
 		$this->activeScenario = $active;
 		if ($active) {
@@ -38,7 +38,7 @@ class Scenario implements Listener
 		}
 	}
 
-	public function isActive(): bool
+	public final function isActive(): bool
 	{
 		return $this->activeScenario;
 	}
