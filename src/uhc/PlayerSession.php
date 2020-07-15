@@ -80,7 +80,7 @@ class PlayerSession
 		return $this->isInTeam() ?? $this->team->getLeader()->getUniqueId() === $this->getPlayer()->getUniqueId();
 	}
 
-	public function updatePlayer(Player $player)
+	public function updatePlayer(Player $player): void
 	{
 		$this->player = $player;
 	}
