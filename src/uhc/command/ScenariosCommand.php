@@ -24,12 +24,13 @@ class ScenariosCommand extends BaseCommand
 	public function onExecute(Player $sender, array $args): void
 	{
 		$toggles = [];
-		foreach ($this->plugin->getScenarios() as $scenario) {
+		foreach ($this->plugin->getScenarioManager()->getScenarios() as $scenario) {
 			$toggles[] = new Toggle($scenario->getName(), $scenario->getName(), $scenario->isActive());
 		}
 
-		$form = new CustomForm("Scenarios", $toggles, function (Player $player, CustomFormResponse $response): void {
-			foreach ($this->plugin->getScenarios() as $scenario) {
+		$form = new CustomForm("Scenarios", $toggles, function (Player $player, CustomFormResponse $response): void
+		{
+			foreach ($this->plugin->getScenarioManager()->getScenarios() as $scenario) {
 				if (!$player->hasPermission("uhc.scenarios.enable")) {
 					return;
 				}

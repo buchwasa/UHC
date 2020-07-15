@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace uhc\game;
+namespace uhc\scenario;
 
-use pocketmine\event\HandlerList;
 use pocketmine\event\HandlerListManager;
 use pocketmine\event\Listener;
 use uhc\Loader;

@@ -14,28 +14,22 @@ use uhc\command\TeamCommand;
 use uhc\command\TpallCommand;
 use uhc\command\UHCCommand;
 use uhc\game\GameHeartbeat;
-use uhc\game\Scenario;
 use uhc\game\Team;
-use Throwable;
-use function is_array;
+use uhc\scenario\ScenarioManager;
 use function is_dir;
 use function mkdir;
-use function scandir;
-use function str_replace;
-use function substr;
 
 class Loader extends PluginBase
 {
 	/** @var GameHeartbeat */
 	private $heartbeat;
+	private $scenarioManager;
 	/** @var Player[] */
 	private $gamePlayers = [];
 	/** @var PlayerSession[] */
 	private $sessions = [];
 	/** @var bool */
 	private $globalMuteEnabled = false;
-	/** @var Scenario[] */
-	private $scenarios = [];
 	/** @var Team[] */
 	private $teams = [];
 
@@ -46,6 +40,7 @@ class Loader extends PluginBase
 		}
 		$this->heartbeat = new GameHeartbeat($this);
 		$this->getScheduler()->scheduleRepeatingTask($this->heartbeat, 20);
+		$this->scenarioManager = new ScenarioManager($this);
 		new EventListener($this);
 
 		$this->getServer()->getCommandMap()->registerAll("uhc", [
@@ -57,33 +52,16 @@ class Loader extends PluginBase
 			new TeamCommand($this),
 			new TpallCommand($this)
 		]);
-		$this->loadScenarios();
-	}
-
-	public function loadScenarios(): void
-	{
-		$dir = scandir($this->getDataFolder() . "scenarios");
-		if (is_array($dir)) {
-			foreach ($dir as $file) {
-				$fileLocation = $this->getDataFolder() . "scenarios/" . $file;
-				if (substr($file, -4) === ".php") {
-					try {
-						require($fileLocation);
-						$class = "\\" . str_replace(".php", "", $file);
-						if (($scenario = new $class($this)) instanceof Scenario) {
-							$this->addScenario($scenario);
-						}
-					} catch (Throwable $error) {
-						$this->getLogger()->error("Failed to load $file, reason: " . $error);
-					}
-				}
-			}
-		}
 	}
 
 	public function getHeartbeat(): GameHeartbeat
 	{
 		return $this->heartbeat;
+	}
+
+	public function getScenarioManager(): ScenarioManager
+	{
+		return $this->scenarioManager;
 	}
 
 	public function setGlobalMute(bool $enabled): void
@@ -153,24 +131,6 @@ class Loader extends PluginBase
 	public function getSession(Player $player): ?PlayerSession
 	{
 		return $this->hasSession($player) ? $this->sessions[$player->getUniqueId()->toString()] : null;
-	}
-
-	/**
-	 * @return Scenario[]
-	 */
-	public function getScenarios(): array
-	{
-		return $this->scenarios;
-	}
-
-	public function getScenario(string $scenarioName): Scenario
-	{
-		return $this->scenarios[$scenarioName];
-	}
-
-	public function addScenario(Scenario $scenario): void
-	{
-		$this->scenarios[$scenario->getName()] = $scenario;
 	}
 
 	/**
