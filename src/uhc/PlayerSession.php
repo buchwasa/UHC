@@ -14,8 +14,8 @@ class PlayerSession
 	private $uuid;
 	/** @var Player */
 	private $player;
-	/** @var int[] */
-	private $eliminations = [];
+	/** @var int */
+	private $eliminations = 0;
 	/** @var Team|null */
 	private $team = null;
 
@@ -23,7 +23,6 @@ class PlayerSession
 	{
 		$this->player = $player;
 		$this->uuid = $player->getUniqueId();
-		$this->eliminations[$player->getName()] = 0;
 	}
 
 	public function getUniqueId(): UUID
@@ -36,19 +35,14 @@ class PlayerSession
 		return $this->player;
 	}
 
-	public function setPlayer(Player $player): void
+	public function addEliminations(int $amount = 1): void
 	{
-		$this->player = $player;
-	}
-
-	public function addElimination(): void
-	{
-		$this->eliminations[$this->player->getName()] = $this->eliminations[$this->player->getName()] + 1;
+		$this->eliminations += $amount;
 	}
 
 	public function getEliminations(): int
 	{
-		return $this->eliminations[$this->player->getName()];
+		return $this->eliminations;
 	}
 
 	public function getTeam(): ?Team
@@ -63,7 +57,7 @@ class PlayerSession
 
 	public function addToTeam(Team $team): bool
 	{
-		if ($team->addMember($this->getPlayer()) || $this->isTeamLeader()) {
+		if ($team->isLeader($this->player) || $team->addMember($this->getPlayer())) {
 			$this->team = $team;
 			return true;
 		}
@@ -86,8 +80,8 @@ class PlayerSession
 		return $this->isInTeam() ?? $this->team->getLeader()->getUniqueId() === $this->getPlayer()->getUniqueId();
 	}
 
-	public static function create(Player $player): self
+	public function updatePlayer(Player $player)
 	{
-		return new self($player);
+		$this->player = $player;
 	}
 }

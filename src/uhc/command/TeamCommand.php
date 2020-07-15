@@ -5,6 +5,7 @@ namespace uhc\command;
 
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\player\Player;
+use pocketmine\scheduler\ClosureTask;
 use uhc\Loader;
 
 class TeamCommand extends BaseCommand
@@ -30,6 +31,7 @@ class TeamCommand extends BaseCommand
 					return;
 				}
 				$this->plugin->addTeam($args[1], $sender);
+				$this->plugin->getSession($sender)->addToTeam($this->plugin->getTeam($args[1]));
 				$sender->sendMessage("Successfully created your team!");
 				break;
 			case "disband":

@@ -40,7 +40,7 @@ class Team
 
 	public function addMember(Player $player): bool
 	{
-		if ($this->isFull() || $player->getUniqueId() === $this->teamLeader->getUniqueId()) {
+		if ($this->isLeader($player) || $this->isFull()) {
 			return false;
 		}
 
@@ -51,7 +51,7 @@ class Team
 
 	public function removeMember(Player $player): bool
 	{
-		if (!isset($this->members[$player->getUniqueId()->toString()]) || $player->getUniqueId() === $this->teamLeader->getUniqueId()) {
+		if ($this->isLeader($player) || !isset($this->members[$player->getUniqueId()->toString()])) {
 			return false;
 		}
 
@@ -68,6 +68,11 @@ class Team
 	public function getLeader(): Player
 	{
 		return $this->teamLeader;
+	}
+
+	public function isLeader(Player $player): bool
+	{
+		return $this->teamLeader->getUniqueId() === $player->getUniqueId();
 	}
 
 	public function isFull(): bool
