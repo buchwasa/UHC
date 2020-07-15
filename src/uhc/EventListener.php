@@ -46,7 +46,7 @@ class EventListener implements Listener
 	{
 		if (
 			$this->plugin->getHeartbeat()->getPhase() >= PhaseChangeEvent::COUNTDOWN &&
-			!$this->plugin->isInGame($ev->getPlayer())
+			!$this->plugin->hasSession($ev->getPlayer())
 		) {
 			$ev->setKickMessage("UHC has already started!");
 			$ev->setCancelled();
