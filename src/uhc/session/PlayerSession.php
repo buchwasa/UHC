@@ -77,7 +77,7 @@ class PlayerSession
 
 	public function isTeamLeader(): bool
 	{
-		return $this->isInTeam() ?? $this->team->getLeader()->getUniqueId() === $this->getPlayer()->getUniqueId();
+		return $this->isInTeam() && $this->team->isLeader($this->getPlayer());
 	}
 
 	public function updatePlayer(Player $player): void
