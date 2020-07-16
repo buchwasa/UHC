@@ -19,9 +19,7 @@ use pocketmine\item\VanillaItems;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
-
 use uhc\event\PhaseChangeEvent;
-use uhc\session\PlayerSession;
 
 class EventListener implements Listener
 {
@@ -45,46 +43,37 @@ class EventListener implements Listener
 
 	public function handleLogin(PlayerLoginEvent $ev): void
 	{
-		if (
-			$this->plugin->getHeartbeat()->getPhase() >= PhaseChangeEvent::COUNTDOWN &&
-			!$this->plugin->getSessionManager()->hasSession($ev->getPlayer())
-		) {
+		$player = $ev->getPlayer();
+		$sessionManager = $this->plugin->getSessionManager();
+		if ($this->plugin->getHeartbeat()->getPhase() >= PhaseChangeEvent::COUNTDOWN && !$sessionManager->hasSession($player)) {
 			$ev->setKickMessage("UHC has already started!");
 			$ev->setCancelled();
+		}
+
+		if (!$sessionManager->hasSession($player)) {
+			$sessionManager->createSession($player);
+		} else {
+			$sessionManager->getSession($player)->update($player);
 		}
 	}
 
 	public function handleJoin(PlayerJoinEvent $ev): void
 	{
-		$player = $ev->getPlayer();
-		$sessionManager = $this->plugin->getSessionManager();
-		if (!$sessionManager->hasSession($player)) {
-			$sessionManager->addSession(new PlayerSession($player));
-		} else {
-			$sessionManager->getSession($player)->updatePlayer($player);
-		}
-
 		if ($this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::WAITING) {
-			$player->teleport($player->getWorld()->getSafeSpawn());
-			$player->setGamemode(GameMode::SURVIVAL());
+			$this->plugin->resetPlayer($ev->getPlayer(), true);
 		}
-
-		$ev->setJoinMessage("");
 	}
 
 	public function handlePhaseChange(PhaseChangeEvent $ev): void
 	{
-		$player = $ev->getPlayer();
 		if ($ev->getOldPhase() === PhaseChangeEvent::COUNTDOWN) {
-			$player->getInventory()->addItem(VanillaItems::STEAK()->setCount(64));
+			$ev->getPlayer()->getInventory()->addItem(VanillaItems::STEAK()->setCount(64));
 		}
 	}
 
 	public function handleQuit(PlayerQuitEvent $ev): void
 	{
-		$player = $ev->getPlayer();
-		$this->plugin->getPlayerManager()->removeFromGame($player);
-		$ev->setQuitMessage("");
+		$this->plugin->getPlayerManager()->removeFromGame($ev->getPlayer());
 	}
 
 	public function handleEntityRegain(EntityRegainHealthEvent $ev): void
@@ -110,8 +99,8 @@ class EventListener implements Listener
 			if ($damager instanceof Player && $victim instanceof Player) {
 				$damagerSession = $this->plugin->getSessionManager()->getSession($damager);
 				$victimSession = $this->plugin->getSessionManager()->getSession($victim);
-				if ($damagerSession->getTeam() !== null && $victimSession->getTeam() !== null) {
-					if ($damagerSession->getTeam()->getName() === $victimSession->getTeam()->getName()) {
+				if ($damagerSession->isInTeam() && $victimSession->isInTeam()) {
+					if ($damagerSession->getTeam()->memberExists($victim)) {
 						$ev->setCancelled();
 					}
 				}

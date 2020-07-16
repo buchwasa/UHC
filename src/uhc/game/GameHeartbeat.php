@@ -105,14 +105,9 @@ class GameHeartbeat extends Task
 			}
 			switch ($this->getPhase()) {
 				case PhaseChangeEvent::COUNTDOWN:
-					$player->getHungerManager()->setFood($player->getHungerManager()->getMaxFood());
-					$player->setHealth($player->getMaxHealth());
 					if ($this->countdown === 29) {
 						$this->randomizeCoordinates($player, 750);
-						$player->getEffects()->clear();
-						$player->getInventory()->clearAll();
-						$player->getArmorInventory()->clearAll();
-						$player->getCursorInventory()->clearAll();
+						$this->plugin->resetPlayer($player);
 						$player->setImmobile(true);
 					} elseif ($this->countdown === 3) {
 						$player->setImmobile(false);

@@ -12,26 +12,44 @@ class SessionManager{
 	/** @var PlayerSession[] */
 	private $activeSessions = [];
 
-	public function addSession(PlayerSession $session): void
+	/**
+	 * Creates a new session for a given player.
+	 *
+	 * @param Player $player
+	 */
+	public function createSession(Player $player): void
 	{
-		if (!isset($this->activeSessions[$session->getUniqueId()->toString()])) {
-			$this->activeSessions[$session->getUniqueId()->toString()] = $session;
+		if (!$this->hasSession($player)) {
+			$this->activeSessions[$player->getUniqueId()->toString()] = new PlayerSession($player);
 		}
 	}
 
-	public function removeSession(PlayerSession $session): void
+	/**
+	 * Removes a session from a given player.
+	 *
+	 * @param Player $player
+	 */
+	public function removeSession(Player $player): void
 	{
-		if (isset($this->activeSessions[$session->getUniqueId()->toString()])) {
-			unset($this->activeSessions[$session->getUniqueId()->toString()]);
+		if ($this->hasSession($player)) {
+			unset($this->activeSessions[$player->getUniqueId()->toString()]);
 		}
 	}
 
+	/**
+	 * Checks if a session exists for a given player, returns false if not.
+	 *
+	 * @param Player $player
+	 * @return bool
+	 */
 	public function hasSession(Player $player): bool
 	{
 		return isset($this->activeSessions[$player->getUniqueId()->toString()]);
 	}
 
 	/**
+	 * Returns an array of player sessions.
+	 *
 	 * @return PlayerSession[]
 	 */
 	public function getSessions(): array
@@ -39,6 +57,12 @@ class SessionManager{
 		return $this->activeSessions;
 	}
 
+	/**
+	 * Gets a given player's session, returns null if there is no session.
+	 *
+	 * @param Player $player
+	 * @return PlayerSession|null
+	 */
 	public function getSession(Player $player): ?PlayerSession
 	{
 		return $this->hasSession($player) ? $this->activeSessions[$player->getUniqueId()->toString()] : null;

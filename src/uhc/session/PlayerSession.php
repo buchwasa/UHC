@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace uhc\session;
 
 use pocketmine\player\Player;
-use pocketmine\uuid\UUID;
 use uhc\game\team\Team;
 
 class PlayerSession
 {
-	/** @var UUID */
-	private $uuid;
 	/** @var Player */
 	private $player;
 	/** @var int */
@@ -22,12 +19,6 @@ class PlayerSession
 	public function __construct(Player $player)
 	{
 		$this->player = $player;
-		$this->uuid = $player->getUniqueId();
-	}
-
-	public function getUniqueId(): UUID
-	{
-		return $this->uuid;
 	}
 
 	public function getPlayer(): Player
@@ -80,7 +71,7 @@ class PlayerSession
 		return $this->isInTeam() && $this->team->isLeader($this->getPlayer());
 	}
 
-	public function updatePlayer(Player $player): void
+	public function update(Player $player): void
 	{
 		$this->player = $player;
 	}
