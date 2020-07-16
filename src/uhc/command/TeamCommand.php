@@ -5,7 +5,6 @@ namespace uhc\command;
 
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\player\Player;
-use pocketmine\scheduler\ClosureTask;
 use uhc\Loader;
 
 class TeamCommand extends BaseCommand
@@ -21,7 +20,7 @@ class TeamCommand extends BaseCommand
 
 	public function onExecute(Player $sender, array $args): void
 	{
-		$session = $this->plugin->getSession($sender);
+		$session = $this->plugin->getSessionManager()->getSession($sender);
 		switch (strtolower($args[0])) {
 			case "create":
 				if (count($args) < 2) {
@@ -30,8 +29,8 @@ class TeamCommand extends BaseCommand
 					$sender->sendMessage("You are already in a team!");
 					return;
 				}
-				$this->plugin->addTeam($args[1], $sender);
-				$this->plugin->getSession($sender)->addToTeam($this->plugin->getTeam($args[1]));
+				$this->plugin->getTeamManager()->createTeam($args[1], $sender);
+				$this->plugin->getSessionManager()->getSession($sender)->addToTeam($this->plugin->getTeamManager()->getTeam($args[1]));
 				$sender->sendMessage("Successfully created your team!");
 				break;
 			case "disband":
@@ -46,9 +45,9 @@ class TeamCommand extends BaseCommand
 				}
 				$teamName = $session->getTeam()->getName();
 				foreach ($session->getTeam()->getMembers() as $member) {
-					$this->plugin->getSession($member)->removeFromTeam();
+					$this->plugin->getSessionManager()->getSession($member)->removeFromTeam();
 				}
-				$this->plugin->removeTeam($teamName);
+				$this->plugin->getTeamManager()->disbandTeam($teamName);
 				$sender->sendMessage("Successfully disbanded your team!");
 				break;
 			case "add":
@@ -67,7 +66,7 @@ class TeamCommand extends BaseCommand
 					return;
 				}
 
-				$this->plugin->getSession($addedPlayer)->addToTeam($session->getTeam());
+				$this->plugin->getSessionManager()->getSession($addedPlayer)->addToTeam($session->getTeam());
 				$sender->sendMessage("Successfully added {$addedPlayer->getDisplayName()} to your team!");
 				break;
 			case "leave":

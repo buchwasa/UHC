@@ -83,16 +83,18 @@ class GameHeartbeat extends Task
 	private function handlePlayers(): void
 	{
 		foreach ($this->plugin->getServer()->getOnlinePlayers() as $p) {
-			if ($p->isSurvival()) { //TODO: This really shouldn't be done the whole game
-				$this->plugin->addToGame($p);
-			} else {
-				$this->plugin->removeFromGame($p);
+			if ($this->phase <= PhaseChangeEvent::COUNTDOWN) {
+				if ($p->isSurvival()) {
+					$this->plugin->getPlayerManager()->addToGame($p);
+				} else {
+					$this->plugin->getPlayerManager()->removeFromGame($p);
+				}
 			}
 			$this->handleScoreboard($p);
 		}
 
-		foreach ($this->plugin->getGamePlayers() as $player) {
-			$session = $this->plugin->getSession($player);
+		foreach ($this->plugin->getPlayerManager()->getPlayers() as $player) {
+			$session = $this->plugin->getSessionManager()->getSession($player);
 			if ($session !== null) {
 				$name = $session->getTeam() !== null ? $session->getTeam()->getName() : "NO TEAM";
 				$player->setNameTag(TF::GOLD . "[$name] " . $player->getDisplayName());
@@ -107,7 +109,6 @@ class GameHeartbeat extends Task
 					$player->setHealth($player->getMaxHealth());
 					if ($this->countdown === 29) {
 						$this->randomizeCoordinates($player, 750);
-						$player->setWhitelisted(true);
 						$player->getEffects()->clear();
 						$player->getInventory()->clearAll();
 						$player->getArmorInventory()->clearAll();
@@ -155,7 +156,7 @@ class GameHeartbeat extends Task
 					}
 				}
 
-				foreach ($this->plugin->getGamePlayers() as $playerSession) {
+				foreach ($this->plugin->getPlayerManager()->getPlayers() as $playerSession) {
 					$ev = new PhaseChangeEvent($playerSession, PhaseChangeEvent::COUNTDOWN, PhaseChangeEvent::GRACE);
 					$ev->call();
 				}
@@ -201,8 +202,8 @@ class GameHeartbeat extends Task
 				$server->broadcastTitle(TF::RED . "PvP will be enabled in $this->grace second(s).");
 				break;
 			case 0:
-				foreach ($this->plugin->getGamePlayers() as $playerSession) {
-					$ev = new PhaseChangeEvent($playerSession, PhaseChangeEvent::GRACE, PhaseChangeEvent::PVP);
+				foreach ($this->plugin->getPlayerManager()->getPlayers() as $player) {
+					$ev = new PhaseChangeEvent($player, PhaseChangeEvent::GRACE, PhaseChangeEvent::PVP);
 					$ev->call();
 				}
 				$server->broadcastTitle(TF::RED . "PvP has been enabled, good luck!");
@@ -228,8 +229,8 @@ class GameHeartbeat extends Task
 				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "250" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 0:
-				foreach ($this->plugin->getGamePlayers() as $playerSession) {
-					$ev = new PhaseChangeEvent($playerSession, PhaseChangeEvent::PVP, PhaseChangeEvent::NORMAL);
+				foreach ($this->plugin->getPlayerManager()->getPlayers() as $player) {
+					$ev = new PhaseChangeEvent($player, PhaseChangeEvent::PVP, PhaseChangeEvent::NORMAL);
 					$ev->call();
 				}
 				$this->border->setSize(250);
@@ -270,14 +271,14 @@ class GameHeartbeat extends Task
 		if ($this->hasStarted()) {
 			ScoreFactory::setScoreLine($p, 1, "§7---------------------");
 			ScoreFactory::setScoreLine($p, 2, " §bGame Time: §f" . gmdate("H:i:s", $this->game));
-			ScoreFactory::setScoreLine($p, 3, " §bRemaining: §f" . count($this->plugin->getGamePlayers()));
-			ScoreFactory::setScoreLine($p, 4, " §bEliminations: §f" . $this->plugin->getSession($p)->getEliminations());
+			ScoreFactory::setScoreLine($p, 3, " §bRemaining: §f" . count($this->plugin->getPlayerManager()->getPlayers()));
+			ScoreFactory::setScoreLine($p, 4, " §bEliminations: §f" . $this->plugin->getSessionManager()->getSession($p)->getEliminations());
 			ScoreFactory::setScoreLine($p, 5, " §bBorder: §f" . $this->border->getSize());
 			ScoreFactory::setScoreLine($p, 6, " §bCenter: §f({$safeSpawn->getFloorX()}, {$safeSpawn->getFloorZ()})");
 			ScoreFactory::setScoreLine($p, 7, "§7--------------------- ");
 		} else {
 			ScoreFactory::setScoreLine($p, 1, "§7---------------------");
-			ScoreFactory::setScoreLine($p, 2, " §bPlayers: §f" . count($this->plugin->getGamePlayers()));
+			ScoreFactory::setScoreLine($p, 2, " §bPlayers: §f" . count($this->plugin->getPlayerManager()->getPlayers()));
 			ScoreFactory::setScoreLine($p, 3, $this->getPhase() === PhaseChangeEvent::WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown");
 			ScoreFactory::setScoreLine($p, 4, "§7--------------------- ");
 		}

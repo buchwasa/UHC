@@ -21,6 +21,7 @@ use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
 
 use uhc\event\PhaseChangeEvent;
+use uhc\session\PlayerSession;
 
 class EventListener implements Listener
 {
@@ -46,7 +47,7 @@ class EventListener implements Listener
 	{
 		if (
 			$this->plugin->getHeartbeat()->getPhase() >= PhaseChangeEvent::COUNTDOWN &&
-			!$this->plugin->hasSession($ev->getPlayer())
+			!$this->plugin->getSessionManager()->hasSession($ev->getPlayer())
 		) {
 			$ev->setKickMessage("UHC has already started!");
 			$ev->setCancelled();
@@ -56,10 +57,11 @@ class EventListener implements Listener
 	public function handleJoin(PlayerJoinEvent $ev): void
 	{
 		$player = $ev->getPlayer();
-		if (!$this->plugin->hasSession($player)) {
-			$this->plugin->addSession(new PlayerSession($player));
+		$sessionManager = $this->plugin->getSessionManager();
+		if (!$sessionManager->hasSession($player)) {
+			$sessionManager->addSession(new PlayerSession($player));
 		} else {
-			$this->plugin->getSession($player)->updatePlayer($player);
+			$sessionManager->getSession($player)->updatePlayer($player);
 		}
 
 		if ($this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::WAITING) {
@@ -81,7 +83,7 @@ class EventListener implements Listener
 	public function handleQuit(PlayerQuitEvent $ev): void
 	{
 		$player = $ev->getPlayer();
-		$this->plugin->removeFromGame($player);
+		$this->plugin->getPlayerManager()->removeFromGame($player);
 		$ev->setQuitMessage("");
 	}
 
@@ -106,8 +108,8 @@ class EventListener implements Listener
 			}
 
 			if ($damager instanceof Player && $victim instanceof Player) {
-				$damagerSession = $this->plugin->getSession($damager);
-				$victimSession = $this->plugin->getSession($victim);
+				$damagerSession = $this->plugin->getSessionManager()->getSession($damager);
+				$victimSession = $this->plugin->getSessionManager()->getSession($victim);
 				if ($damagerSession->getTeam() !== null && $victimSession->getTeam() !== null) {
 					if ($damagerSession->getTeam()->getName() === $victimSession->getTeam()->getName()) {
 						$ev->setCancelled();
@@ -121,14 +123,14 @@ class EventListener implements Listener
 	{
 		$player = $ev->getPlayer();
 		$cause = $player->getLastDamageCause();
-		$eliminatedSession = $this->plugin->getSession($player);
+		$eliminatedSession = $this->plugin->getSessionManager()->getSession($player);
 		$player->setGamemode(GameMode::SPECTATOR());
 		$player->sendTitle(TF::YELLOW . "You have been eliminated!", "Use /spectate to spectate a player.");
-		//$this->plugin->removeFromGame($player); TODO: Fix this, presently the timer does this, which is not ideal.
+		$this->plugin->getPlayerManager()->removeFromGame($player);
 		if ($cause instanceof EntityDamageByEntityEvent) {
 			$damager = $cause->getDamager();
 			if ($damager instanceof Player) {
-				$damagerSession = $this->plugin->getSession($damager);
+				$damagerSession = $this->plugin->getSessionManager()->getSession($damager);
 				$damagerSession->addEliminations();
 				$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " was slain by " . TF::RED . $damager->getName() . TF::GRAY . "[" . TF::WHITE . $damagerSession->getEliminations() . TF::GRAY . "]");
 			}

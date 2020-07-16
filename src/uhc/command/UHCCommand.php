@@ -20,7 +20,6 @@ class UHCCommand extends BaseCommand
 		parent::__construct("uhc", "Starts the UHC", "/uhc");
 		$this->plugin = $plugin;
 		$this->setPermission("uhc.command.uhc");
-		$this->setUsage("/uhc");
 	}
 
 	public function onExecute(Player $sender, array $args): void

@@ -6,6 +6,8 @@ namespace uhc\game\scenario;
 use uhc\Loader;
 use Throwable;
 use function is_array;
+use function is_dir;
+use function mkdir;
 use function scandir;
 use function str_replace;
 use function substr;
@@ -24,6 +26,9 @@ class ScenarioManager{
 
 	public function loadDirectoryScenarios(string $directory): void
 	{
+		if (!is_dir($directory)) {
+			mkdir($directory);
+		}
 		$dir = scandir($directory);
 		if (is_array($dir)) {
 			foreach ($dir as $file) {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace uhc;
+namespace uhc\session;
 
 use pocketmine\player\Player;
 use pocketmine\uuid\UUID;
-use uhc\game\Team;
+use uhc\game\team\Team;
 
 class PlayerSession
 {

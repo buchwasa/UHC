@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace uhc\game;
+namespace uhc\game\team;
 
 use pocketmine\player\Player;
 use function count;
