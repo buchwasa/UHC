@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace uhc\game;
 
+use pocketmine\block\Liquid;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
@@ -86,33 +87,33 @@ class Border
 	}
 
 	public function build(): void
-	{ //TODO: Run this in a closure task.
-		for ($minX = $this->getX(true); $minX <= $this->getX(); $minX++) {
-			ChunkRegion::onChunkGenerated($this->world, $minX >> 4, $this->getZ() >> 4, function () use ($minX): void {
-				$highestBlock = $this->world->getHighestBlockAt($minX, $this->getZ());
-				for ($y = $highestBlock; $y <= $highestBlock + 4; $y++) {
-					$this->world->setBlock(new Vector3($minX, $y, $this->getZ()), VanillaBlocks::BEDROCK());
-				}
-
-				$highestBlock = $this->world->getHighestBlockAt($minX, $this->getZ(true));
-				for ($y = $highestBlock; $y <= $highestBlock + 4; $y++) {
-					$this->world->setBlock(new Vector3($minX, $y, $this->getZ(true)), VanillaBlocks::BEDROCK());
-				}
-			});
+	{
+		for ($minX = $this->getX(true); $minX < $this->getX(); $minX++) {
+			$this->generateBorderWall($minX, $this->getZ());
+			$this->generateBorderWall($minX, $this->getZ(true));
 		}
 
-		for ($minZ = $this->getZ(true); $minZ <= $this->getZ(); $minZ++) {
-			ChunkRegion::onChunkGenerated($this->world, $this->getX() >> 4, $minZ >> 4, function () use ($minZ): void {
-				$highestBlock = $this->world->getHighestBlockAt($this->getX(), $minZ);
-				for ($y = $highestBlock; $y <= $highestBlock + 4; $y++) {
-					$this->world->setBlock(new Vector3($this->getX(), $y, $minZ), VanillaBlocks::BEDROCK());
+		for ($minZ = $this->getZ(true); $minZ < $this->getZ(); $minZ++) {
+			$this->generateBorderWall($this->getX(), $minZ);
+			$this->generateBorderWall($this->getX(true), $minZ);
+		}
+	}
+
+	public function generateBorderWall(int $x, int $z) : void
+	{
+		ChunkRegion::onChunkGenerated($this->world, $x >> 4, $z >> 4, function () use ($x, $z): void {
+			$y = 256;
+			while ($y > 0){
+				$block = $this->world->getBlockAt($x, $y, $z);
+				if($block instanceof Liquid || !$block->isTransparent()){
+					for ($borderY = $block->getPos()->getY(); $borderY <= $block->getPos()->getY() + 4; $borderY++) {
+						$this->world->setBlockAt($x, $borderY, $z, VanillaBlocks::BEDROCK());
+					}
+					break;
 				}
 
-				$highestBlock = $this->world->getHighestBlockAt($this->getX(true), $minZ);
-				for ($y = $highestBlock; $y <= $highestBlock + 4; $y++) {
-					$this->world->setBlock(new Vector3($this->getX(true), $y, $minZ), VanillaBlocks::BEDROCK());
-				}
-			});
-		}
+				$y--;
+			}
+		});
 	}
 }

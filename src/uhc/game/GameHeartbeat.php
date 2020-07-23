@@ -45,6 +45,11 @@ class GameHeartbeat extends Task
 		$this->border = new Border($plugin->getServer()->getWorldManager()->getDefaultWorld());
 	}
 
+	public function getBorder() : Border
+	{
+		return $this->border;
+	}
+
 	public function getPhase(): int
 	{
 		return $this->phase;
