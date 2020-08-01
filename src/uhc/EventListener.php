@@ -16,6 +16,8 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\VanillaItems;
+use pocketmine\network\mcpe\protocol\GameRulesChangedPacket;
+use pocketmine\network\mcpe\protocol\types\BoolGameRule;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
@@ -39,6 +41,9 @@ class EventListener implements Listener
 			$player->sendMessage(TF::RED . "You cannot talk right now!");
 			$ev->setCancelled();
 		}
+
+		$this->plugin->getHeartbeat()->getBorder()->setSize(15);
+		$this->plugin->getHeartbeat()->getBorder()->build();
 	}
 
 	public function handleLogin(PlayerLoginEvent $ev): void
@@ -55,6 +60,11 @@ class EventListener implements Listener
 		} else {
 			$sessionManager->getSession($player)->update($player);
 		}
+		$this->plugin->getPlayerManager()->addToGame($player);
+
+		$pk = new GameRulesChangedPacket();
+		$pk->gameRules = ["showcoordinates" => new BoolGameRule(true)];
+		$player->getNetworkSession()->sendDataPacket($pk);
 	}
 
 	public function handleJoin(PlayerJoinEvent $ev): void
