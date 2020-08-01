@@ -4,3 +4,4 @@ php_cs
 .idea
 dev-phpstan.neon
 /vendor/
+/src/libVanilla/

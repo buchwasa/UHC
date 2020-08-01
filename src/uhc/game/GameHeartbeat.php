@@ -284,7 +284,7 @@ class GameHeartbeat extends Task
 		}
 	}
 
-	private function randomizeCoordinates(Player $p, int $range): void
+	private function randomizeCoordinates(Player $p, int $range): void //Teams should be tped together
 	{
 		$this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($p, $range) : void {
 			$ss = $p->getWorld()->getSafeSpawn();

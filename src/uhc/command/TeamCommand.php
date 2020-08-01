@@ -21,7 +21,7 @@ class TeamCommand extends BaseCommand
 	public function onExecute(Player $sender, array $args): void
 	{
 		$session = $this->plugin->getSessionManager()->getSession($sender);
-		switch (strtolower($args[0])) {
+		switch (strtolower($args[0])) { //team notifications really needed.
 			case "create":
 				if (count($args) < 2) {
 					throw new InvalidCommandSyntaxException();
@@ -50,7 +50,7 @@ class TeamCommand extends BaseCommand
 				$this->plugin->getTeamManager()->disbandTeam($teamName);
 				$sender->sendMessage("Successfully disbanded your team!");
 				break;
-			case "add": //Check if team is full
+			case "add": //Check if team is full, team leaders aren't actually leaders after relogging?
 				if (count($args) < 2) {
 					throw new InvalidCommandSyntaxException();
 				} else if (!$session->isInTeam()) {
