@@ -41,9 +41,6 @@ class EventListener implements Listener
 			$player->sendMessage(TF::RED . "You cannot talk right now!");
 			$ev->setCancelled();
 		}
-
-		$this->plugin->getHeartbeat()->getBorder()->setSize(15);
-		$this->plugin->getHeartbeat()->getBorder()->build();
 	}
 
 	public function handleLogin(PlayerLoginEvent $ev): void
