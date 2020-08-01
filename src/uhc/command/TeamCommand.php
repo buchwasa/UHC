@@ -33,7 +33,7 @@ class TeamCommand extends BaseCommand
 				$this->plugin->getSessionManager()->getSession($sender)->addToTeam($this->plugin->getTeamManager()->getTeam($args[1]));
 				$sender->sendMessage("Successfully created your team!");
 				break;
-			case "disband":
+			case "disband": //Doesn't actually disband
 				if (!isset($args[0])) {
 					throw new InvalidCommandSyntaxException();
 				} elseif (!$session->isInTeam()) {
@@ -50,7 +50,7 @@ class TeamCommand extends BaseCommand
 				$this->plugin->getTeamManager()->disbandTeam($teamName);
 				$sender->sendMessage("Successfully disbanded your team!");
 				break;
-			case "add":
+			case "add": //Check if team is full
 				if (count($args) < 2) {
 					throw new InvalidCommandSyntaxException();
 				} else if (!$session->isInTeam()) {
@@ -83,6 +83,8 @@ class TeamCommand extends BaseCommand
 				$session->removeFromTeam();
 				$sender->sendMessage("Successfully left your team!");
 				break;
+			default:
+				throw new InvalidCommandSyntaxException();
 		}
 	}
 }
