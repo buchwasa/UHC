@@ -61,10 +61,6 @@ class EventListener implements Listener
 			$sessionManager->getSession($player)->update($player);
 		}
 		$this->plugin->getPlayerManager()->addToGame($player);
-
-		$pk = new GameRulesChangedPacket();
-		$pk->gameRules = ["showcoordinates" => new BoolGameRule(true)];
-		$player->getNetworkSession()->sendDataPacket($pk);
 	}
 
 	public function handleJoin(PlayerJoinEvent $ev): void
@@ -72,6 +68,9 @@ class EventListener implements Listener
 		if ($this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::WAITING) {
 			$this->plugin->resetPlayer($ev->getPlayer(), true);
 		}
+		$pk = new GameRulesChangedPacket();
+		$pk->gameRules = ["showcoordinates" => new BoolGameRule(true)];
+		$ev->getPlayer()->getNetworkSession()->sendDataPacket($pk);
 	}
 
 	public function handlePhaseChange(PhaseChangeEvent $ev): void
