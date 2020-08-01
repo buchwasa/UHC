@@ -106,7 +106,7 @@ class Border
 			while ($y > 0){
 				$block = $this->world->getBlockAt($x, $y, $z);
 				if($block instanceof Liquid || !$block->isTransparent()){
-					for ($borderY = $block->getPos()->getY(); $borderY <= $block->getPos()->getY() + 4; $borderY++) {
+					for ($borderY = $block->getPos()->getFloorY(); $borderY <= $block->getPos()->getFloorY() + 4; $borderY++) {
 						$this->world->setBlockAt($x, $borderY, $z, VanillaBlocks::BEDROCK());
 					}
 					break;
