@@ -16,6 +16,7 @@ class BaseCommand extends Command
 	public function __construct(Loader $plugin, string $name, string $description, string $usageMessage, array $aliases = [])
 	{
 		parent::__construct($name, $description, $usageMessage, $aliases);
+		$this->plugin = $plugin;
 	}
 
 	/**
