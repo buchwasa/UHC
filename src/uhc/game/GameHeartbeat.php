@@ -57,6 +57,10 @@ class GameHeartbeat extends Task
 
 	public function setPhase(int $phase): void
 	{
+		foreach ($this->plugin->getPlayerManager()->getPlayers() as $playerSession) {
+			$ev = new PhaseChangeEvent($playerSession, $this->phase, $phase);
+			$ev->call();
+		}
 		$this->phase = $phase;
 	}
 
@@ -156,10 +160,6 @@ class GameHeartbeat extends Task
 					}
 				}
 
-				foreach ($this->plugin->getPlayerManager()->getPlayers() as $playerSession) {
-					$ev = new PhaseChangeEvent($playerSession, PhaseChangeEvent::COUNTDOWN, PhaseChangeEvent::GRACE);
-					$ev->call();
-				}
 				$server->broadcastTitle(TF::RED . TF::BOLD . "The UHC has begun!");
 				$this->setPhase(PhaseChangeEvent::GRACE);
 				break;
@@ -202,10 +202,6 @@ class GameHeartbeat extends Task
 				$server->broadcastTitle(TF::RED . "PvP will be enabled in $this->grace second(s).");
 				break;
 			case 0:
-				foreach ($this->plugin->getPlayerManager()->getPlayers() as $player) {
-					$ev = new PhaseChangeEvent($player, PhaseChangeEvent::GRACE, PhaseChangeEvent::PVP);
-					$ev->call();
-				}
 				$server->broadcastTitle(TF::RED . "PvP has been enabled, good luck!");
 				$this->setPhase(PhaseChangeEvent::PVP);
 				break;
@@ -229,10 +225,6 @@ class GameHeartbeat extends Task
 				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "250" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				break;
 			case 0:
-				foreach ($this->plugin->getPlayerManager()->getPlayers() as $player) {
-					$ev = new PhaseChangeEvent($player, PhaseChangeEvent::PVP, PhaseChangeEvent::NORMAL);
-					$ev->call();
-				}
 				$this->border->setSize(250);
 				$server->broadcastTitle("The border has shrunk to " . TF::AQUA . $this->border->getSize() . ".\nShrinking to " . TF::AQUA . "100" . TF::WHITE . " in " . TF::AQUA . "5 minutes.");
 				$this->setPhase(PhaseChangeEvent::NORMAL);
