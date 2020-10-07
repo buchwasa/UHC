@@ -39,8 +39,8 @@ class Loader extends PluginBase
 
 	public function onEnable(): void
 	{
-		$this->getScheduler()->scheduleRepeatingTask($this->heartbeat = new GameHeartbeat($this), 20);
 		$this->registerPermissions();
+		$this->getScheduler()->scheduleRepeatingTask($this->heartbeat = new GameHeartbeat($this), 20);
 		$this->playerManager = new PlayerManager();
 		$this->scenarioManager = new ScenarioManager($this);
 		$this->sessionManager = new SessionManager();
