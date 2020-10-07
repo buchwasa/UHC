@@ -12,6 +12,8 @@ use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerDropItemEvent;
+use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -142,6 +144,20 @@ class EventListener implements Listener
 	}
 
 	public function handlePlace(BlockPlaceEvent $ev): void
+	{
+		if (!$this->plugin->getHeartbeat()->hasStarted()) {
+			$ev->cancel();
+		}
+	}
+
+	public function handleItemDrop(PlayerDropItemEvent $ev): void
+	{
+		if (!$this->plugin->getHeartbeat()->hasStarted()) {
+			$ev->cancel();
+		}
+	}
+
+	public function handleExhaust(PlayerExhaustEvent $ev): void
 	{
 		if (!$this->plugin->getHeartbeat()->hasStarted()) {
 			$ev->cancel();

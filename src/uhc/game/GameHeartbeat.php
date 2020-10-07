@@ -154,12 +154,6 @@ class GameHeartbeat extends Task
 				$server->broadcastTitle("The game will begin in " . TF::AQUA . "$this->countdown second(s).");
 				break;
 			case 0:
-				foreach ($server->getWorldManager()->getDefaultWorld()->getEntities() as $entity) {
-					if (!$entity instanceof Player) {
-						$entity->flagForDespawn();
-					}
-				}
-
 				$server->broadcastTitle(TF::RED . TF::BOLD . "The UHC has begun!");
 				$this->setPhase(PhaseChangeEvent::GRACE);
 				break;
