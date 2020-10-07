@@ -3,7 +3,7 @@ parameters:
 	paths:
 		- src
 	bootstrapFiles:
-    	- phar:///pocketmine/PocketMine-MP.phar/vendor/autoload.php
+		- phar:///pocketmine/PocketMine-MP.phar/vendor/autoload.php
 	scanDirectories:
 		- phar://pmforms.phar
 		- phar://ScoreFactory.phar
