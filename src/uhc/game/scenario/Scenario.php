@@ -42,4 +42,9 @@ class Scenario implements Listener
 	{
 		return $this->activeScenario;
 	}
+
+	public final function getPlugin(): Loader
+	{
+		return $this->plugin;
+	}
 }
