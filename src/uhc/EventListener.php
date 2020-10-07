@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace uhc;
 
+use pocketmine\block\Leaves;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -59,7 +61,7 @@ class EventListener implements Listener
 		} else {
 			$sessionManager->getSession($player)->update($player);
 		}
-		
+
 		$this->plugin->getPlayerManager()->addToGame($player);
 	}
 
@@ -141,6 +143,19 @@ class EventListener implements Listener
 	{
 		if (!$this->plugin->getHeartbeat()->hasStarted()) {
 			$ev->cancel();
+		} else {
+			if ($ev->getBlock() instanceof Leaves) {
+				$rand = mt_rand(0, 100);
+				if ($ev->getItem()->equals(VanillaItems::SHEARS(), false, false)) {
+					if ($rand <= 6) {
+						$ev->setDrops([VanillaItems::APPLE()]);
+					}
+				} else {
+					if ($rand <= 3) {
+						$ev->setDrops([VanillaItems::APPLE()]);
+					}
+				}
+			}
 		}
 	}
 
