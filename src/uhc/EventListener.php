@@ -37,9 +37,9 @@ class EventListener implements Listener
 	public function handleChat(PlayerChatEvent $ev): void
 	{
 		$player = $ev->getPlayer();
-		if ($this->plugin->isGlobalMuteEnabled() && !$player->isOp()) {
+		if ($this->plugin->isGlobalMuteEnabled() && !$player->hasPermission("uhc.bypass.globalmute")) {
 			$player->sendMessage(TF::RED . "You cannot talk right now!");
-			$ev->setCancelled();
+			$ev->cancel();
 		}
 	}
 
@@ -49,7 +49,7 @@ class EventListener implements Listener
 		$sessionManager = $this->plugin->getSessionManager();
 		if ($this->plugin->getHeartbeat()->getPhase() >= PhaseChangeEvent::COUNTDOWN && !$sessionManager->hasSession($player)) {
 			$ev->setKickMessage("UHC has already started!");
-			$ev->setCancelled();
+			$ev->cancel();
 		}
 
 		if (!$sessionManager->hasSession($player)) {
@@ -85,21 +85,21 @@ class EventListener implements Listener
 	public function handleEntityRegain(EntityRegainHealthEvent $ev): void
 	{
 		if ($ev->getRegainReason() === EntityRegainHealthEvent::CAUSE_SATURATION) {
-			$ev->setCancelled();
+			$ev->cancel();
 		}
 	}
 
 	public function handleDamage(EntityDamageEvent $ev): void
 	{
 		if (!$this->plugin->getHeartbeat()->hasStarted()) {
-			$ev->setCancelled();
+			$ev->cancel();
 		}
 
 		if ($ev instanceof EntityDamageByEntityEvent) {
 			$damager = $ev->getDamager();
 			$victim = $ev->getEntity();
 			if ($this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::GRACE) {
-				$ev->setCancelled();
+				$ev->cancel();
 			}
 
 			if ($damager instanceof Player && $victim instanceof Player) {
@@ -107,7 +107,7 @@ class EventListener implements Listener
 				$victimSession = $this->plugin->getSessionManager()->getSession($victim);
 				if ($damagerSession->isInTeam() && $victimSession->isInTeam()) {
 					if ($damagerSession->getTeam()->memberExists($victim)) {
-						$ev->setCancelled();
+						$ev->cancel();
 					}
 				}
 			}
@@ -137,14 +137,14 @@ class EventListener implements Listener
 	public function handleBreak(BlockBreakEvent $ev): void
 	{
 		if (!$this->plugin->getHeartbeat()->hasStarted()) {
-			$ev->setCancelled();
+			$ev->cancel();
 		}
 	}
 
 	public function handlePlace(BlockPlaceEvent $ev): void
 	{
 		if (!$this->plugin->getHeartbeat()->hasStarted()) {
-			$ev->setCancelled();
+			$ev->cancel();
 		}
 	}
 }

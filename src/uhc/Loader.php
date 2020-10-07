@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace uhc;
 
+use pocketmine\permission\DefaultPermissions;
+use pocketmine\permission\Permission;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
@@ -103,5 +105,24 @@ class Loader extends PluginBase
 			$player->teleport($player->getWorld()->getSafeSpawn());
 			$player->setGamemode(GameMode::SURVIVAL());
 		}
+	}
+
+	public function registerPermissions(): void
+	{
+		$parent = DefaultPermissions::registerPermission(new Permission("uhc", "Parent for all UHC permissions."));
+
+		$commands = DefaultPermissions::registerPermission(new Permission("uhc.command", "Parent permission for all UHC commands."), $parent);
+		DefaultPermissions::registerPermission(new Permission("uhc.command.globalmute", "", Permission::DEFAULT_OP), $commands);
+		DefaultPermissions::registerPermission(new Permission("uhc.command.heal", "", Permission::DEFAULT_OP), $commands);
+		DefaultPermissions::registerPermission(new Permission("uhc.command.scenarios", "", Permission::DEFAULT_OP), $commands);
+		DefaultPermissions::registerPermission(new Permission("uhc.command.tpall", "", Permission::DEFAULT_OP), $commands);
+		DefaultPermissions::registerPermission(new Permission("uhc.command.uhc", "", Permission::DEFAULT_OP), $commands);
+		$commands->recalculatePermissibles();
+
+		$bypass = DefaultPermissions::registerPermission(new Permission("uhc.bypass", "Parent permission for all UHC bypasses", Permission::DEFAULT_OP), $parent);
+		DefaultPermissions::registerPermission(new Permission("uhc.bypass.globalmute", "", Permission::DEFAULT_OP), $bypass);
+		$bypass->recalculatePermissibles();
+
+		$parent->recalculatePermissibles();
 	}
 }

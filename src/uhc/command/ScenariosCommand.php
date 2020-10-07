@@ -31,7 +31,7 @@ class ScenariosCommand extends BaseCommand
 		$form = new CustomForm("Scenarios", $toggles, function (Player $player, CustomFormResponse $response): void
 		{
 			foreach ($this->plugin->getScenarioManager()->getScenarios() as $scenario) {
-				if (!$player->hasPermission("uhc.scenarios.enable")) {
+				if (!$player->hasPermission("uhc.command.scenarios")) {
 					return;
 				}
 				$scenario->setActive($response->getBool($scenario->getName()));
