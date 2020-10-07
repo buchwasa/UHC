@@ -110,10 +110,8 @@ class EventListener implements Listener
 			if ($damager instanceof Player && $victim instanceof Player) {
 				$damagerSession = $this->plugin->getSessionManager()->getSession($damager);
 				$victimSession = $this->plugin->getSessionManager()->getSession($victim);
-				if ($damagerSession->isInTeam() && $victimSession->isInTeam()) {
-					if ($damagerSession->getTeam()->memberExists($victim)) {
-						$ev->cancel();
-					}
+				if ($damagerSession->isInTeam() && $victimSession->isInTeam() && $damagerSession->getTeam()->memberExists($victim)) {
+					$ev->cancel();
 				}
 			}
 		}
