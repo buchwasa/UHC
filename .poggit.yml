@@ -1,4 +1,4 @@
---- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/stephen-mc-pl/UHC
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/buchwasa/UHC
 build-by-default: true
 branches:
 - master
