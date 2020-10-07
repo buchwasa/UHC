@@ -14,11 +14,11 @@ jobs:
     - name: scorefactory
       uses: wei/wget@v1
       with:
-        args: https://poggit.pmmp.io/r/95688/ScoreFactory_dev-12.phar -O ScoreFactory.phar
+        args: https://poggit.pmmp.io/r/104378/ScoreFactory_dev-14.phar -O ScoreFactory.phar
     - name: libchunkloader
       uses: wei/wget@v1
       with:
-        args: https://poggit.pmmp.io/r/95685/libChunkLoader_dev-12.phar -O libChunkLoader.phar
+        args: https://poggit.pmmp.io/r/104375/libChunkLoader_dev-15.phar -O libChunkLoader.phar
     - name: phpstan
       uses: nxtlvlsoftware/pmmp-phpstan-action@4
       with:
