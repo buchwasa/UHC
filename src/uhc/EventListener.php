@@ -59,6 +59,7 @@ class EventListener implements Listener
 		} else {
 			$sessionManager->getSession($player)->update($player);
 		}
+		
 		$this->plugin->getPlayerManager()->addToGame($player);
 	}
 
