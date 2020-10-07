@@ -7,7 +7,7 @@ projects:
   UHC:
     path: ""
     libs:
-      - src: buchwasa-mc-pl/pmforms-pm4/pmforms
+      - src: stephen-mc-pl/pmforms-pm4/pmforms
         branch: prod
         version: 1.0.1
       - src: buchwasa/ScoreFactory/ScoreFactory
