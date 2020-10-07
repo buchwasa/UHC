@@ -37,7 +37,7 @@ class ScenarioManager{
 					try {
 						require($fileLocation);
 						$class = "\\" . str_replace(".php", "", $file);
-						if (($scenario = new $class($this)) instanceof Scenario) {
+						if (($scenario = new $class($this->plugin)) instanceof Scenario) {
 							$this->registerScenario($scenario);
 						}
 					} catch (Throwable $error) {

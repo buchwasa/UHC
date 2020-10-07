@@ -21,6 +21,9 @@ class TeamCommand extends BaseCommand
 	public function onExecute(Player $sender, array $args): void
 	{
 		$session = $this->plugin->getSessionManager()->getSession($sender);
+		if(!isset($args[0])){
+			throw new InvalidCommandSyntaxException();
+		}
 		switch (strtolower($args[0])) { //team notifications really needed.
 			case "create":
 				if (count($args) < 2) {

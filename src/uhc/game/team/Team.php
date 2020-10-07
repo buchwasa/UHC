@@ -72,7 +72,7 @@ class Team
 
 	public function isLeader(Player $player): bool
 	{
-		return $this->teamLeader->getUniqueId() === $player->getUniqueId();
+		return $this->teamLeader->getUniqueId()->toString() === $player->getUniqueId()->toString();
 	}
 
 	public function isFull(): bool
