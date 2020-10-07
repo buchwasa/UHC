@@ -10,7 +10,7 @@ use pocketmine\player\Player;
  */
 class PlayerManager{
 	/** @var Player[] */
-	private $gamePlayers = [];
+	private array $gamePlayers = [];
 
 	public function addToGame(Player $player): void
 	{

@@ -12,25 +12,22 @@ use uhc\Loader;
 
 class ScenariosCommand extends BaseCommand
 {
-	/** @var Loader */
-	private $plugin;
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("scenario", "Shows the game's scenarios or sets them", "/scenario", ["sc"]);
-		$this->plugin = $plugin;
+		parent::__construct($plugin, "scenario", "Shows the game's scenarios or sets them", "/scenario", ["sc"]);
 	}
 
 	public function onExecute(Player $sender, array $args): void
 	{
 		$toggles = [];
-		foreach ($this->plugin->getScenarioManager()->getScenarios() as $scenario) {
+		foreach ($this->getPlugin()->getScenarioManager()->getScenarios() as $scenario) {
 			$toggles[] = new Toggle($scenario->getName(), $scenario->getName(), $scenario->isActive());
 		}
 
 		$form = new CustomForm("Scenarios", $toggles, function (Player $player, CustomFormResponse $response): void
 		{
-			foreach ($this->plugin->getScenarioManager()->getScenarios() as $scenario) {
+			foreach ($this->getPlugin()->getScenarioManager()->getScenarios() as $scenario) {
 				if (!$player->hasPermission("uhc.command.scenarios")) {
 					return;
 				}
@@ -39,7 +36,5 @@ class ScenariosCommand extends BaseCommand
 		});
 
 		$sender->sendForm($form);
-
-		return;
 	}
 }

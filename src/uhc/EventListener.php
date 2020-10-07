@@ -28,7 +28,7 @@ use uhc\event\PhaseChangeEvent;
 class EventListener implements Listener
 {
 	/** @var Loader */
-	private $plugin;
+	private Loader $plugin;
 
 	public function __construct(Loader $plugin)
 	{

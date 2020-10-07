@@ -19,12 +19,12 @@ use function mt_rand;
 class GameHeartbeat extends Task
 {
 	/** @var int */
-	private $phase = PhaseChangeEvent::WAITING;
+	private int $phase = PhaseChangeEvent::WAITING;
 
 	/** @var int */
-	private $game = 0;
+	private int $game = 0;
 	/** @var int */
-	private $countdown = GameTimer::TIMER_COUNTDOWN;
+	private int $countdown = GameTimer::TIMER_COUNTDOWN;
 	/** @var float|int */
 	private $grace = GameTimer::TIMER_GRACE;
 	/** @var float|int */
@@ -32,12 +32,12 @@ class GameHeartbeat extends Task
 	/** @var float|int */
 	private $normal = GameTimer::TIMER_NORMAL;
 	/** @var Border */
-	private $border;
+	private Border $border;
 	/** @var Loader */
-	private $plugin;
+	private Loader $plugin;
 
 	/** @var int */
-	private $playerTimer = 1;
+	private int $playerTimer = 1;
 
 	public function __construct(Loader $plugin)
 	{

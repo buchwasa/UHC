@@ -9,19 +9,16 @@ use uhc\Loader;
 
 class TpallCommand extends BaseCommand
 {
-	/** @var Loader */
-	private $plugin;
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("tpall", "Teleports everyone to the sender", "/tpall");
-		$this->plugin = $plugin;
+		parent::__construct($plugin, "tpall", "Teleports everyone to the sender", "/tpall");
 		$this->setPermission("uhc.command.tpall");
 	}
 
 	public function onExecute(Player $sender, array $args): void
 	{
-		foreach ($this->plugin->getServer()->getOnlinePlayers() as $p) {
+		foreach ($this->getPlugin()->getServer()->getOnlinePlayers() as $p) {
 			$p->teleport($sender->getPosition());
 		}
 		Command::broadcastCommandMessage($sender, "Teleported everyone");

@@ -15,13 +15,13 @@ use function mt_rand;
 class Border
 {
 	/** @var int */
-	private $size = 1000;
+	private int $size = 1000;
 	/** @var World */
-	private $world;
+	private World $world;
 	/** @var int */
-	private $safeX;
+	private int $safeX;
 	/** @var int */
-	private $safeZ;
+	private int $safeZ;
 
 	public function __construct(World $world)
 	{
@@ -67,13 +67,13 @@ class Border
 	{
 		$x = mt_rand(5, 20);
 		$z = mt_rand(5, 20);
-		if ($p->getX() < 0 && $p->getZ() < 0) {
+		if ($p->getPosition()->getX() < 0 && $p->getPosition()->getZ() < 0) {
 			$pX = $this->getX(true) + $x;
 			$pZ = $this->getZ(true) + $z;
-		} elseif ($p->getX() > 0 && $p->getZ() > 0) {
+		} elseif ($p->getPosition()->getX() > 0 && $p->getPosition()->getZ() > 0) {
 			$pX = $this->getX() - $x;
 			$pZ = $this->getZ() - $z;
-		} elseif ($p->getX() < 0 && $p->getZ() > 0) {
+		} elseif ($p->getPosition()->getX() < 0 && $p->getPosition()->getZ() > 0) {
 			$pX = $this->getX(true) + $x;
 			$pZ = $this->getZ() - $z;
 		} else {

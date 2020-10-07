@@ -4,16 +4,16 @@ declare(strict_types=1);
 namespace uhc\command;
 
 use pocketmine\command\Command;
-use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
-use pocketmine\command\PluginCommand;
 use pocketmine\player\Player;
 use uhc\Loader;
 
 class BaseCommand extends Command
 {
+	/** @var Loader */
+	private Loader $plugin;
 
-	public function __construct(string $name, string $description, string $usageMessage, array $aliases = [])
+	public function __construct(Loader $plugin, string $name, string $description, string $usageMessage, array $aliases = [])
 	{
 		parent::__construct($name, $description, $usageMessage, $aliases);
 	}
@@ -45,5 +45,10 @@ class BaseCommand extends Command
 	public function onExecute(Player $sender, array $args): void
 	{
 
+	}
+
+	public function getPlugin(): Loader
+	{
+		return $this->plugin;
 	}
 }

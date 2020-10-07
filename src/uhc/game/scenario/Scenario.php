@@ -11,11 +11,11 @@ use uhc\Loader;
 class Scenario implements Listener
 {
 	/** @var string */
-	private $name;
+	private string $name;
 	/** @var Loader */
-	protected $plugin;
+	protected Loader $plugin;
 	/** @var bool */
-	private $activeScenario = false;
+	private bool $activeScenario = false;
 
 	public function __construct(Loader $plugin, string $name)
 	{

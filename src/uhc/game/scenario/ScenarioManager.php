@@ -14,9 +14,9 @@ use function substr;
 
 class ScenarioManager{
 	/** @var Loader */
-	private $plugin;
+	private Loader $plugin;
 	/** @var Scenario[] */
-	private $registeredScenarios = [];
+	private array $registeredScenarios = [];
 
 	public function __construct(Loader $plugin)
 	{

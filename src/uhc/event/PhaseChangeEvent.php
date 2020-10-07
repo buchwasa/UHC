@@ -21,11 +21,11 @@ class PhaseChangeEvent extends Event
 	public const NORMAL = 3;
 
 	/** @var Player */
-	private $player;
+	private Player $player;
 	/** @var int */
-	private $oldPhase;
+	private int $oldPhase;
 	/** @var int */
-	private $newPhase;
+	private int $newPhase;
 
 	public function __construct(Player $player, int $oldPhase, int $newPhase)
 	{

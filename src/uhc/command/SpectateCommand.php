@@ -13,13 +13,10 @@ use function mb_strtolower;
 
 class SpectateCommand extends BaseCommand
 {
-	/** @var Loader */
-	private $plugin;
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("spectate", "Spectates a player", "/spectate <player>");
-		$this->plugin = $plugin;
+		parent::__construct($plugin, "spectate", "Spectates a player", "/spectate <player>");
 	}
 
 	public function onExecute(Player $sender, array $args): void
@@ -34,7 +31,7 @@ class SpectateCommand extends BaseCommand
 			throw new InvalidCommandSyntaxException();
 		}
 
-		$player = $this->plugin->getServer()->getPlayer(mb_strtolower($args[0]));
+		$player = $this->getPlugin()->getServer()->getPlayer(mb_strtolower($args[0]));
 		if ($player === null) {
 			$sender->sendMessage(TextFormat::RED . "That player is offline!");
 
@@ -43,13 +40,9 @@ class SpectateCommand extends BaseCommand
 
 		if ($player === $sender) {
 			$sender->sendMessage(TextFormat::RED . "You can't spectate yourself!");
-
-			return;
 		} else {
 			$sender->teleport($player->getPosition());
 			$sender->sendMessage(TextFormat::GREEN . "Now spectating: " . $player->getDisplayName());
-
-			return;
 		}
 	}
 }

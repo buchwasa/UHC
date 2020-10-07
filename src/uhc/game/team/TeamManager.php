@@ -7,7 +7,7 @@ use pocketmine\player\Player;
 
 class TeamManager{
 	/** @var Team[] */
-	private $teams = [];
+	private array $teams = [];
 
 	/**
 	 * @return Team[]

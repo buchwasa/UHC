@@ -10,7 +10,7 @@ use pocketmine\player\Player;
  */
 class SessionManager{
 	/** @var PlayerSession[] */
-	private $activeSessions = [];
+	private array $activeSessions = [];
 
 	/**
 	 * Creates a new session for a given player.

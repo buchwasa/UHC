@@ -10,25 +10,22 @@ use uhc\Loader;
 
 class GlobalMuteCommand extends BaseCommand
 {
-	/** @var Loader */
-	private $plugin;
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("globalmute", "Controls whether all players can chat or not", "/globalmute");
-		$this->plugin = $plugin;
+		parent::__construct($plugin, "globalmute", "Controls whether all players can chat or not", "/globalmute");
 		$this->setPermission("uhc.command.globalmute");
 	}
 
 	public function onExecute(Player $sender, array $args): void
 	{
-		if (!$this->plugin->isGlobalMuteEnabled()) {
-			$this->plugin->setGlobalMute(true);
-			$this->plugin->getServer()->broadcastMessage(TextFormat::GREEN . "Chat has been disabled by an admin!");
+		if (!$this->getPlugin()->isGlobalMuteEnabled()) {
+			$this->getPlugin()->setGlobalMute(true);
+			$this->getPlugin()->getServer()->broadcastMessage(TextFormat::GREEN . "Chat has been disabled by an admin!");
 			Command::broadcastCommandMessage($sender, "Disabled chat", false);
 		} else {
-			$this->plugin->setGlobalMute(false);
-			$this->plugin->getServer()->broadcastMessage(TextFormat::GREEN . "Chat has been enabled by an admin!");
+			$this->getPlugin()->setGlobalMute(false);
+			$this->getPlugin()->getServer()->broadcastMessage(TextFormat::GREEN . "Chat has been enabled by an admin!");
 			Command::broadcastCommandMessage($sender, "Enabled chat", false);
 		}
 	}

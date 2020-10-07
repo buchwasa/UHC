@@ -25,17 +25,17 @@ use uhc\session\SessionManager;
 class Loader extends PluginBase
 {
 	/** @var GameHeartbeat */
-	private $heartbeat;
+	private GameHeartbeat $heartbeat;
 	/** @var PlayerManager */
-	private $playerManager;
+	private PlayerManager $playerManager;
 	/** @var ScenarioManager */
-	private $scenarioManager;
+	private ScenarioManager $scenarioManager;
 	/** @var SessionManager */
-	private $sessionManager;
+	private SessionManager $sessionManager;
 	/** @var TeamManager */
-	private $teamManager;
+	private TeamManager $teamManager;
 	/** @var bool */
-	private $globalMuteEnabled = false;
+	private bool $globalMuteEnabled = false;
 
 	public function onEnable(): void
 	{

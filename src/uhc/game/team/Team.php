@@ -9,11 +9,11 @@ use function count;
 class Team
 {
 	/** @var string */
-	private $teamName;
+	private string $teamName;
 	/** @var Player */
-	private $teamLeader;
+	private Player $teamLeader;
 	/** @var Player[] */
-	private $members = [];
+	private array $members = [];
 	/** @var int */
 	public const TEAM_LIMIT = 2;
 

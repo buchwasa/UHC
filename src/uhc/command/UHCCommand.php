@@ -12,28 +12,21 @@ use uhc\Loader;
 
 class UHCCommand extends BaseCommand
 {
-	/** @var Loader */
-	private $plugin;
 
 	public function __construct(Loader $plugin)
 	{
-		parent::__construct("uhc", "Starts the UHC", "/uhc");
-		$this->plugin = $plugin;
+		parent::__construct($plugin, "uhc", "Starts the UHC", "/uhc");
 		$this->setPermission("uhc.command.uhc");
 	}
 
 	public function onExecute(Player $sender, array $args): void
 	{
-		if ($this->plugin->getHeartbeat()->hasStarted()) {
+		if ($this->getPlugin()->getHeartbeat()->hasStarted()) {
 			$sender->sendMessage(TextFormat::RED . "UHC already started!");
-
-			return;
 		} else {
-			$this->plugin->getHeartbeat()->setPhase(PhaseChangeEvent::COUNTDOWN);
+			$this->getPlugin()->getHeartbeat()->setPhase(PhaseChangeEvent::COUNTDOWN);
 			$sender->sendMessage(TextFormat::GREEN . "The UHC has been started successfully!");
 			Command::broadcastCommandMessage($sender, "Started the UHC", false);
 		}
-
-		return;
 	}
 }

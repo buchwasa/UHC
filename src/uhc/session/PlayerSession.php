@@ -10,11 +10,11 @@ use uhc\game\team\Team;
 class PlayerSession
 {
 	/** @var Player */
-	private $player;
+	private Player $player;
 	/** @var int */
-	private $eliminations = 0;
+	private int $eliminations = 0;
 	/** @var Team|null */
-	private $team = null;
+	private ?Team $team = null;
 
 	public function __construct(Player $player)
 	{
