@@ -65,15 +65,16 @@ class Border
 
 	public function teleportPlayer(Player $p): void
 	{
+		$playerPos = $p->getPosition();
 		$x = mt_rand(5, 20);
 		$z = mt_rand(5, 20);
-		if ($p->getPosition()->getX() < 0 && $p->getPosition()->getZ() < 0) {
+		if ($playerPos->getFloorX() < 0 && $playerPos->getFloorZ() < 0) {
 			$pX = $this->getX(true) + $x;
 			$pZ = $this->getZ(true) + $z;
-		} elseif ($p->getPosition()->getX() > 0 && $p->getPosition()->getZ() > 0) {
+		} elseif ($playerPos->getFloorX() > 0 && $playerPos->getFloorZ() > 0) {
 			$pX = $this->getX() - $x;
 			$pZ = $this->getZ() - $z;
-		} elseif ($p->getPosition()->getX() < 0 && $p->getPosition()->getZ() > 0) {
+		} elseif ($playerPos->getFloorX() < 0 && $playerPos->getFloorZ() > 0) {
 			$pX = $this->getX(true) + $x;
 			$pZ = $this->getZ() - $z;
 		} else {
