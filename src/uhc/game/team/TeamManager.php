@@ -17,23 +17,27 @@ class TeamManager{
 		return $this->teams;
 	}
 
-	public function createTeam(string $teamName, Player $teamLeader): void
+	public function createTeam(Player $teamLeader): Team
 	{
-		$this->teams[$teamName] = new Team($teamName, $teamLeader);
+		$teamNumber = count($this->teams) + 1;
+		$team = new Team($teamNumber, $teamLeader);
+		$this->teams[$teamNumber] = $team;
+
+		return $team;
 	}
 
-	public function getTeam(string $teamName): ?Team
+	public function getTeam(int $teamNumber): ?Team
 	{
-		return $this->teamExists($teamName) ? $this->teams[$teamName] : null;
+		return $this->teamExists($teamNumber) ? $this->teams[$teamNumber] : null;
 	}
 
-	public function teamExists(string $teamName): bool
+	public function teamExists(int $teamNumber): bool
 	{
-		return isset($this->teams[$teamName]);
+		return isset($this->teams[$teamNumber]);
 	}
 
-	public function disbandTeam(string $teamName): void
+	public function disbandTeam(int $teamNumber): void
 	{
-		unset($this->teams[$teamName]);
+		unset($this->teams[$teamNumber]);
 	}
 }

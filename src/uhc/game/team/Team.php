@@ -8,18 +8,16 @@ use function count;
 
 class Team
 {
-	/** @var string */
-	private string $teamName;
+	/** @var int */
+	private int $teamNumber;
 	/** @var Player */
 	private Player $teamLeader;
 	/** @var Player[] */
 	private array $members = [];
-	/** @var int */
-	public const TEAM_LIMIT = 2;
 
-	public function __construct(string $teamName, Player $teamLeader)
+	public function __construct(int $teamNumber, Player $teamLeader)
 	{
-		$this->teamName = $teamName;
+		$this->teamNumber = $teamNumber;
 		$this->teamLeader = $teamLeader;
 
 		$this->members[$teamLeader->getUniqueId()->toString()] = $teamLeader;
@@ -60,9 +58,9 @@ class Team
 		return true;
 	}
 
-	public function getName(): string
+	public function getNumber(): int
 	{
-		return $this->teamName;
+		return $this->teamNumber;
 	}
 
 	public function getLeader(): Player
@@ -77,6 +75,6 @@ class Team
 
 	public function isFull(): bool
 	{
-		return count($this->members) === self::TEAM_LIMIT;
+		return count($this->members) === 2; //TODO
 	}
 }
