@@ -105,7 +105,7 @@ class GameHeartbeat extends Task
 		foreach ($this->plugin->getPlayerManager()->getPlayers() as $player) {
 			$session = $this->plugin->getSessionManager()->getSession($player);
 			if ($session !== null) {
-				$name = $session->getTeam() !== null ? $session->getTeam()->getName() : "NO TEAM";
+				$name = $session->getTeam() !== null ? (string)$session->getTeam()->getNumber() : "NO TEAM";
 				$player->setNameTag(TF::GOLD . "[$name] " . TF::WHITE . $player->getDisplayName());
 			}
 			if (!$this->border->isPlayerInsideOfBorder($player)) {
