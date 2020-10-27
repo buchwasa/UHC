@@ -15,6 +15,8 @@ class PlayerSession
 	private int $eliminations = 0;
 	/** @var Team|null */
 	private ?Team $team = null;
+	/** @var bool */
+	private bool $isPlaying = false;
 
 	public function __construct(Player $player)
 	{
@@ -24,6 +26,16 @@ class PlayerSession
 	public function getPlayer(): Player
 	{
 		return $this->player;
+	}
+
+	public function setPlaying(bool $isPlaying): void
+	{
+		$this->isPlaying = $isPlaying;
+	}
+
+	public function isPlaying(): bool
+	{
+		return $this->isPlaying;
 	}
 
 	public function addEliminations(int $amount = 1): void
