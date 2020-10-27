@@ -57,7 +57,7 @@ class GameHeartbeat extends Task
 
 	public function setPhase(int $phase): void
 	{
-		foreach ($this->plugin->getSessionManager()->getSessions() as $playerSession) {
+		foreach ($this->plugin->getSessionManager()->getPlaying() as $playerSession) {
 			$ev = new PhaseChangeEvent($playerSession->getPlayer(), $this->phase, $phase);
 			$ev->call();
 		}
