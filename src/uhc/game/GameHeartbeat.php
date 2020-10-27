@@ -57,8 +57,8 @@ class GameHeartbeat extends Task
 
 	public function setPhase(int $phase): void
 	{
-		foreach ($this->plugin->getPlayerManager()->getPlayers() as $playerSession) {
-			$ev = new PhaseChangeEvent($playerSession, $this->phase, $phase);
+		foreach ($this->plugin->getSessionManager()->getSessions() as $playerSession) {
+			$ev = new PhaseChangeEvent($playerSession->getPlayer(), $this->phase, $phase);
 			$ev->call();
 		}
 		$this->phase = $phase;
@@ -91,42 +91,34 @@ class GameHeartbeat extends Task
 
 	private function handlePlayers(): void
 	{
-		foreach ($this->plugin->getServer()->getOnlinePlayers() as $p) {
-			if ($this->phase <= PhaseChangeEvent::COUNTDOWN) {
-				if ($p->isSurvival()) {
-					$this->plugin->getPlayerManager()->addToGame($p);
-				} else {
-					$this->plugin->getPlayerManager()->removeFromGame($p);
+		foreach ($this->plugin->getSessionManager()->getSessions() as $session) {
+			$p = $session->getPlayer();
+			if($p->isOnline()) {
+				$this->handleScoreboard($p);
+				if($session->isPlaying()) {
+					$name = $session->getTeam() !== null ? (string)$session->getTeam()->getNumber() : "NO TEAM";
+					$p->setNameTag(TF::GOLD . "[$name] " . TF::WHITE . $p->getDisplayName());
+					if (!$this->border->isPlayerInsideOfBorder($p)) {
+						$this->border->teleportPlayer($p);
+						$p->sendTitle("You have been teleported by border!");
+					}
+					switch ($this->getPhase()) {
+						case PhaseChangeEvent::COUNTDOWN:
+							if ($this->countdown === 29) {
+								$this->randomizeCoordinates($p, 750);
+								$this->plugin->resetPlayer($p);
+								$p->setImmobile(true);
+							} elseif ($this->countdown === 3) {
+								$p->setImmobile(false);
+							}
+							break;
+						case PhaseChangeEvent::GRACE:
+							if ($this->grace === 601) {
+								$p->setHealth($p->getMaxHealth());
+							}
+							break;
+					}
 				}
-			}
-			$this->handleScoreboard($p);
-		}
-
-		foreach ($this->plugin->getPlayerManager()->getPlayers() as $player) {
-			$session = $this->plugin->getSessionManager()->getSession($player);
-			if ($session !== null) {
-				$name = $session->getTeam() !== null ? (string)$session->getTeam()->getNumber() : "NO TEAM";
-				$player->setNameTag(TF::GOLD . "[$name] " . TF::WHITE . $player->getDisplayName());
-			}
-			if (!$this->border->isPlayerInsideOfBorder($player)) {
-				$this->border->teleportPlayer($player);
-				$player->sendTitle("You have been teleported by border!");
-			}
-			switch ($this->getPhase()) {
-				case PhaseChangeEvent::COUNTDOWN:
-					if ($this->countdown === 29) {
-						$this->randomizeCoordinates($player, 750);
-						$this->plugin->resetPlayer($player);
-						$player->setImmobile(true);
-					} elseif ($this->countdown === 3) {
-						$player->setImmobile(false);
-					}
-					break;
-				case PhaseChangeEvent::GRACE:
-					if ($this->grace === 601) {
-						$player->setHealth($player->getMaxHealth());
-					}
-					break;
 			}
 		}
 	}
@@ -257,14 +249,14 @@ class GameHeartbeat extends Task
 		if ($this->hasStarted()) {
 			ScoreFactory::setScoreLine($p, 1, "§7---------------------");
 			ScoreFactory::setScoreLine($p, 2, " §bGame Time: §f" . gmdate("H:i:s", $this->game));
-			ScoreFactory::setScoreLine($p, 3, " §bRemaining: §f" . count($this->plugin->getPlayerManager()->getPlayers()));
+			ScoreFactory::setScoreLine($p, 3, " §bRemaining: §f" . count($this->plugin->getSessionManager()->getPlaying()));
 			ScoreFactory::setScoreLine($p, 4, " §bEliminations: §f" . $this->plugin->getSessionManager()->getSession($p)->getEliminations());
 			ScoreFactory::setScoreLine($p, 5, " §bBorder: §f" . $this->border->getSize());
 			ScoreFactory::setScoreLine($p, 6, " §bCenter: §f({$safeSpawn->getFloorX()}, {$safeSpawn->getFloorZ()})");
 			ScoreFactory::setScoreLine($p, 7, "§7--------------------- ");
 		} else {
 			ScoreFactory::setScoreLine($p, 1, "§7---------------------");
-			ScoreFactory::setScoreLine($p, 2, " §bPlayers: §f" . count($this->plugin->getPlayerManager()->getPlayers()));
+			ScoreFactory::setScoreLine($p, 2, " §bPlayers: §f" . count($this->plugin->getSessionManager()->getSessions()));
 			ScoreFactory::setScoreLine($p, 3, $this->getPhase() === PhaseChangeEvent::WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown");
 			ScoreFactory::setScoreLine($p, 4, "§7--------------------- ");
 		}

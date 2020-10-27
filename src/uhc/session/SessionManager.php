@@ -67,4 +67,19 @@ class SessionManager{
 	{
 		return $this->hasSession($player) ? $this->activeSessions[$player->getUniqueId()->toString()] : null;
 	}
+
+	/**
+	 * @return PlayerSession[]
+	 */
+	public function getPlaying(): array
+	{
+		$playing = [];
+		foreach ($this->getSessions() as $session) {
+			if ($session->isPlaying() && $session->getPlayer()->isOnline()) {
+				$playing[] = $session;
+			}
+		}
+
+		return $playing;
+	}
 }

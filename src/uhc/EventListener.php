@@ -61,8 +61,7 @@ class EventListener implements Listener
 		} else {
 			$sessionManager->getSession($player)->update($player);
 		}
-
-		$this->plugin->getPlayerManager()->addToGame($player);
+		$sessionManager->getSession($player)->setPlaying(true);
 	}
 
 	public function handleJoin(PlayerJoinEvent $ev): void
@@ -84,7 +83,7 @@ class EventListener implements Listener
 
 	public function handleQuit(PlayerQuitEvent $ev): void
 	{
-		$this->plugin->getPlayerManager()->removeFromGame($ev->getPlayer());
+		$this->plugin->getSessionManager()->getSession($ev->getPlayer())->setPlaying(false);
 	}
 
 	public function handleEntityRegain(EntityRegainHealthEvent $ev): void
@@ -124,7 +123,7 @@ class EventListener implements Listener
 		$eliminatedSession = $this->plugin->getSessionManager()->getSession($player);
 		$player->setGamemode(GameMode::SPECTATOR());
 		$player->sendTitle(TF::YELLOW . "You have been eliminated!", "Use /spectate to spectate a player.");
-		$this->plugin->getPlayerManager()->removeFromGame($player);
+		$eliminatedSession->setPlaying(false);
 		if ($cause instanceof EntityDamageByEntityEvent) {
 			$damager = $cause->getDamager();
 			if ($damager instanceof Player) {

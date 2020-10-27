@@ -26,8 +26,6 @@ class Loader extends PluginBase
 {
 	/** @var GameHeartbeat */
 	private GameHeartbeat $heartbeat;
-	/** @var PlayerManager */
-	private PlayerManager $playerManager;
 	/** @var ScenarioManager */
 	private ScenarioManager $scenarioManager;
 	/** @var SessionManager */
@@ -41,7 +39,6 @@ class Loader extends PluginBase
 	{
 		$this->registerPermissions();
 		$this->getScheduler()->scheduleRepeatingTask($this->heartbeat = new GameHeartbeat($this), 20);
-		$this->playerManager = new PlayerManager();
 		$this->scenarioManager = new ScenarioManager($this);
 		$this->sessionManager = new SessionManager();
 		$this->teamManager = new TeamManager();
@@ -61,11 +58,6 @@ class Loader extends PluginBase
 	public function getHeartbeat(): GameHeartbeat
 	{
 		return $this->heartbeat;
-	}
-
-	public function getPlayerManager(): PlayerManager
-	{
-		return $this->playerManager;
 	}
 
 	public function getScenarioManager(): ScenarioManager
