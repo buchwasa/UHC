@@ -68,6 +68,9 @@ class SessionManager{
 		return $this->hasSession($player) ? $this->activeSessions[$player->getUniqueId()->toString()] : null;
 	}
 
+	/**
+	 * @return PlayerSession[]
+	 */
 	public function getPlaying(): array
 	{
 		$playing = [];
