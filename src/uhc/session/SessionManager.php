@@ -21,6 +21,8 @@ class SessionManager{
 	{
 		if (!$this->hasSession($player)) {
 			$this->activeSessions[$player->getUniqueId()->toString()] = new PlayerSession($player);
+		} else {
+			$this->getSession($player)->update($player);
 		}
 	}
 

@@ -55,12 +55,7 @@ class EventListener implements Listener
 			$ev->setKickMessage("UHC has already started!");
 			$ev->cancel();
 		}
-
-		if (!$sessionManager->hasSession($player)) {
-			$sessionManager->createSession($player);
-		} else {
-			$sessionManager->getSession($player)->update($player);
-		}
+		$sessionManager->createSession($player);
 		$sessionManager->getSession($player)->setPlaying(true);
 	}
 
