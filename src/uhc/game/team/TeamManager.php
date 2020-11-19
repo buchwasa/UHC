@@ -8,6 +8,8 @@ use pocketmine\player\Player;
 class TeamManager{
 	/** @var Team[] */
 	private array $teams = [];
+	/** @var int */
+	private int $teamNumbers = 1;
 
 	/**
 	 * @return Team[]
@@ -19,9 +21,9 @@ class TeamManager{
 
 	public function createTeam(Player $teamLeader): Team
 	{
-		$teamNumber = count($this->teams) + 1;
-		$team = new Team($teamNumber, $teamLeader);
-		$this->teams[$teamNumber] = $team;
+		$team = new Team($this->teamNumbers, $teamLeader);
+		$this->teams[$this->teamNumbers] = $team;
+		$this->teamNumbers++;
 
 		return $team;
 	}
