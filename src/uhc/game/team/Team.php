@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace uhc\game\team;
 
 use pocketmine\player\Player;
+use uhc\UHC;
 use function count;
 
 class Team
@@ -75,6 +76,7 @@ class Team
 
 	public function isFull(): bool
 	{
-		return count($this->members) === 2; //TODO
+		$size = UHC::getInstance()->getTeamManager()->getTeamSize();
+		return count($this->members) === $size;
 	}
 }

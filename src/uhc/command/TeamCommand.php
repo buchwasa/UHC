@@ -5,12 +5,12 @@ namespace uhc\command;
 
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\player\Player;
-use uhc\Loader;
+use uhc\UHC;
 
 class TeamCommand extends BaseCommand
 {
 
-	public function __construct(Loader $plugin)
+	public function __construct(UHC $plugin)
 	{
 		parent::__construct($plugin, "team", "Team management", "/team <add:create:disband:leave> <player>");
 	}

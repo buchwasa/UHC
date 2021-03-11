@@ -8,12 +8,12 @@ use pocketmine\command\Command;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use uhc\event\PhaseChangeEvent;
-use uhc\Loader;
+use uhc\UHC;
 
 class UHCCommand extends BaseCommand
 {
 
-	public function __construct(Loader $plugin)
+	public function __construct(UHC $plugin)
 	{
 		parent::__construct($plugin, "uhc", "Starts the UHC", "/uhc");
 		$this->setPermission("uhc.command.uhc");

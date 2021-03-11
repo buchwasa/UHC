@@ -4,171 +4,180 @@ declare(strict_types=1);
 
 namespace uhc;
 
-use pocketmine\block\Leaves;
-use pocketmine\block\VanillaBlocks;
-use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
-use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
-use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerLoginEvent;
+use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\item\VanillaItems;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\network\mcpe\protocol\GameRulesChangedPacket;
 use pocketmine\network\mcpe\protocol\types\BoolGameRule;
+use pocketmine\utils\TextFormat as TF;
+use pocketmine\item\VanillaItems;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
-use pocketmine\utils\TextFormat as TF;
+use pocketmine\block\Leaves;
+use pocketmine\event\Listener;
+
 use uhc\event\PhaseChangeEvent;
 
 class EventListener implements Listener
 {
-	/** @var Loader */
-	private Loader $plugin;
+	/** @var UHC */
+	private UHC $plugin;
 
-	public function __construct(Loader $plugin)
+	public function __construct(UHC $plugin)
 	{
 		$this->plugin = $plugin;
 		$plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
 	}
 
-	public function handleChat(PlayerChatEvent $ev): void
+	public function handleChat(PlayerChatEvent $event): void
 	{
-		$player = $ev->getPlayer();
+		$player = $event->getPlayer();
 		if ($this->plugin->isGlobalMuteEnabled() && !$player->hasPermission("uhc.bypass.globalmute")) {
 			$player->sendMessage(TF::RED . "You cannot talk right now!");
-			$ev->cancel();
+			$event->cancel();
 		}
 	}
 
-	public function handleLogin(PlayerLoginEvent $ev): void
+	public function handleLogin(PlayerLoginEvent $event): void
 	{
-		$player = $ev->getPlayer();
+		$player = $event->getPlayer();
 		$sessionManager = $this->plugin->getSessionManager();
 		if ($this->plugin->getHeartbeat()->getPhase() >= PhaseChangeEvent::COUNTDOWN && !$sessionManager->hasSession($player)) {
-			$ev->setKickMessage("UHC has already started!");
-			$ev->cancel();
+			$event->setKickMessage("UHC has already started!");
+			$event->cancel();
 		}
 		$sessionManager->createSession($player);
 		$sessionManager->getSession($player)->setPlaying(true);
 	}
 
-	public function handleJoin(PlayerJoinEvent $ev): void
+	public function handleJoin(PlayerJoinEvent $event): void
 	{
 		if ($this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::WAITING) {
-			$this->plugin->resetPlayer($ev->getPlayer(), true);
+			$this->plugin->resetPlayer($event->getPlayer(), true);
 		}
 		$pk = new GameRulesChangedPacket();
 		$pk->gameRules = ["showcoordinates" => new BoolGameRule(true)];
-		$ev->getPlayer()->getNetworkSession()->sendDataPacket($pk);
+		$event->getPlayer()->getNetworkSession()->sendDataPacket($pk);
 	}
 
-	public function handlePhaseChange(PhaseChangeEvent $ev): void
+	public function handlePhaseChange(PhaseChangeEvent $event): void
 	{
-		if ($ev->getOldPhase() === PhaseChangeEvent::COUNTDOWN) {
-			$ev->getPlayer()->getInventory()->addItem(VanillaItems::STEAK()->setCount(64));
+		if ($event->getOldPhase() === PhaseChangeEvent::COUNTDOWN) {
+			$event->getPlayer()->getInventory()->addItem(VanillaItems::STEAK()->setCount(64));
 		}
 	}
 
-	public function handleQuit(PlayerQuitEvent $ev): void
+	public function handleQuit(PlayerQuitEvent $event): void
 	{
-		$this->plugin->getSessionManager()->getSession($ev->getPlayer())->setPlaying(false);
+		$this->plugin->getSessionManager()->getSession($event->getPlayer())->setPlaying(false);
 	}
 
-	public function handleEntityRegain(EntityRegainHealthEvent $ev): void
+	public function handleEntityRegain(EntityRegainHealthEvent $event): void
 	{
-		if ($ev->getRegainReason() === EntityRegainHealthEvent::CAUSE_SATURATION) {
-			$ev->cancel();
+		if ($event->getRegainReason() === EntityRegainHealthEvent::CAUSE_SATURATION) {
+			$event->cancel();
 		}
 	}
 
-	public function handleDamage(EntityDamageEvent $ev): void
+	public function handleDamage(EntityDamageEvent $event): void
 	{
 		if (!$this->plugin->getHeartbeat()->hasStarted()) {
-			$ev->cancel();
+			$event->cancel();
 		}
 
-		if ($ev instanceof EntityDamageByEntityEvent) {
-			$damager = $ev->getDamager();
-			$victim = $ev->getEntity();
+		if ($event instanceof EntityDamageByEntityEvent) {
+			$damager = $event->getDamager();
+			$victim = $event->getEntity();
 			if ($this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::GRACE) {
-				$ev->cancel();
+				$event->cancel();
 			}
 
 			if ($damager instanceof Player && $victim instanceof Player) {
 				$damagerSession = $this->plugin->getSessionManager()->getSession($damager);
 				$victimSession = $this->plugin->getSessionManager()->getSession($victim);
 				if ($damagerSession->isInTeam() && $victimSession->isInTeam() && $damagerSession->getTeam()->memberExists($victim)) {
-					$ev->cancel();
+					$event->cancel();
 				}
 			}
 		}
 	}
 
-	public function handleDeath(PlayerDeathEvent $ev): void
+	public function handleDeath(PlayerDeathEvent $event): void
 	{
-		$player = $ev->getPlayer();
+		$player = $event->getPlayer();
 		$cause = $player->getLastDamageCause();
 		$eliminatedSession = $this->plugin->getSessionManager()->getSession($player);
 		$player->setGamemode(GameMode::SPECTATOR());
-		$player->sendTitle(TF::YELLOW . "You have been eliminated!", "Use /spectate to spectate a player.");
+		$player->sendTitle(TF::AQUA . "You have been eliminated!", "Use /spectate to spectate a player.");
 		$eliminatedSession->setPlaying(false);
+
 		if ($cause instanceof EntityDamageByEntityEvent) {
 			$damager = $cause->getDamager();
 			if ($damager instanceof Player) {
 				$damagerSession = $this->plugin->getSessionManager()->getSession($damager);
+				$deathMessages = $this->plugin->getMessageManager()->getDeathMessages();
+				$eliminations = $eliminatedSession->getEliminations();
+				$damagerEliminations = $damagerSession->getEliminations();
 				$damagerSession->addEliminations();
-				$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " was slain by " . TF::RED . $damager->getName() . TF::GRAY . "[" . TF::WHITE . $damagerSession->getEliminations() . TF::GRAY . "]");
+
+				$event->setDeathMessage(
+					TF::RED . $player->getName() . TF::GRAY . "[" . $eliminations . TF::GRAY . "]" .
+					TF::AQUA . $deathMessages[array_rand($deathMessages)] . TF::RED . $damager->getName() .
+					TF::GRAY . "[" . $damagerEliminations . TF::GRAY . "]",
+				);
 			}
 		} else {
-			$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " died!");
+			$event->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " died!");
 		}
 	}
 
-	public function handleBreak(BlockBreakEvent $ev): void
+	public function handleBreak(BlockBreakEvent $event): void
 	{
 		if (!$this->plugin->getHeartbeat()->hasStarted()) {
-			$ev->cancel();
+			$event->cancel();
 		} else {
-			if ($ev->getBlock() instanceof Leaves) {
+			if ($event->getBlock() instanceof Leaves) {
 				$rand = mt_rand(0, 100);
-				if ($ev->getItem()->equals(VanillaItems::SHEARS(), false, false)) {
+				if ($event->getItem()->equals(VanillaItems::SHEARS(), false, false)) {
 					if ($rand <= 6) {
-						$ev->setDrops([VanillaItems::APPLE()]);
+						$event->setDrops([VanillaItems::APPLE()]);
 					}
 				} else {
 					if ($rand <= 3) {
-						$ev->setDrops([VanillaItems::APPLE()]);
+						$event->setDrops([VanillaItems::APPLE()]);
 					}
 				}
 			}
 		}
 	}
 
-	public function handlePlace(BlockPlaceEvent $ev): void
+	public function handlePlace(BlockPlaceEvent $event): void
 	{
 		if (!$this->plugin->getHeartbeat()->hasStarted()) {
-			$ev->cancel();
+			$event->cancel();
 		}
 	}
 
-	public function handleItemDrop(PlayerDropItemEvent $ev): void
+	public function handleItemDrop(PlayerDropItemEvent $event): void
 	{
 		if (!$this->plugin->getHeartbeat()->hasStarted()) {
-			$ev->cancel();
+			$event->cancel();
 		}
 	}
 
-	public function handleExhaust(PlayerExhaustEvent $ev): void
+	public function handleExhaust(PlayerExhaustEvent $event): void
 	{
 		if (!$this->plugin->getHeartbeat()->hasStarted()) {
-			$ev->cancel();
+			$event->cancel();
 		}
 	}
 }

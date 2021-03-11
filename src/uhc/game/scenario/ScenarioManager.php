@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace uhc\game\scenario;
 
-use uhc\Loader;
+use uhc\UHC;
 use Throwable;
 use function is_array;
 use function is_dir;
@@ -13,12 +13,12 @@ use function str_replace;
 use function substr;
 
 class ScenarioManager{
-	/** @var Loader */
-	private Loader $plugin;
+	/** @var UHC */
+	private UHC $plugin;
 	/** @var Scenario[] */
 	private array $registeredScenarios = [];
 
-	public function __construct(Loader $plugin)
+	public function __construct(UHC $plugin)
 	{
 		$this->plugin = $plugin;
 		$this->loadDirectoryScenarios($plugin->getDataFolder() . "scenarios/");

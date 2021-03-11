@@ -8,13 +8,13 @@ use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
-use uhc\Loader;
+use uhc\UHC;
 use function mb_strtolower;
 
 class SpectateCommand extends BaseCommand
 {
 
-	public function __construct(Loader $plugin)
+	public function __construct(UHC $plugin)
 	{
 		parent::__construct($plugin, "spectate", "Spectates a player", "/spectate <player>");
 	}

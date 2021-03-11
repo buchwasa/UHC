@@ -8,13 +8,13 @@ use pocketmine\command\Command;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
-use uhc\Loader;
+use uhc\UHC;
 use function mb_strtolower;
 
 class HealCommand extends BaseCommand
 {
 
-	public function __construct(Loader $plugin)
+	public function __construct(UHC $plugin)
 	{
 		parent::__construct($plugin, "heal", "Heals a given player", "/heal <player>");
 		$this->setPermission("uhc.command.heal");

@@ -6,18 +6,18 @@ namespace uhc\game\scenario;
 
 use pocketmine\event\HandlerListManager;
 use pocketmine\event\Listener;
-use uhc\Loader;
+use uhc\UHC;
 
 class Scenario implements Listener
 {
 	/** @var string */
 	private string $name;
-	/** @var Loader */
-	protected Loader $plugin;
+	/** @var UHC */
+	protected UHC $plugin;
 	/** @var bool */
 	private bool $activeScenario = false;
 
-	public function __construct(Loader $plugin, string $name)
+	public function __construct(UHC $plugin, string $name)
 	{
 		$this->plugin = $plugin;
 		$this->name = $name;
@@ -43,7 +43,7 @@ class Scenario implements Listener
 		return $this->activeScenario;
 	}
 
-	public final function getPlugin(): Loader
+	public final function getPlugin(): UHC
 	{
 		return $this->plugin;
 	}

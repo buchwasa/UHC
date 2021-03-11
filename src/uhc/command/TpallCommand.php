@@ -5,12 +5,12 @@ namespace uhc\command;
 
 use pocketmine\command\Command;
 use pocketmine\player\Player;
-use uhc\Loader;
+use uhc\UHC;
 
 class TpallCommand extends BaseCommand
 {
 
-	public function __construct(Loader $plugin)
+	public function __construct(UHC $plugin)
 	{
 		parent::__construct($plugin, "tpall", "Teleports everyone to the sender", "/tpall");
 		$this->setPermission("uhc.command.tpall");

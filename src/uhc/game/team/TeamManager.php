@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace uhc\game\team;
 
 use pocketmine\player\Player;
+use uhc\UHC;
 
 class TeamManager{
 	/** @var Team[] */
@@ -41,5 +42,13 @@ class TeamManager{
 	public function disbandTeam(int $teamNumber): void
 	{
 		unset($this->teams[$teamNumber]);
+	}
+
+	public function getTeamSize(): int{
+		return UHC::getInstance()->config->get("team-size");
+	}
+
+	public function setTeamSize(int $size): void{
+		UHC::getInstance()->config->set("team-size", $size);
 	}
 }
