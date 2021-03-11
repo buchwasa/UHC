@@ -25,6 +25,7 @@ use uhc\session\SessionManager;
 
 class UHC extends PluginBase
 {
+	public const ROOT = "uhc";
 	/** @var GameHeartbeat */
 	private GameHeartbeat $heartbeat;
 	/** @var ScenarioManager */
@@ -123,18 +124,18 @@ class UHC extends PluginBase
 
 	public function registerPermissions(): void
 	{
-		$parent = DefaultPermissions::registerPermission(new Permission("uhc", "Parent for all UHC permissions."));
+		$parent = DefaultPermissions::registerPermission(new Permission(self::ROOT, "Parent for all UHC permissions."));
 
-		$commands = DefaultPermissions::registerPermission(new Permission("uhc.command", "Parent permission for all UHC commands."), $parent);
-		DefaultPermissions::registerPermission(new Permission("uhc.command.globalmute", "", Permission::DEFAULT_OP), $commands);
-		DefaultPermissions::registerPermission(new Permission("uhc.command.heal", "", Permission::DEFAULT_OP), $commands);
-		DefaultPermissions::registerPermission(new Permission("uhc.command.scenarios", "", Permission::DEFAULT_OP), $commands);
-		DefaultPermissions::registerPermission(new Permission("uhc.command.tpall", "", Permission::DEFAULT_OP), $commands);
-		DefaultPermissions::registerPermission(new Permission("uhc.command.uhc", "", Permission::DEFAULT_OP), $commands);
+		$commands = DefaultPermissions::registerPermission(new Permission(self::ROOT . ".command", "Parent permission for all UHC commands."), [$parent]);
+		DefaultPermissions::registerPermission(new Permission(self::ROOT . ".command.globalmute", ""), [$commands]);
+		DefaultPermissions::registerPermission(new Permission(self::ROOT . ".command.heal",""), [$commands]);
+		DefaultPermissions::registerPermission(new Permission(self::ROOT . ".command.scenarios", ""), [$commands]);
+		DefaultPermissions::registerPermission(new Permission(self::ROOT . ".command.tpall", ""), [$commands]);
+		DefaultPermissions::registerPermission(new Permission(self::ROOT . ".command.uhc", ""), [$commands]);
 		$commands->recalculatePermissibles();
 
-		$bypass = DefaultPermissions::registerPermission(new Permission("uhc.bypass", "Parent permission for all UHC bypasses", Permission::DEFAULT_OP), $parent);
-		DefaultPermissions::registerPermission(new Permission("uhc.bypass.globalmute", "", Permission::DEFAULT_OP), $bypass);
+		$bypass = DefaultPermissions::registerPermission(new Permission(self::ROOT . ".bypass", "Parent permission for all UHC bypasses"), [$parent]);
+		DefaultPermissions::registerPermission(new Permission(self::ROOT . ".bypass.globalmute", ""), [$bypass]);
 		$bypass->recalculatePermissibles();
 
 		$parent->recalculatePermissibles();
