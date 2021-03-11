@@ -8,12 +8,12 @@ use dktapps\pmforms\CustomForm;
 use dktapps\pmforms\CustomFormResponse;
 use dktapps\pmforms\element\Toggle;
 use pocketmine\player\Player;
-use uhc\Loader;
+use uhc\UHC;
 
 class ScenariosCommand extends BaseCommand
 {
 
-	public function __construct(Loader $plugin)
+	public function __construct(UHC $plugin)
 	{
 		parent::__construct($plugin, "scenario", "Shows the game's scenarios or sets them", "/scenario", ["sc"]);
 	}
