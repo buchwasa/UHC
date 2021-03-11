@@ -6,12 +6,12 @@ namespace uhc\command;
 use pocketmine\command\Command;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
-use uhc\Loader;
+use uhc\UHC;
 
 class GlobalMuteCommand extends BaseCommand
 {
 
-	public function __construct(Loader $plugin)
+	public function __construct(UHC $plugin)
 	{
 		parent::__construct($plugin, "globalmute", "Controls whether all players can chat or not", "/globalmute");
 		$this->setPermission("uhc.command.globalmute");
