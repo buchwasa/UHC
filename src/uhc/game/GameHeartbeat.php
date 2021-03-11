@@ -12,7 +12,7 @@ use pocketmine\scheduler\Task;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\PhaseChangeEvent;
 use uhc\game\type\GameTimer;
-use uhc\Loader;
+use uhc\UHC;
 use muqsit\chunkloader\ChunkRegion;
 use function mt_rand;
 
@@ -33,13 +33,13 @@ class GameHeartbeat extends Task
 	private $normal = GameTimer::TIMER_NORMAL;
 	/** @var Border */
 	private Border $border;
-	/** @var Loader */
-	private Loader $plugin;
+	/** @var UHC */
+	private UHC $plugin;
 
 	/** @var int */
 	private int $playerTimer = 1;
 
-	public function __construct(Loader $plugin)
+	public function __construct(UHC $plugin)
 	{
 		$this->plugin = $plugin;
 		$this->border = new Border($plugin->getServer()->getWorldManager()->getDefaultWorld());
