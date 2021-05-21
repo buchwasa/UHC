@@ -27,8 +27,6 @@ class Loader extends PluginBase
 	private SessionManager $sessionManager;
 	/** @var TeamManager */
 	private TeamManager $teamManager;
-	/** @var bool */
-	private bool $globalMuteEnabled = false;
 
 	public function onEnable(): void
 	{
@@ -64,16 +62,6 @@ class Loader extends PluginBase
 	public function getTeamManager(): TeamManager
 	{
 		return $this->teamManager;
-	}
-
-	public function setGlobalMute(bool $enabled): void
-	{
-		$this->globalMuteEnabled = $enabled;
-	}
-
-	public function isGlobalMuteEnabled(): bool
-	{
-		return $this->globalMuteEnabled;
 	}
 
 	public function resetPlayer(Player $player, bool $fullReset = false): void

@@ -75,6 +75,6 @@ class Team
 
 	public function isFull(): bool
 	{
-		return count($this->members) === 2; //TODO
+		return count($this->members) === 2; //TODO: Remove hardcoded max team size
 	}
 }

@@ -24,6 +24,9 @@ class ScenariosCommand extends BaseCommand
 		}
 
 		$form->setCallable(function (Player $player, $data): void{
+			if (!$player->hasPermission("uhc.command.scenarios")) {
+				return;
+			}
 			$index = 0;
 			foreach ($this->getPlugin()->getScenarioManager()->getScenarios() as $scenario) {
 				$scenario->setActive($data[$index]);

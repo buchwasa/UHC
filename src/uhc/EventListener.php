@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace uhc;
 
 use pocketmine\block\Leaves;
-use pocketmine\block\VanillaBlocks;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -13,7 +12,6 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -26,6 +24,7 @@ use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\PhaseChangeEvent;
+use uhc\game\GameProperties;
 
 class EventListener implements Listener
 {
@@ -41,7 +40,7 @@ class EventListener implements Listener
 	public function handleChat(PlayerChatEvent $ev): void
 	{
 		$player = $ev->getPlayer();
-		if ($this->plugin->isGlobalMuteEnabled()) {
+		if (GameProperties::$globalMute) {
 			$player->sendMessage(TF::RED . "You cannot talk right now!");
 			$ev->cancel();
 		}
@@ -90,13 +89,13 @@ class EventListener implements Listener
 
 	public function handleDamage(EntityDamageEvent $ev): void
 	{
+		$victim = $ev->getEntity();
 		if (!$this->plugin->getHeartbeat()->hasStarted()) {
 			$ev->cancel();
 		}
 
 		if ($ev instanceof EntityDamageByEntityEvent) {
 			$damager = $ev->getDamager();
-			$victim = $ev->getEntity();
 			if ($this->plugin->getHeartbeat()->getPhase() === PhaseChangeEvent::GRACE) {
 				$ev->cancel();
 			}
@@ -109,25 +108,30 @@ class EventListener implements Listener
 				}
 			}
 		}
-	}
 
-	public function handleDeath(PlayerDeathEvent $ev): void
-	{
-		$player = $ev->getPlayer();
-		$cause = $player->getLastDamageCause();
-		$eliminatedSession = $this->plugin->getSessionManager()->getSession($player);
-		$player->setGamemode(GameMode::SPECTATOR());
-		$player->sendTitle(TF::YELLOW . "You have been eliminated!", "Use /spectate to spectate a player.");
-		$eliminatedSession->setPlaying(false);
-		if ($cause instanceof EntityDamageByEntityEvent) {
-			$damager = $cause->getDamager();
-			if ($damager instanceof Player) {
-				$damagerSession = $this->plugin->getSessionManager()->getSession($damager);
-				$damagerSession->addEliminations();
-				$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " was slain by " . TF::RED . $damager->getName() . TF::GRAY . "[" . TF::WHITE . $damagerSession->getEliminations() . TF::GRAY . "]");
+		if (!$ev->isCancelled() && $ev->getFinalDamage() >= $victim->getHealth()) {
+			//TODO: Clean up this mess
+			$ev->cancel();
+			$eliminatedSession = $this->plugin->getSessionManager()->getSession($victim);
+			$eliminatedSession->setPlaying(false);
+			if ($ev instanceof EntityDamageByEntityEvent) {
+				$damager = $ev->getDamager();
+				if ($damager instanceof Player) {
+					$damagerSession = $this->plugin->getSessionManager()->getSession($damager);
+					$damagerSession->addEliminations();
+					//TODO: Introduce world based broadcast methods
+					foreach ($victim->getWorld()->getPlayers() as $player) {
+						$player->sendMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " was slain by " . TF::RED . $damager->getName() . TF::GRAY . "[" . TF::WHITE . $damagerSession->getEliminations() . TF::GRAY . "]");
+					}
+				}
+			} else {
+				foreach ($victim->getWorld()->getPlayers() as $player) {
+					$player->sendMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " died!");
+				}
 			}
-		} else {
-			$ev->setDeathMessage(TF::RED . $player->getName() . TF::GRAY . "[" . TF::WHITE . $eliminatedSession->getEliminations() . TF::GRAY . "]" . TF::YELLOW . " died!");
+
+			$this->plugin->resetPlayer($victim);
+			$victim->setGamemode(GameMode::SPECTATOR());
 		}
 	}
 

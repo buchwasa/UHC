@@ -5,9 +5,6 @@ namespace uhc\session;
 
 use pocketmine\player\Player;
 
-/**
- * Sessions are permanent unlike players in PlayerManager.
- */
 class SessionManager{
 	/** @var PlayerSession[] */
 	private array $activeSessions = [];

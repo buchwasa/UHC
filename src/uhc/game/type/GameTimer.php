@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace uhc\game\type;
 
+//TODO: Make configurable
 final class GameTimer
 {
 

@@ -55,7 +55,7 @@ class TeamCommand extends BaseCommand
 					$sender->sendMessage("You must be team leader to add players!");
 					return;
 				}
-				$addedPlayer = $this->getPlugin()->getServer()->getPlayer($args[1]);
+				$addedPlayer = $this->getPlugin()->getServer()->getPlayerByPrefix($args[1]);
 				if (!$addedPlayer instanceof Player) {
 					$sender->sendMessage("You must add a valid player!");
 					return;

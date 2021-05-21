@@ -123,10 +123,6 @@ class GameHeartbeat extends Task
 				$server->broadcastTitle("Server has been " . TF::AQUA . "whitelisted!");
 				$server->broadcastTitle("The game will begin in " . TF::AQUA . "30 seconds.");
 				break;
-			case 29:
-				$server->broadcastTitle("Global Mute has been " . TF::AQUA . "enabled!");
-				$this->plugin->setGlobalMute(true);
-				break;
 			case 10:
 				$server->broadcastTitle("The game will begin in " . TF::AQUA . "10 seconds.");
 				break;
@@ -150,8 +146,6 @@ class GameHeartbeat extends Task
 		$server = $this->plugin->getServer();
 		switch ($this->grace) {
 			case 1190:
-				$server->broadcastTitle("Global Mute has been " . TF::AQUA . "disabled!");
-				$this->plugin->setGlobalMute(false);
 				$server->broadcastTitle("Final heal will occur in " . TF::AQUA . "10 minutes.");
 				break;
 			case 601:

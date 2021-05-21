@@ -81,6 +81,9 @@ class PlayerSession
 		return false;
 	}
 
+	/**
+	 * @deprecated Use {@see Team} instead
+	 */
 	public function isTeamLeader(): bool
 	{
 		return $this->isInTeam() && $this->team->isLeader($this->getPlayer());

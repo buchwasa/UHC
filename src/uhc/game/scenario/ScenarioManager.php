@@ -58,7 +58,7 @@ class ScenarioManager{
 
 	public function getScenarioByName(string $name) : ?Scenario
 	{
-		return isset($this->registeredScenarios[$name]) ? $this->registeredScenarios[$name] : null;
+		return $this->registeredScenarios[$name] ?? null;
 	}
 
 	public function registerScenario(Scenario $scenario): void
