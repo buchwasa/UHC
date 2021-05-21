@@ -7,18 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: pmforms
+    - name: customui
       uses: wei/wget@v1
       with:
-        args: https://poggit.pmmp.io/r/96115/pmforms_dev-1.phar -O pmforms.phar
+        args: https://poggit.pmmp.io/r/105720/customui_dev-36.phar -O customui.phar
     - name: scorefactory
       uses: wei/wget@v1
       with:
-        args: https://poggit.pmmp.io/r/104378/ScoreFactory_dev-14.phar -O ScoreFactory.phar
-    - name: libchunkloader
-      uses: wei/wget@v1
-      with:
-        args: https://poggit.pmmp.io/r/104375/libChunkLoader_dev-15.phar -O libChunkLoader.phar
+        args: https://poggit.pmmp.io/r/119291/ScoreFactory_dev-22.phar -O ScoreFactory.phar
     - name: phpstan
       uses: nxtlvlsoftware/pmmp-phpstan-action@4
       with:

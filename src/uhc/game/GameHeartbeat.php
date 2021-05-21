@@ -5,16 +5,12 @@ declare(strict_types=1);
 namespace uhc\game;
 
 use jackmd\scorefactory\ScoreFactory;
-use pocketmine\math\Vector3;
 use pocketmine\player\Player;
-use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\Task;
 use pocketmine\utils\TextFormat as TF;
 use uhc\event\PhaseChangeEvent;
 use uhc\game\type\GameTimer;
 use uhc\Loader;
-use muqsit\chunkloader\ChunkRegion;
-use function mt_rand;
 
 class GameHeartbeat extends Task
 {
@@ -35,9 +31,6 @@ class GameHeartbeat extends Task
 	private Border $border;
 	/** @var Loader */
 	private Loader $plugin;
-
-	/** @var int */
-	private int $playerTimer = 1;
 
 	public function __construct(Loader $plugin)
 	{
@@ -105,7 +98,6 @@ class GameHeartbeat extends Task
 					switch ($this->getPhase()) {
 						case PhaseChangeEvent::COUNTDOWN:
 							if ($this->countdown === 29) {
-								$this->randomizeCoordinates($p, 750);
 								$this->plugin->resetPlayer($p);
 								$p->setImmobile(true);
 							} elseif ($this->countdown === 3) {
@@ -260,20 +252,5 @@ class GameHeartbeat extends Task
 			ScoreFactory::setScoreLine($p, 3, $this->getPhase() === PhaseChangeEvent::WAITING ? "§b Waiting for players..." : "§b Starting in:§f $this->countdown");
 			ScoreFactory::setScoreLine($p, 4, "§7--------------------- ");
 		}
-	}
-
-	private function randomizeCoordinates(Player $p, int $range): void //Teams should be tped together
-	{
-		$this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($p, $range) : void {
-			$ss = $p->getWorld()->getSafeSpawn();
-			$x = mt_rand($ss->getFloorX() - $range, $ss->getFloorX() + $range);
-			$z = mt_rand($ss->getFloorZ() - $range, $ss->getFloorZ() + $range);
-
-			ChunkRegion::onChunkGenerated($p->getWorld(), $x >> 4, $z >> 4, function () use ($p, $x, $z): void {
-				$p->teleport(new Vector3($x, $p->getWorld()->getHighestBlockAt($x, $z) + 1, $z));
-			});
-
-			$this->playerTimer += 5;
-		}), $this->playerTimer);
 	}
 }

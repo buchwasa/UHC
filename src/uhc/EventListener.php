@@ -41,7 +41,7 @@ class EventListener implements Listener
 	public function handleChat(PlayerChatEvent $ev): void
 	{
 		$player = $ev->getPlayer();
-		if ($this->plugin->isGlobalMuteEnabled() && !$player->hasPermission("uhc.bypass.globalmute")) {
+		if ($this->plugin->isGlobalMuteEnabled()) {
 			$player->sendMessage(TF::RED . "You cannot talk right now!");
 			$ev->cancel();
 		}

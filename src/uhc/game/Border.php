@@ -9,7 +9,6 @@ use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\world\World;
-use muqsit\chunkloader\ChunkRegion;
 use function mt_rand;
 
 class Border
@@ -82,9 +81,10 @@ class Border
 			$pZ = $this->getZ(true) + $z;
 		}
 
-		ChunkRegion::onChunkGenerated($this->world, $pX >> 4, $pZ >> 4, function () use ($p, $pX, $pZ): void {
+		$this->world->orderChunkPopulation($pX >> 4, $pZ >> 4, null)->onCompletion(function () use($p, $pX, $pZ): void
+		{
 			$p->teleport(new Vector3($pX, $this->world->getHighestBlockAt($pX, $pZ) + 1, $pZ));
-		});
+		}, function (): void{});
 	}
 
 	public function build(): void
@@ -102,7 +102,8 @@ class Border
 
 	public function generateBorderWall(int $x, int $z) : void
 	{
-		ChunkRegion::onChunkGenerated($this->world, $x >> 4, $z >> 4, function () use ($x, $z): void {
+		$this->world->orderChunkPopulation($x >> 4, $z >> 4, null)->onCompletion(function () use($x, $z): void
+		{
 			$y = 256;
 			while ($y > 0){
 				$block = $this->world->getBlockAt($x, $y, $z);
@@ -115,6 +116,6 @@ class Border
 
 				$y--;
 			}
-		});
+		}, function (): void{});
 	}
 }

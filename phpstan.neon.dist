@@ -2,9 +2,7 @@ parameters:
 	level: 7
 	paths:
 		- src
-	bootstrapFiles:
-		- phar:///pocketmine/PocketMine-MP.phar/vendor/autoload.php
 	scanDirectories:
-		- phar://pmforms.phar
+		- phar:///pocketmine/PocketMine-MP.phar
+		- phar://customui.phar
 		- phar://ScoreFactory.phar
-		- phar://libChunkLoader.phar

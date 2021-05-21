@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace uhc\command;
 
-use dktapps\pmforms\CustomForm;
-use dktapps\pmforms\CustomFormResponse;
-use dktapps\pmforms\element\Toggle;
 use pocketmine\player\Player;
 use uhc\Loader;
+use xenialdan\customui\windows\CustomForm;
 
 class ScenariosCommand extends BaseCommand
 {
@@ -20,18 +18,16 @@ class ScenariosCommand extends BaseCommand
 
 	public function onExecute(Player $sender, array $args): void
 	{
-		$toggles = [];
+		$form = new CustomForm("Scenarios");
 		foreach ($this->getPlugin()->getScenarioManager()->getScenarios() as $scenario) {
-			$toggles[] = new Toggle($scenario->getName(), $scenario->getName(), $scenario->isActive());
+			$form->addToggle($scenario->getName(), $scenario->isActive());
 		}
 
-		$form = new CustomForm("Scenarios", $toggles, function (Player $player, CustomFormResponse $response): void
-		{
+		$form->setCallable(function (Player $player, $data): void{
+			$index = 0;
 			foreach ($this->getPlugin()->getScenarioManager()->getScenarios() as $scenario) {
-				if (!$player->hasPermission("uhc.command.scenarios")) {
-					return;
-				}
-				$scenario->setActive($response->getBool($scenario->getName()));
+				$scenario->setActive($data[$index]);
+				$index++;
 			}
 		});
 

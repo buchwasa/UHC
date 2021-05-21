@@ -2,18 +2,14 @@
 build-by-default: true
 branches:
 - pm4
-- pm3
 projects:
   UHC:
     path: ""
     libs:
-      - src: stephen-mc-pl/pmforms-pm4/pmforms
-        branch: prod
-        version: 1.0.1
       - src: buchwasa/ScoreFactory/ScoreFactory
         branch: pm4
         version: 3.0.1
-      - src: buchwasa/libChunkLoader/libChunkLoader
-        branch: pm4
-        version: 3.0.0
+      - src: thebigsmilexd/customui/customui
+        version: ^4.0.0
+        branch: PM4
 ...
